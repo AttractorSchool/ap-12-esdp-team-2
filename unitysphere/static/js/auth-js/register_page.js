@@ -1,4 +1,5 @@
-letRegisterURL = "/api/v1/register"
+let RegisterURL = "/api/v1/register";
+let RegisterVerifyURL = "/api/v1/register/verify";
 
 
 jQuery("#register_user_form").submit(function (e) { 
@@ -13,7 +14,7 @@ jQuery("#register_user_form").submit(function (e) {
     validatePasswords(formData)
     jQuery.ajax({
         type: "post",
-        url: letRegisterURL,
+        url: RegisterURL,
         headers: {
             "X-CSRFToken": csrfToken,
 
@@ -23,6 +24,38 @@ jQuery("#register_user_form").submit(function (e) {
         contentType: false,
         success: function (response) {
             localStorage.setItem("session_id", response.session_id)
+            swapForm()
+        },
+        error: function (response) {
+            console.log(response)
+            insertAllErrors(response.responseJSON)
+        }
+    });    
+    
+});
+
+jQuery("#verify_user_form").submit(function (e) { 
+    e.preventDefault();
+    formData = new FormData(jQuery(this)[0]);
+    let csrfToken = formData.get("csrfmiddlewaretoken");
+    let code_input = $("#id_sms_code").val();
+    let data = {
+        "user_session_id": localStorage.getItem("session_id"),
+        "sms_code": code_input
+    }
+
+    clearFieldErrors()
+    jQuery.ajax({
+        type: "post",
+        url: RegisterVerifyURL,
+        headers: {
+            "X-CSRFToken": csrfToken
+        },
+        data: JSON.stringify(data),
+        processData: false,
+        contentType: "application/json;charset=utf-8",
+        success: function (response) {
+            console.log(response)
         },
         error: function (response) {
             console.log(response)
@@ -74,4 +107,13 @@ function clearFieldErrors() {
     for (let errorBlock of errorBlocks) {
         errorBlock.innerHTML = ""
     }
+}
+
+function swapForm() {
+    let formRegister = document.getElementById("register_user_form")
+    let formVerify = document.getElementById("verify_user_form")
+    formRegister.style.display = "none"
+    formVerify.style.display = "block"
+    let formTitle = document.getElementById("form-title")
+    formTitle.innerText = "Введите код из СМС"
 }

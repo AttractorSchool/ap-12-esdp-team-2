@@ -4,5 +4,4 @@ from accounts import views
 
 urlpatterns = [
     path('register/', views.RegisterUserView.as_view(), name='register'),
-
 ]

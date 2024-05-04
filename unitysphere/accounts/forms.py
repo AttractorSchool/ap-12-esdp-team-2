@@ -33,3 +33,10 @@ class UserLoginForm(AuthenticationForm):
         strip=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "current-password", 'class': "form-control"}),
     )
+
+
+class VerifyUserForm(forms.Form):
+    code = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control text-center'}),
+        label="Код подтверждения"
+    )

@@ -1,6 +1,4 @@
-from django.shortcuts import render
 from django.views import generic
-
 from accounts.forms import RegisterUserForm
 
 

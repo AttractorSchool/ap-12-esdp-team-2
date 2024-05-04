@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, FileExtensionValidator
 from django.db import models
 
+
 phone_regex_validator = RegexValidator(
         regex=r'^\+?1?\d{9,15}$',
         message="Номер телефона должен быть введен в формате: '+999999999'. Максимум 15 чисел."
@@ -24,7 +25,7 @@ class User(AbstractUser):
         verbose_name="Номер телефона",
         validators=[phone_regex_validator]
     )
-    email = models.EmailField(unique=True, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
     username = None
 
     USERNAME_FIELD = 'phone'
