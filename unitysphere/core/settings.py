@@ -25,6 +25,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'api.apps.ApiConfig',
+    'clubs.apps.ClubsConfig',
 ]
 
 MIDDLEWARE = [
