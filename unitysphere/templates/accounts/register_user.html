@@ -1,0 +1,32 @@
+{% extends 'accounts/auth_base.html' %}
+
+{% block content %}
+
+<div class="wrap d-md-flex">
+    <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+        <div class="text w-100">
+            <h2>Добро пожаловать!</h2>
+            <p>Уже есть аккаунт?</p>
+            <a href="{% url 'login' %}" class="btn btn-white btn-outline-white">Войти</a>
+        </div>
+    </div>
+    <div class="login-wrap p-4 p-lg-5" id="auth-form-block">
+        <div class="w-100">
+            <h3 class="mb-4 text-center" id="form-title">Регистрация</h3>
+        </div>
+        {% include 'partial/form.html' with btn_text="Зарегистрироваться" form_method="post" form_id="register_user_form" %}
+        <form action="" method="post" id="verify_user_form" style="display: none">
+            <div class="mb-2 text-center">
+                <p class="verify-message" id="verify-message"></p>
+                {% csrf_token %}
+                <label class="d-inline-block mx-auto">Код</label>
+                <span style="color: red;" class="required">*</span>
+                <input type="text" name="sms_code" class="form-control text-center" maxlength="20" autofocus="" required="" id="id_sms_code">
+                <div class="block-errors" id="errors_sms_code"></div>
+            </div>
+            <button type="submit" class="btn btn-primary my-3 d-block mx-auto">Отправить</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
