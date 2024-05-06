@@ -1,10 +1,12 @@
 <form action="{{ form_action }}" method="{% if form_method %}{{ form_method }}{% else %}post{% endif %}" id="{{form_id}}" enctype="multipart/form-data">
     {% csrf_token %}
+    <div class="block-errors" id="errors_non_field_errors">
     {% if form.non_field_errors %}
         {% for err in form.non_field_errors %}
           <p class="text-danger text-center">{{ err }}</p>
         {% endfor %}
     {% endif %}
+    </div>
     {% for field in form %}
     <div class="mb-2 text-center">
         <label class="d-inline-block mx-auto">{{ field.label }}</label>

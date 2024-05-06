@@ -1,5 +1,6 @@
 let RegisterURL = "/api/v1/register";
-let RegisterVerifyURL = "/api/v1/register/verify";
+let RegisterVerifyURL = "/api/v1/account/verify";
+let LoginURL = "/api/v1/login"
 
 
 jQuery("#register_user_form").submit(function (e) { 
@@ -33,6 +34,37 @@ jQuery("#register_user_form").submit(function (e) {
     });    
     
 });
+
+
+jQuery("#login_user_form").submit(function (e) { 
+    e.preventDefault();
+    formData = new FormData(jQuery(this)[0]);
+    let csrfToken = formData.get("csrfmiddlewaretoken");
+    formData.delete("csrfmiddlewaretoken");
+    form_id = this.id
+    clearFieldErrors()
+    jQuery.ajax({
+        type: "post",
+        url: LoginURL,
+        headers: {
+            "X-CSRFToken": csrfToken,
+
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            localStorage.setItem("session_id", response.session_id)
+            swapForm(form_id, response.phone)
+        },
+        error: function (response) {
+            console.log(response)
+            insertAllErrors(response.responseJSON)
+        }
+    });    
+    
+});
+
 
 jQuery("#verify_user_form").submit(function (e) { 
     e.preventDefault();
@@ -93,6 +125,9 @@ function insertFieldErrors(field_name, errors) {
     let blockErrors;
     if (field_name == "password") {
         blockErrors = document.getElementById(`errors_password2`)
+        if (!blockErrors) {
+            blockErrors = document.getElementById('errors_password');
+        }
     } else {
         blockErrors = document.getElementById(`errors_${field_name}`)
     }
@@ -109,11 +144,12 @@ function clearFieldErrors() {
     }
 }
 
-function swapForm(phoneNumber) {
+function swapForm(form_id, phoneNumber) {
     let verifyMessageElm = document.getElementById("verify-message")
-    let formRegister = document.getElementById("register_user_form")
     let formVerify = document.getElementById("verify_user_form")
-    formRegister.style.display = "none"
+    let form = document.getElementById(form_id)
+    console.log(form)
+    form.style.display = "none"
     formVerify.style.display = "block"
     let formTitle = document.getElementById("form-title")
     formTitle.innerText = "Введите код из СМС"

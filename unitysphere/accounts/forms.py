@@ -26,12 +26,19 @@ class RegisterUserForm(UserCreationForm):
     )
 
 
-class UserLoginForm(AuthenticationForm):
-    username = UsernameField(widget=forms.TextInput(attrs={"autofocus": True, 'class': "form-control"}))
+class UserLoginForm(forms.Form):
+    phone = forms.CharField(
+        widget=forms.TextInput(attrs={"autofocus": True, 'class': "form-control"}),
+        label="Номер телефона",
+    )
     password = forms.CharField(
         label=_("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", 'class': "form-control"}),
+        widget=forms.PasswordInput(attrs={
+            "autocomplete": "current-password",
+            'class': "form-control",
+            'id': "id_password2",
+        }),
     )
 
 
