@@ -66,8 +66,6 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5051',
-    }
-}
 
 
 AUTH_PASSWORD_VALIDATORS = [
