@@ -7,3 +7,8 @@ def generate_sms_code(sms_code_len=4):
     sms_code = str(random.randint(min_code_value, max_code_value))
     print(f"SMS_CODE: {sms_code}")
     return sms_code
+
+
+def mask_phone_number(phone_number):
+    phone_number = phone_number[:7] + "***" + phone_number[10:]
+    return phone_number

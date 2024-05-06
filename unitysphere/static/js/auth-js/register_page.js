@@ -24,7 +24,7 @@ jQuery("#register_user_form").submit(function (e) {
         contentType: false,
         success: function (response) {
             localStorage.setItem("session_id", response.session_id)
-            swapForm()
+            swapForm(response.phone)
         },
         error: function (response) {
             console.log(response)
@@ -109,11 +109,13 @@ function clearFieldErrors() {
     }
 }
 
-function swapForm() {
+function swapForm(phoneNumber) {
+    let verifyMessageElm = document.getElementById("verify-message")
     let formRegister = document.getElementById("register_user_form")
     let formVerify = document.getElementById("verify_user_form")
     formRegister.style.display = "none"
     formVerify.style.display = "block"
     let formTitle = document.getElementById("form-title")
     formTitle.innerText = "Введите код из СМС"
+    verifyMessageElm.innerText = `Мы отправили его на номер: ${phoneNumber}`
 }

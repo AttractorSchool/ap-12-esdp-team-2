@@ -17,8 +17,9 @@ class UserCreateAPIView(APIView):
         session_id = uuid.uuid4()
         session_key = constants.USER_SESSION_KEY.format(session_id)
         sms_code = api_utils.generate_sms_code(sms_code_len=4)
+        phone = serializer.validated_data['phone']
         user_data = {
-            'phone': serializer.validated_data['phone'],
+            'phone': phone,
             'password': make_password(serializer.validated_data['password']),
         }
         data = {
@@ -26,7 +27,10 @@ class UserCreateAPIView(APIView):
             "sms_code": sms_code,
         }
         cache.set(session_key, data, constants.USER_SESSION_KEY_TTL)
-        return Response({'session_id': session_id}, status=status.HTTP_202_ACCEPTED)
+        return Response(
+            {'session_id': session_id, 'phone': api_utils.mask_phone_number(phone)},
+            status=status.HTTP_202_ACCEPTED
+        )
 
 
 class UserVerifyAPIView(APIView):
@@ -45,8 +49,6 @@ class UserVerifyAPIView(APIView):
             return Response({'sms_code': [error_message,]}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User(**session['user_data'])
-        user.is_superuser = True
-        user.is_staff = True
         user.save()
         login(request, user)
         return Response({'message': 'User verified and logged in successfully'}, status=status.HTTP_200_OK)

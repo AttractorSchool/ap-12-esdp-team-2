@@ -17,6 +17,7 @@
         {% include 'partial/form.html' with btn_text="Зарегистрироваться" form_method="post" form_id="register_user_form" %}
         <form action="" method="post" id="verify_user_form" style="display: none">
             <div class="mb-2 text-center">
+                <p class="verify-message" id="verify-message"></p>
                 {% csrf_token %}
                 <label class="d-inline-block mx-auto">Код</label>
                 <span style="color: red;" class="required">*</span>
