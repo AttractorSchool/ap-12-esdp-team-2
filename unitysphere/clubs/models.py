@@ -29,7 +29,7 @@ class Club(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, null=True, blank=True, unique=True)
     category = models.ForeignKey(
-        'webapp.ClubCategory',
+        'clubs.ClubCategory',
         on_delete=models.SET_NULL,
         related_name='clubs',
         null=True,
@@ -74,5 +74,3 @@ class Club(models.Model):
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
-
-

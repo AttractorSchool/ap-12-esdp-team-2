@@ -6,7 +6,7 @@ let LoginURL = "/api/v1/login"
 jQuery("#register_user_form").submit(function (e) { 
     e.preventDefault();
     formData = new FormData(jQuery(this)[0]);
-    
+    form_id = this.id
     console.log(formData)
     let csrfToken = formData.get("csrfmiddlewaretoken");
     formData.delete("csrfmiddlewaretoken");
@@ -25,7 +25,7 @@ jQuery("#register_user_form").submit(function (e) {
         contentType: false,
         success: function (response) {
             localStorage.setItem("session_id", response.session_id)
-            swapForm(response.phone)
+            swapForm(form_id, response.phone)
         },
         error: function (response) {
             console.log(response)
@@ -88,6 +88,7 @@ jQuery("#verify_user_form").submit(function (e) {
         contentType: "application/json;charset=utf-8",
         success: function (response) {
             console.log(response)
+            document.location.href="/";
         },
         error: function (response) {
             console.log(response)
