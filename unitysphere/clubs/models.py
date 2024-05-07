@@ -48,16 +48,16 @@ class Club(models.Model):
         'accounts.User',
         related_name='co_managed_clubs',
         blank=True,
-        verbose_name="Соуправляющие клуба"
+        verbose_name='Соуправляющие клуба'
     )
-    description = models.TextField(validators=[MinLengthValidator(200)], verbose_name="Описание")
-    email = models.EmailField(verbose_name="Контактный email")
-    phone = models.CharField(validators=[phone_regex_validator], verbose_name="Контактный телефон", max_length=20)
+    description = models.TextField(validators=[MinLengthValidator(200)], verbose_name='Описание')
+    email = models.EmailField(verbose_name='Контактный email')
+    phone = models.CharField(validators=[phone_regex_validator], verbose_name='Контактный телефон', max_length=20)
     city = models.ForeignKey(to='clubs.City', on_delete=models.SET_NULL, null=True, blank=True)
-    address = models.CharField(default="No location", verbose_name="Локация клуба", max_length=150, blank=True)
+    address = models.CharField(default='No location', verbose_name='Локация клуба', max_length=150, blank=True)
     members = models.ManyToManyField(
         'accounts.User',
-        verbose_name="Члены клуба",
+        verbose_name='Члены клуба',
         related_name='clubs',
         blank=True,
     )
@@ -69,6 +69,7 @@ class Club(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(autp_now=True)
+    subscribers = models.ManyToManyField('self', null=True, related_name='subscriptions')
 
     def __str__(self):
         return self.name
