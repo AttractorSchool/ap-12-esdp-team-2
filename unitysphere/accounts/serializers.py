@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
@@ -12,10 +13,18 @@ class UserLoginSerializer(serializers.Serializer):
         phone = data.get('phone')
         password = data.get('password')
 
-        if not phone or not password:
+        if phone and password:
+            user = authenticate(request=self.context.get('request'), phone=phone, password=password)
+
+            if not user:
+                msg = 'Не верный логин или пароль.'
+                raise serializers.ValidationError(msg, code='authentication')
+
+        else:
             msg = "Телефон и пароль объязательные поля"
             raise serializers.ValidationError(msg, code='authentication')
 
+        data['user'] = user
         return data
 
 

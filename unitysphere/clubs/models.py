@@ -1,3 +1,5 @@
+import uuid
+
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
 from accounts.models import phone_regex_validator
@@ -5,8 +7,12 @@ from pytils.translit import slugify
 
 
 class ClubCategory(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, blank=True, null=True, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(autp_now=True)
 
     def __str__(self):
         return self.name
@@ -20,14 +26,19 @@ class ClubCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+        uuid
+
 
 class City(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    iata_coe = models.CharField(index=True)
+    name = models.CharField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(autp_now=True)
 
 
 class Club(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, null=True, blank=True, unique=True)
     category = models.ForeignKey(
         'clubs.ClubCategory',
         on_delete=models.SET_NULL,
@@ -39,13 +50,7 @@ class Club(models.Model):
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
         default='club/logos/club-icon.png',
     )
-    manager = models.ForeignKey(
-        'accounts.User',
-        on_delete=models.PROTECT,
-        related_name='managed_clubs',
-        verbose_name='Управляющий клуба',
-    )
-    co_managers = models.ManyToManyField(
+    managers = models.ManyToManyField(
         'accounts.User',
         related_name='co_managed_clubs',
         blank=True,
