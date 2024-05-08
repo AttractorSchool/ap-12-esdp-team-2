@@ -12,7 +12,7 @@ class ClubCategory(models.Model):
     slug = models.SlugField(max_length=100, blank=True, null=True, unique=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(autp_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -26,15 +26,13 @@ class ClubCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-        uuid
-
 
 class City(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    iata_coe = models.CharField(index=True)
-    name = models.CharField()
+    iata_coe = models.CharField(db_index=True, max_length=20, unique=True)
+    name = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(autp_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Club(models.Model):
