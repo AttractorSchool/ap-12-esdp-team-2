@@ -1,6 +1,6 @@
-let RegisterURL = "/api/v1/register";
-let RegisterVerifyURL = "/api/v1/account/verify";
-let LoginURL = "/api/v1/login"
+let RegisterURL = "/api/v1/accounts/register/";
+let RegisterVerifyURL = "/api/v1/accounts/verify/";
+let LoginURL = "/api/v1/accounts/token/"
 
 
 jQuery("#register_user_form").submit(function (e) { 
@@ -12,7 +12,6 @@ jQuery("#register_user_form").submit(function (e) {
     formData.delete("csrfmiddlewaretoken");
     
     clearFieldErrors()
-    validatePasswords(formData)
     jQuery.ajax({
         type: "post",
         url: RegisterURL,
@@ -54,8 +53,9 @@ jQuery("#login_user_form").submit(function (e) {
         processData: false,
         contentType: false,
         success: function (response) {
+            console.log(response)
             localStorage.setItem("session_id", response.session_id)
-            swapForm(form_id, response.phone)
+
         },
         error: function (response) {
             console.log(response)
@@ -88,7 +88,7 @@ jQuery("#verify_user_form").submit(function (e) {
         contentType: "application/json;charset=utf-8",
         success: function (response) {
             console.log(response)
-            document.location.href="/";
+            // document.location.href="/";
         },
         error: function (response) {
             console.log(response)
@@ -97,22 +97,6 @@ jQuery("#verify_user_form").submit(function (e) {
     });    
     
 });
-
-
-function validatePasswords(formData) {
-
-    if (formData.get("password1") != formData.get("password2")) {
-        blockErrors = document.getElementById(`errors_password2`)
-        let errorElm = "<p class='text-danger text-center'>Пароли не совпадают</p>"
-        blockErrors.innerHTML += errorElm
-    } 
-
-    let password = formData.get("password1")
-    formData.delete("password1")
-    formData.delete("password2")
-    formData.append("password", password)
-    
-}
 
 
 function insertAllErrors(errors) {
@@ -132,9 +116,14 @@ function insertFieldErrors(field_name, errors) {
     } else {
         blockErrors = document.getElementById(`errors_${field_name}`)
     }
-    for (let i = 0; i < errors.length; i++) {
-        let errorElm = `<p class="text-danger text-center">${errors[i]}</p>`;
+    if(typeof errors === 'string') {
+        let errorElm = `<p class="text-danger text-center">${errors}</p>`;
         blockErrors.innerHTML += errorElm
+    } else {
+        for (let i = 0; i < errors.length; i++) {
+            let errorElm = `<p class="text-danger text-center">${errors[i]}</p>`;
+            blockErrors.innerHTML += errorElm
+        }
     }
 }
 

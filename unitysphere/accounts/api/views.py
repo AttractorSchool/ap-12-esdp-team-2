@@ -2,12 +2,15 @@ import uuid
 
 from django.contrib.auth.hashers import make_password
 from django.core.cache import cache
-from accounts.models import User
-from accounts.utils import generate_sms_code, generate_tokens
+
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
-from api import constants, exceptions
+
+from accounts.models import User
+from accounts.utils import generate_sms_code, generate_tokens
+from api import constants
 from .serializers import UserCreateSerializer, UserVerifySerializer
+from . import exceptions
 
 
 class UserCreateAPIView(generics.CreateAPIView):
@@ -25,7 +28,7 @@ class UserCreateAPIView(generics.CreateAPIView):
 
         user_data = {
             'phone': phone,
-            'password': make_password(serializer.validated_data['password']),
+            'password': make_password(serializer.validated_data['password2']),
         }
 
         data = {

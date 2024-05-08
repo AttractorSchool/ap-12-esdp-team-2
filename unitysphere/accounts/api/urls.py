@@ -1,5 +1,7 @@
 from django.urls import path
+
 from . import views as api_views
+
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
