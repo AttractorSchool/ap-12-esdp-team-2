@@ -1,4 +1,3 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
@@ -13,31 +12,27 @@ class UserLoginSerializer(serializers.Serializer):
         phone = data.get('phone')
         password = data.get('password')
 
-        if phone and password:
-            user = authenticate(request=self.context.get('request'), phone=phone, password=password)
-
-            if not user:
-                msg = 'Не верный логин или пароль.'
-                raise serializers.ValidationError(msg, code='authentication')
-
-        else:
+        if not phone or not password:
             msg = "Телефон и пароль объязательные поля"
             raise serializers.ValidationError(msg, code='authentication')
 
-        data['user'] = user
         return data
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ['phone', 'password']
+        fields = ['phone', 'password', 'password2']
 
-    def validate_password(self, value):
-        validate_password(value)
-        return value
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError(
+                {"password": "Password fields didn't match."})
+
+        return attrs
 
 
 class UserVerifySerializer(serializers.Serializer):

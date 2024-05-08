@@ -3,17 +3,20 @@ import uuid
 from django.contrib.auth.hashers import make_password
 from django.core.cache import cache
 from accounts.models import User
-from accounts.utils import generate_sms_code
-from rest_framework.views import APIView
+from accounts.utils import generate_sms_code, generate_tokens
 from rest_framework.response import Response
-from rest_framework import status
-from api import constants, exceptions, serializers
-from .serializers import UserCreateSerializer
+from rest_framework import status, permissions, generics
+from api import constants, exceptions
+from .serializers import UserCreateSerializer, UserVerifySerializer
 
 
-class UserCreateAPIView(APIView):
-    def post(self, request):
-        serializer = UserCreateSerializer(data=request.data)
+class UserCreateAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = UserCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         session_id = uuid.uuid4()
         session_key = constants.USER_SESSION_KEY.format(session_id)
@@ -30,16 +33,14 @@ class UserCreateAPIView(APIView):
             'sms_code': sms_code,
         }
         cache.set(session_key, data, constants.USER_SESSION_KEY_TTL)
-        return Response(
-            {'session_id': session_id},
-            status=status.HTTP_202_ACCEPTED,
-        )
+        return Response({'session_id': session_id}, status=status.HTTP_202_ACCEPTED)
 
 
-class UserVerifyAPIView(APIView):
+class UserVerifyAPIView(generics.GenericAPIView):
+    serializer_class = UserVerifySerializer
 
     def post(self, request):
-        serializer = serializers.UserVerifySerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         session_key = constants.USER_SESSION_KEY.format(serializer.validated_data['user_session_id'])
         session = cache.get(session_key)
@@ -52,10 +53,6 @@ class UserVerifyAPIView(APIView):
 
         user = User.objects.create(**session['user_data'])
 
-        # access = AccessToken.for_user(user)
-        # refresh = RefreshToken.for_user(user)
-        #
-        # return Response({
-        #     'access': access,
-        #     'refresh': refresh,
-        # }, status=status.HTTP_201_CREATED)
+        tokens = generate_tokens(user)
+
+        return Response(tokens, status=status.HTTP_201_CREATED)
