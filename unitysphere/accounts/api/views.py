@@ -55,7 +55,9 @@ class UserVerifyAPIView(generics.GenericAPIView):
             raise exceptions.SMSCodeInvalidException
 
         user = User.objects.create(**session['user_data'])
-
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
         tokens = generate_tokens(user)
 
         return Response(tokens, status=status.HTTP_201_CREATED)

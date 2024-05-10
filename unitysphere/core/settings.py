@@ -76,6 +76,7 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5051',
+        'DISABLE_SERVER_SIDE_CURSORS': True,
     }
 }
 

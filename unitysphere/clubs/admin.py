@@ -1,3 +1,16 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+
+class CutomClubAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'city', 'address')
+
+
+admin.site.register(Club, CutomClubAdmin)
+
+
+class CutomCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at')
+
+
+admin.site.register(ClubCategory, CutomCategoryAdmin)
