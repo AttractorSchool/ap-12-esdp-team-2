@@ -81,3 +81,70 @@ class Club(models.Model):
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
+
+
+class ClubService(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    club = models.ForeignKey(
+        'clubs.Club',
+        on_delete=models.CASCADE,
+        related_name='services',
+        verbose_name='Клуб'
+    )
+    name = models.CharField(max_length=100, unique=True, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Услуга клуба'
+        verbose_name_plural = 'Услуги клуба'
+
+
+class Ads(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255, unique=True, verbose_name='Название рекламы')
+    description = models.TextField(verbose_name='Описание', max_length=1000)
+    ads_img = models.ImageField(
+        upload_to='ads',
+        verbose_name='Изображение',
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])]
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name='Клуб')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Реклама'
+        verbose_name_plural = 'Рекламы'
+        ordering = ['-created_at']
+
+
+class Event(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255, unique=True, verbose_name='Название мероприятия')
+    description = models.TextField(verbose_name='Описание', validators=[MinLengthValidator(100)])
+    event_img = models.ImageField(upload_to='events', verbose_name='Изображение мероприятия', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='events', verbose_name='Клуб')
+    event_date = models.DateField(verbose_name='Дата мероприятия')
+    old_event_date = models.DateField(verbose_name='Старая дата мероприятия', null=True, blank=True)
+    min_age = models.PositiveIntegerField(verbose_name='Минимальный возраст', default=0)
+    location = models.CharField(max_length=255, verbose_name='Местоположение', null=True, blank=True)
+    other_conditions = models.TextField(verbose_name='Другие условия', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Мероприятие'
+        verbose_name_plural = 'Мероприятия'
+        ordering = ['-created_at']
