@@ -171,3 +171,4 @@ class ClubAds(models.Model):
     class Meta:
         verbose_name = 'Объявления'
         verbose_name_plural = 'Объявления'
+#dfsdfsdfsdfsdf
