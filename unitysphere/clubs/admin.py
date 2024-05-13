@@ -6,7 +6,7 @@ from .models import Club, ClubCategory, City
 class ClubAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'category', 'logo',
-        'managers', 'description', 
+        'description',
         'email', 'phone', 'city', 
         'address', 'is_active',
     )

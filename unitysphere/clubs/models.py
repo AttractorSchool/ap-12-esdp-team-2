@@ -22,7 +22,7 @@ class ClubCategory(models.Model):
 
 class City(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    iata_code = models.CharField(index=True, verbose_name='Код города')
+    iata_code = models.CharField(max_length=20, db_index=True, verbose_name='Код города')
     name = models.CharField(max_length=50, verbose_name='Название города')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
@@ -40,7 +40,8 @@ class Club(models.Model):
         on_delete=models.SET_NULL,
         related_name='clubs',
         null=True,
-        verbose_name='Категория'
+        verbose_name='Категория',
+        limit_choices_to={'is_active': True},
     )
     logo = models.ImageField(
         upload_to='club/logos',
@@ -51,12 +52,14 @@ class Club(models.Model):
         'accounts.User',
         related_name='co_managed_clubs',
         blank=True,
-        verbose_name='Соуправляющие клуба'
+        verbose_name='Соуправляющие клуба',
     )
     description = models.TextField(validators=[MinLengthValidator(200)], verbose_name='Описание')
     email = models.EmailField(verbose_name='Контактный email')
     phone = models.CharField(validators=[phone_regex_validator], verbose_name='Контактный телефон', max_length=20)
-    city = models.ForeignKey(to='clubs.City', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город')
+    city = models.ForeignKey(
+        to='clubs.City', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город'
+    )
     address = models.CharField(default='No location', verbose_name='Локация клуба', max_length=150, blank=True)
     members = models.ManyToManyField(
         'accounts.User',
@@ -70,10 +73,14 @@ class Club(models.Model):
         blank=True,
         verbose_name='Нравится'
     )
+    likes_count = models.PositiveIntegerField(default=0,)
     is_active = models.BooleanField(default=True, verbose_name='Активность')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
-    subscribers = models.ManyToManyField('self', null=True, related_name='subscriptions', symmetrical=False, verbose_name='Подписчики')
+    subscribers = models.ManyToManyField(
+        'self', related_name='subscriptions', symmetrical=False, verbose_name='Подписчики'
+    )
+    subscribers_count = models.PositiveIntegerField(default=0, )
 
     def __str__(self):
         return self.name
@@ -89,7 +96,8 @@ class ClubService(models.Model):
         'clubs.Club',
         on_delete=models.CASCADE,
         related_name='services',
-        verbose_name='Клуб'
+        verbose_name='Клуб',
+        limit_choices_to={'is_active': True},
     )
     name = models.CharField(max_length=100, unique=True, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
@@ -112,11 +120,14 @@ class Ads(models.Model):
     ads_img = models.ImageField(
         upload_to='ads',
         verbose_name='Изображение',
-        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])]
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name='Клуб')
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, verbose_name='Клуб',
+        limit_choices_to={'is_active': True},
+    )
 
     def __str__(self):
         return self.name
@@ -131,10 +142,16 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, unique=True, verbose_name='Название мероприятия')
     description = models.TextField(verbose_name='Описание', validators=[MinLengthValidator(100)])
-    event_img = models.ImageField(upload_to='events', verbose_name='Изображение мероприятия', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
+    event_img = models.ImageField(
+        upload_to='events', verbose_name='Изображение мероприятия',
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])]
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='events', verbose_name='Клуб')
+    club = models.ForeignKey(
+        'clubs.Club', on_delete=models.CASCADE, related_name='events',
+        verbose_name='Клуб', limit_choices_to={'is_active': True},
+    )
     event_date = models.DateField(verbose_name='Дата мероприятия')
     old_event_date = models.DateField(verbose_name='Старая дата мероприятия', null=True, blank=True)
     min_age = models.PositiveIntegerField(verbose_name='Минимальный возраст', default=0)
