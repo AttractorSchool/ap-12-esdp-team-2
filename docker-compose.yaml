@@ -8,8 +8,3 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - "5051:5432"
-
-  test_redis:
-    image: redis:7-alpine
-    ports:
-      - "5052:6379"
