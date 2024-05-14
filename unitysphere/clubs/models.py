@@ -32,7 +32,6 @@ class City(models.Model):
         verbose_name_plural = 'Города'
 
 
-
 class Club(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True, verbose_name='Имя клуба')
@@ -43,7 +42,6 @@ class Club(models.Model):
         null=True,
         verbose_name='Категория',
         limit_choices_to={'is_active': True},
-        verbose_name='Категория клуба'
     )
     logo = models.ImageField(
         upload_to='club/logos',
@@ -51,11 +49,16 @@ class Club(models.Model):
         default='club/logos/club-icon.png',
         verbose_name='Логотип'
     )
+    creater = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.PROTECT,
+        related_name='created_clubs',
+    )
     managers = models.ManyToManyField(
         'accounts.User',
         related_name='co_managed_clubs',
         blank=True,
-        verbose_name='Соуправляющие клуба'
+        verbose_name='Управляющие клуба'
     )
     description = models.TextField(validators=[MinLengthValidator(200)], verbose_name='Описание')
     email = models.EmailField(verbose_name='Контактный email')
@@ -92,9 +95,6 @@ class Club(models.Model):
         blank=True,
     )
     partners_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во партнеров')
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -115,7 +115,7 @@ class ClubService(models.Model):
     )
     name = models.CharField(max_length=100, unique=True, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
@@ -172,7 +172,7 @@ class ClubEvent(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = "События"
+        verbose_name = "Событие"
         verbose_name_plural = "События"
 
 
@@ -205,4 +205,3 @@ class ClubAds(models.Model):
     class Meta:
         verbose_name = 'Объявления'
         verbose_name_plural = 'Объявления'
-
