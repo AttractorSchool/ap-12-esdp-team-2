@@ -3,15 +3,14 @@ import uuid
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
 from accounts.models import phone_regex_validator
-from pytils.translit import slugify
 
 
 class ClubCategory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name='Название категории')
+    is_active = models.BooleanField(default=True, verbose_name='Активность')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создана')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлена')
 
     def __str__(self):
         return self.name
@@ -23,10 +22,15 @@ class ClubCategory(models.Model):
 
 class City(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    iata_coe = models.CharField(db_index=True, max_length=20, unique=True, verbose_name='Код города')
-    name = models.CharField(max_length=20, unique=True, verbose_name='Имя')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    iata_code = models.CharField(max_length=20, db_index=True, verbose_name='Код города')
+    name = models.CharField(max_length=50, verbose_name='Название города')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
+
+    class Meta:
+        verbose_name = 'Город'
+        verbose_name_plural = 'Города'
+
 
 
 class Club(models.Model):
@@ -37,6 +41,8 @@ class Club(models.Model):
         on_delete=models.SET_NULL,
         related_name='clubs',
         null=True,
+        verbose_name='Категория',
+        limit_choices_to={'is_active': True},
         verbose_name='Категория клуба'
     )
     logo = models.ImageField(
@@ -66,9 +72,13 @@ class Club(models.Model):
     members = models.ManyToManyField(
         'accounts.User',
         verbose_name='Члены клуба',
-        related_name='member_of_clubs',
+        related_name='members_of_clubs',
         blank=True,
     )
+    likes_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во лайков')
+    is_active = models.BooleanField(default=True, verbose_name='Активность')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
     likes = models.ManyToManyField(
         to='accounts.User',
         verbose_name='Лайкнули',
@@ -81,6 +91,7 @@ class Club(models.Model):
         related_name='club_partners',
         blank=True,
     )
+    partners_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во партнеров')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -93,6 +104,29 @@ class Club(models.Model):
         verbose_name_plural = 'Клубы'
 
 
+class ClubService(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    club = models.ForeignKey(
+        'clubs.Club',
+        on_delete=models.CASCADE,
+        related_name='services',
+        verbose_name='Клуб',
+        limit_choices_to={'is_active': True},
+    )
+    name = models.CharField(max_length=100, unique=True, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Услуга клуба'
+        verbose_name_plural = 'Услуги клуба'
+        
+        
 class ClubGalleryPhoto(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     club = models.ForeignKey(
@@ -171,4 +205,4 @@ class ClubAds(models.Model):
     class Meta:
         verbose_name = 'Объявления'
         verbose_name_plural = 'Объявления'
-#dfsdfsdfsdfsdf
+

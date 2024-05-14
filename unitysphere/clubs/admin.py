@@ -1,32 +1,26 @@
 from django.contrib import admin
-from .models import *
+from .models import Club, ClubCategory, City 
 
 
 @admin.register(Club)
-class CutomClubAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'city', 'address')
-
-
-@admin.register(ClubCategory)
-class CutomCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_at')
-
-
-@admin.register(ClubEvent)
-class CustomClubEventAdmin(admin.ModelAdmin):
+class ClubAdmin(admin.ModelAdmin):
     list_display = (
-        'title',
-        'location',
-        'start_datetime',
-        'end_datetime',
-        'club',
+        'name', 'category', 'logo',
+        'description',
+        'email', 'phone', 'city', 
+        'address', 'is_active',
     )
 
 
-@admin.register(ClubAds)
-class CustomClubAdsAdmin(admin.ModelAdmin):
+@admin.register(ClubCategory)
+class ClubCategoryAdmin(admin.ModelAdmin):
     list_display = (
-        'title',
-        'club',
-        'type',
+        'name', 'is_active',
+    )
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'iata_code',
     )
