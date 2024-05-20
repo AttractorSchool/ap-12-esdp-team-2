@@ -1,6 +1,10 @@
-from django.urls import path
-from . import views as clubs_views
+from rest_framework import routers
 
-urlpatterns = [
-    path('', clubs_views.IndexView.as_view(), name='index'),
-]
+from . import views
+
+
+router = routers.DefaultRouter()
+router.register('clubs', views.ClubViewSet, basename='clubs')
+
+
+urlpatterns = router.urls

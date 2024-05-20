@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 
 from accounts.models import User
-from accounts.utils import generate_sms_code, generate_tokens
-from api import constants
+from acconts import constants, utils
+
 from .serializers import UserCreateSerializer, UserVerifySerializer
 from . import exceptions
 
@@ -23,7 +23,7 @@ class UserCreateAPIView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         session_id = uuid.uuid4()
         session_key = constants.USER_SESSION_KEY.format(session_id)
-        sms_code = generate_sms_code(k=4)
+        sms_code = utils.generate_sms_code(k=4)
         phone = serializer.validated_data['phone']
 
         user_data = {
@@ -58,6 +58,6 @@ class UserVerifyAPIView(generics.GenericAPIView):
         user.is_staff = True
         user.is_superuser = True
         user.save()
-        tokens = generate_tokens(user)
+        tokens = utils.generate_tokens(user)
 
         return Response(tokens, status=status.HTTP_201_CREATED)
