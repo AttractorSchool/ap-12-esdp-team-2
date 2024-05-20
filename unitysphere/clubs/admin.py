@@ -2,9 +2,14 @@ from django.contrib import admin
 from .models import *
 
 
+class ClubPhotoInline(admin.TabularInline):
+    model = ClubGalleryPhoto
+
+
 @admin.register(Club)
 class ClubAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'city', 'address', 'is_active',)
+    inlines = (ClubPhotoInline,)
 
 
 @admin.register(ClubCategory)

@@ -31,6 +31,9 @@ class City(models.Model):
         verbose_name = 'Город'
         verbose_name_plural = 'Города'
 
+    def __str__(self):
+        return self.name
+
 
 class Club(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -126,7 +129,7 @@ class ClubService(models.Model):
         verbose_name = 'Услуга клуба'
         verbose_name_plural = 'Услуги клуба'
         
-        
+
 class ClubGalleryPhoto(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     club = models.ForeignKey(
