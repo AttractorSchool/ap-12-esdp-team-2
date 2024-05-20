@@ -19,6 +19,10 @@ class ClubCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def delete(self, using=None, keep_parents=False):
+        self.is_active = False
+        self.save()
+
 
 class City(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -40,9 +44,8 @@ class Club(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Имя клуба')
     category = models.ForeignKey(
         'clubs.ClubCategory',
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name='clubs',
-        null=True,
         verbose_name='Категория',
         limit_choices_to={'is_active': True},
     )
