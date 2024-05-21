@@ -84,7 +84,7 @@ class Club(models.Model):
         related_name='members_of_clubs',
         blank=True,
     )
-    likes_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во лайков')
+    likes_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во лайков', editable=False)
     is_active = models.BooleanField(default=True, verbose_name='Активность')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
@@ -100,7 +100,7 @@ class Club(models.Model):
         related_name='club_partners',
         blank=True,
     )
-    partners_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во партнеров')
+    partners_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во партнеров', editable=False)
 
     def __str__(self):
         return self.name
@@ -211,3 +211,5 @@ class ClubAds(models.Model):
     class Meta:
         verbose_name = 'Объявления'
         verbose_name_plural = 'Объявления'
+
+
