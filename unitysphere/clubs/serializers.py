@@ -60,3 +60,10 @@ class ClubAdsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClubAds
         fields = '__all__'
+
+
+class ClubGalleryPhotoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ClubGalleryPhoto
+        fields = '__all__'

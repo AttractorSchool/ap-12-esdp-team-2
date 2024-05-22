@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from . import serializers
 from clubs import models
 from .permissions import ClubPermission, ClubObjectsPermission
-from .serializers import ClubServiceSerializer, ClubEventSerializer, ClubAdsSerializer
 from . import exeptions as club_exceptions
 
 
@@ -39,19 +38,19 @@ class ClubViewSet(viewsets.ModelViewSet):
 class ClubServiceViewSet(viewsets.ModelViewSet):
     queryset = models.ClubService.objects.all()
     permission_classes = [ClubObjectsPermission, ]
-    serializer_class = ClubServiceSerializer
+    serializer_class = serializers.ClubServiceSerializer
 
 
 class ClubEventViewSet(viewsets.ModelViewSet):
     queryset = models.ClubEvent.objects.filter(start_datetime__gte=datetime.now())
     permission_classes = [ClubObjectsPermission, ]
-    serializer_class = ClubEventSerializer
+    serializer_class = serializers.ClubEventSerializer
 
 
 class ClubAdsViewSet(viewsets.ModelViewSet):
     queryset = models.ClubAds.objects.all()
     permission_classes = [ClubObjectsPermission, ]
-    serializer_class = ClubAdsSerializer
+    serializer_class = serializers.ClubAdsSerializer
 
 
 class ClubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -62,3 +61,9 @@ class ClubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class ClubCityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.City.objects.all()
     serializer_class = serializers.ClubCitySerializer
+
+
+class ClubGalleryPhotoViewSet(viewsets.ModelViewSet):
+    queryset = models.ClubGalleryPhoto.objects.all()
+    permission_classes = [ClubObjectsPermission, ]
+    serializer_class = serializers.ClubGalleryPhotoSerializer
