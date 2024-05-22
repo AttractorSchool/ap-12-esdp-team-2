@@ -10,6 +10,7 @@ class ClubPhotoInline(admin.TabularInline):
 class ClubAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'city', 'address', 'is_active',)
     inlines = (ClubPhotoInline,)
+    readonly_fields = ('members_count', 'likes_count', 'partners_count', 'likes', 'members', 'partners')
 
 
 @admin.register(ClubCategory)

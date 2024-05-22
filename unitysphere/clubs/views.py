@@ -1,16 +1,34 @@
 from datetime import datetime
-
-from rest_framework import viewsets
-
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from . import serializers
-from clubs.models import Club, ClubCategory, City, ClubService, ClubEvent, ClubAds
+from clubs import models
 from .permissions import ClubPermission, ClubObjectsPermission
 from .serializers import ClubServiceSerializer, ClubEventSerializer, ClubAdsSerializer
+from . import exeptions as club_exceptions
 
 
 class ClubViewSet(viewsets.ModelViewSet):
-    queryset = Club.objects.filter(is_active=True)
+    queryset = models.Club.objects.filter(is_active=True)
     permission_classes = [ClubPermission,]
+
+    @action(detail=True, methods=['post'])
+    def club_action(self, request, **kwargs):
+        club = self.get_object()
+        user = request.user
+        action_name = request.query_params.get('action')
+        if action_name == 'join':
+            club.join(user)
+        elif action_name == 'leave':
+            club.leave(user)
+        elif action_name == 'like':
+            club.like(user)
+        elif action_name == 'unlike':
+            club.unlike(user)
+        else:
+            raise club_exceptions.InvalidClubActionExeption
+        return Response({'detail': 'Success'}, status=status.HTTP_200_OK)
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -19,28 +37,28 @@ class ClubViewSet(viewsets.ModelViewSet):
 
 
 class ClubServiceViewSet(viewsets.ModelViewSet):
-    queryset = ClubService.objects.all()
+    queryset = models.ClubService.objects.all()
     permission_classes = [ClubObjectsPermission, ]
     serializer_class = ClubServiceSerializer
 
 
 class ClubEventViewSet(viewsets.ModelViewSet):
-    queryset = ClubEvent.objects.filter(start_datetime__gte=datetime.now())
+    queryset = models.ClubEvent.objects.filter(start_datetime__gte=datetime.now())
     permission_classes = [ClubObjectsPermission, ]
     serializer_class = ClubEventSerializer
 
 
 class ClubAdsViewSet(viewsets.ModelViewSet):
-    queryset = ClubAds.objects.all()
+    queryset = models.ClubAds.objects.all()
     permission_classes = [ClubObjectsPermission, ]
     serializer_class = ClubAdsSerializer
 
 
 class ClubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ClubCategory.objects.filter(is_active=True)
+    queryset = models.ClubCategory.objects.filter(is_active=True)
     serializer_class = serializers.ClubCategorySerializer
 
 
 class ClubCityViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = City.objects.all()
+    queryset = models.City.objects.all()
     serializer_class = serializers.ClubCitySerializer

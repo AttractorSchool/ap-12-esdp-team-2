@@ -3,7 +3,7 @@ import uuid
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
 from accounts.models import phone_regex_validator
-
+from . import exeptions as clubs_exceptions
 
 class ClubCategory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -84,6 +84,11 @@ class Club(models.Model):
         related_name='members_of_clubs',
         blank=True,
     )
+    members_count = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Кол-во участников',
+        editable=False,
+    )
     likes_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во лайков', editable=False)
     is_active = models.BooleanField(default=True, verbose_name='Активность')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
@@ -108,6 +113,38 @@ class Club(models.Model):
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
+
+    def delete(self, using=None, keep_parents=False):
+        self.is_active = False
+        self.save()
+
+    def join(self, user):
+        if user in self.members.all():
+            raise clubs_exceptions.UserAlreadyInClubException
+        self.members.add(user)
+        self.members_count += 1
+        self.save()
+
+    def leave(self, user):
+        if user not in self.members.all():
+            raise clubs_exceptions.UserNotInClubException
+        self.members.remove(user)
+        self.members_count -= 1
+        self.save()
+
+    def like(self, user):
+        if user in self.likes.all():
+            raise clubs_exceptions.UserLikeAlreadyExistsException
+        self.likes.add(user)
+        self.likes_count += 1
+        self.save()
+
+    def unlike(self, user):
+        if user not in self.likes.all():
+            raise clubs_exceptions.UserLikeDoesNotExistException
+        self.likes.remove(user)
+        self.likes_count -= 1
+        self.save()
 
 
 class ClubService(models.Model):
