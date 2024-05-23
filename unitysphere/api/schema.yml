@@ -1,0 +1,1924 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/schema:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/ads/:
+    get:
+      operationId: v1_ads_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubAds'
+          description: ''
+    post:
+      operationId: v1_ads_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubAds'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubAds'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubAds'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubAds'
+          description: ''
+  /api/v1/ads/{id}/:
+    get:
+      operationId: v1_ads_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Объявление.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubAds'
+          description: ''
+    put:
+      operationId: v1_ads_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Объявление.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubAds'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubAds'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubAds'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubAds'
+          description: ''
+    patch:
+      operationId: v1_ads_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Объявление.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubAds'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubAds'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubAds'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubAds'
+          description: ''
+    delete:
+      operationId: v1_ads_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Объявление.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/category/:
+    get:
+      operationId: v1_category_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubCategory'
+          description: ''
+  /api/v1/category/{id}/:
+    get:
+      operationId: v1_category_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Категория.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCategory'
+          description: ''
+  /api/v1/cities/:
+    get:
+      operationId: v1_cities_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubCity'
+          description: ''
+  /api/v1/cities/{id}/:
+    get:
+      operationId: v1_cities_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Город.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCity'
+          description: ''
+  /api/v1/clubs/:
+    get:
+      operationId: v1_clubs_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubRead'
+          description: ''
+    post:
+      operationId: v1_clubs_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCreate'
+          description: ''
+  /api/v1/clubs/{id}/:
+    get:
+      operationId: v1_clubs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Клуб.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRead'
+          description: ''
+    put:
+      operationId: v1_clubs_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Клуб.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubUpdate'
+          description: ''
+    patch:
+      operationId: v1_clubs_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Клуб.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubRead'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubRead'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubRead'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRead'
+          description: ''
+    delete:
+      operationId: v1_clubs_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Клуб.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/clubs/{id}/club_action/:
+    post:
+      operationId: v1_clubs_club_action_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Клуб.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubAction'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubAction'
+          description: ''
+  /api/v1/events/:
+    get:
+      operationId: v1_events_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubEvent'
+          description: ''
+    post:
+      operationId: v1_events_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubEvent'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubEvent'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubEvent'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubEvent'
+          description: ''
+  /api/v1/events/{id}/:
+    get:
+      operationId: v1_events_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Событие.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubEvent'
+          description: ''
+    put:
+      operationId: v1_events_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Событие.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubEvent'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubEvent'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubEvent'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubEvent'
+          description: ''
+    patch:
+      operationId: v1_events_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Событие.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubEvent'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubEvent'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubEvent'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubEvent'
+          description: ''
+    delete:
+      operationId: v1_events_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Событие.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/gallery/photos/:
+    get:
+      operationId: v1_gallery_photos_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubGalleryPhoto'
+          description: ''
+    post:
+      operationId: v1_gallery_photos_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubGalleryPhoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubGalleryPhoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubGalleryPhoto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubGalleryPhoto'
+          description: ''
+  /api/v1/gallery/photos/{id}/:
+    get:
+      operationId: v1_gallery_photos_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Фотогалерея.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubGalleryPhoto'
+          description: ''
+    put:
+      operationId: v1_gallery_photos_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Фотогалерея.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubGalleryPhoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubGalleryPhoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubGalleryPhoto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubGalleryPhoto'
+          description: ''
+    patch:
+      operationId: v1_gallery_photos_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Фотогалерея.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubGalleryPhoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubGalleryPhoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubGalleryPhoto'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubGalleryPhoto'
+          description: ''
+    delete:
+      operationId: v1_gallery_photos_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Фотогалерея.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/register/:
+    post:
+      operationId: v1_register_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+  /api/v1/services/:
+    get:
+      operationId: v1_services_list
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubService'
+          description: ''
+    post:
+      operationId: v1_services_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubService'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubService'
+          description: ''
+  /api/v1/services/{id}/:
+    get:
+      operationId: v1_services_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Услуга клуба.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubService'
+          description: ''
+    put:
+      operationId: v1_services_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Услуга клуба.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubService'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubService'
+          description: ''
+    patch:
+      operationId: v1_services_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Услуга клуба.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubService'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubService'
+          description: ''
+    delete:
+      operationId: v1_services_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Услуга клуба.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/token/:
+    post:
+      operationId: v1_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/v1/token/refresh/:
+    post:
+      operationId: v1_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/verify/:
+    post:
+      operationId: v1_verify_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserVerify'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVerify'
+          description: ''
+components:
+  schemas:
+    ActionEnum:
+      enum:
+      - unlike
+      - like
+      - join
+      - leave
+      type: string
+      description: |-
+        * `unlike` - unlike
+        * `like` - like
+        * `join` - join
+        * `leave` - leave
+    ClubAction:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/ActionEnum'
+      required:
+      - action
+    ClubAds:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          title: Название события
+          maxLength: 150
+        description:
+          type: string
+          title: Описание
+        img:
+          type: string
+          format: uri
+          title: Фото объявления
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+        type:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - club
+      - created_at
+      - description
+      - id
+      - img
+      - title
+      - updated_at
+    ClubCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название категории
+          maxLength: 100
+      required:
+      - id
+      - name
+    ClubCity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название города
+          maxLength: 50
+      required:
+      - id
+      - name
+    ClubCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Имя клуба
+          maxLength: 100
+        category:
+          type: string
+          format: uuid
+          title: Категория
+        logo:
+          type: string
+          format: uri
+          title: Логотип
+          pattern: (?:png|jpg|jpeg)$
+        email:
+          type: string
+          format: email
+          title: Контактный email
+          maxLength: 254
+        phone:
+          type: string
+          title: Контактный телефон
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 20
+        description:
+          type: string
+          title: Описание
+          minLength: 200
+      required:
+      - category
+      - description
+      - email
+      - name
+      - phone
+    ClubEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          title: Название события
+          maxLength: 150
+        description:
+          type: string
+          title: Описание
+        banner:
+          type: string
+          format: uri
+          title: Баннер события
+        location:
+          type: string
+          title: Место проведения
+          maxLength: 150
+        start_datetime:
+          type: string
+          format: date-time
+          title: Дата и время начала
+        end_datetime:
+          type: string
+          format: date-time
+          title: Дата и время завершения
+        min_age:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          title: Минимальный возраст для входа
+        max_age:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          title: Максимальный возраст для входа
+        entry_requirements:
+          type: string
+          nullable: true
+          title: Требования для входа
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+      required:
+      - banner
+      - club
+      - created_at
+      - description
+      - end_datetime
+      - id
+      - location
+      - start_datetime
+      - title
+      - updated_at
+    ClubGalleryPhoto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        image:
+          type: string
+          format: uri
+          title: Фото
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+      required:
+      - club
+      - created_at
+      - id
+      - image
+      - updated_at
+    ClubRead:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        creater:
+          $ref: '#/components/schemas/UserRead'
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRead'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRead'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRead'
+        name:
+          type: string
+          title: Имя клуба
+          maxLength: 100
+        logo:
+          type: string
+          format: uri
+          title: Логотип
+          pattern: (?:png|jpg|jpeg)$
+        description:
+          type: string
+          title: Описание
+          minLength: 200
+        email:
+          type: string
+          format: email
+          title: Контактный email
+          maxLength: 254
+        phone:
+          type: string
+          title: Контактный телефон
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 20
+        address:
+          type: string
+          title: Локация клуба
+          maxLength: 150
+        members_count:
+          type: integer
+          readOnly: true
+          title: Кол-во участников
+        likes_count:
+          type: integer
+          readOnly: true
+          title: Кол-во лайков
+        is_active:
+          type: boolean
+          title: Активность
+        is_private:
+          type: boolean
+          title: Приватный клуб
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Создан
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Обновлен
+        partners_count:
+          type: integer
+          readOnly: true
+          title: Кол-во партнеров
+        category:
+          type: string
+          format: uuid
+          title: Категория
+        city:
+          type: string
+          format: uuid
+          nullable: true
+          title: Город
+        partners:
+          type: array
+          items:
+            type: string
+            format: uuid
+            title: Клубы-партнеры
+          title: Клубы-партнеры
+      required:
+      - category
+      - created_at
+      - creater
+      - description
+      - email
+      - id
+      - likes
+      - likes_count
+      - managers
+      - members
+      - members_count
+      - name
+      - partners_count
+      - phone
+      - updated_at
+    ClubService:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 100
+        description:
+          type: string
+          title: Описание
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          title: Цена
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Создан
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Обновлено
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+      required:
+      - club
+      - created_at
+      - description
+      - id
+      - name
+      - updated_at
+    ClubUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Имя клуба
+          maxLength: 100
+        logo:
+          type: string
+          format: uri
+          title: Логотип
+          pattern: (?:png|jpg|jpeg)$
+        description:
+          type: string
+          title: Описание
+          minLength: 200
+        email:
+          type: string
+          format: email
+          title: Контактный email
+          maxLength: 254
+        phone:
+          type: string
+          title: Контактный телефон
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 20
+        address:
+          type: string
+          title: Локация клуба
+          maxLength: 150
+        members_count:
+          type: integer
+          readOnly: true
+          title: Кол-во участников
+        likes_count:
+          type: integer
+          readOnly: true
+          title: Кол-во лайков
+        is_active:
+          type: boolean
+          title: Активность
+        is_private:
+          type: boolean
+          title: Приватный клуб
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Создан
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Обновлен
+        partners_count:
+          type: integer
+          readOnly: true
+          title: Кол-во партнеров
+        category:
+          type: string
+          format: uuid
+          title: Категория
+        creater:
+          type: string
+          format: uuid
+        city:
+          type: string
+          format: uuid
+          nullable: true
+          title: Город
+        managers:
+          type: array
+          items:
+            type: string
+            format: uuid
+            title: Управляющие клуба
+          title: Управляющие клуба
+        members:
+          type: array
+          items:
+            type: string
+            format: uuid
+            title: Члены клуба
+          title: Члены клуба
+        likes:
+          type: array
+          items:
+            type: string
+            format: uuid
+            title: Лайкнули
+          title: Лайкнули
+        partners:
+          type: array
+          items:
+            type: string
+            format: uuid
+            title: Клубы-партнеры
+          title: Клубы-партнеры
+      required:
+      - category
+      - created_at
+      - creater
+      - description
+      - email
+      - id
+      - likes_count
+      - members_count
+      - name
+      - partners_count
+      - phone
+      - updated_at
+    PatchedClubAds:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          title: Название события
+          maxLength: 150
+        description:
+          type: string
+          title: Описание
+        img:
+          type: string
+          format: uri
+          title: Фото объявления
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+        type:
+          type: string
+          format: uuid
+          nullable: true
+    PatchedClubEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          title: Название события
+          maxLength: 150
+        description:
+          type: string
+          title: Описание
+        banner:
+          type: string
+          format: uri
+          title: Баннер события
+        location:
+          type: string
+          title: Место проведения
+          maxLength: 150
+        start_datetime:
+          type: string
+          format: date-time
+          title: Дата и время начала
+        end_datetime:
+          type: string
+          format: date-time
+          title: Дата и время завершения
+        min_age:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          title: Минимальный возраст для входа
+        max_age:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          title: Максимальный возраст для входа
+        entry_requirements:
+          type: string
+          nullable: true
+          title: Требования для входа
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+    PatchedClubGalleryPhoto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        image:
+          type: string
+          format: uri
+          title: Фото
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+    PatchedClubRead:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        creater:
+          $ref: '#/components/schemas/UserRead'
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRead'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRead'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRead'
+        name:
+          type: string
+          title: Имя клуба
+          maxLength: 100
+        logo:
+          type: string
+          format: uri
+          title: Логотип
+          pattern: (?:png|jpg|jpeg)$
+        description:
+          type: string
+          title: Описание
+          minLength: 200
+        email:
+          type: string
+          format: email
+          title: Контактный email
+          maxLength: 254
+        phone:
+          type: string
+          title: Контактный телефон
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 20
+        address:
+          type: string
+          title: Локация клуба
+          maxLength: 150
+        members_count:
+          type: integer
+          readOnly: true
+          title: Кол-во участников
+        likes_count:
+          type: integer
+          readOnly: true
+          title: Кол-во лайков
+        is_active:
+          type: boolean
+          title: Активность
+        is_private:
+          type: boolean
+          title: Приватный клуб
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Создан
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Обновлен
+        partners_count:
+          type: integer
+          readOnly: true
+          title: Кол-во партнеров
+        category:
+          type: string
+          format: uuid
+          title: Категория
+        city:
+          type: string
+          format: uuid
+          nullable: true
+          title: Город
+        partners:
+          type: array
+          items:
+            type: string
+            format: uuid
+            title: Клубы-партнеры
+          title: Клубы-партнеры
+    PatchedClubService:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 100
+        description:
+          type: string
+          title: Описание
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          title: Цена
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Создан
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Обновлено
+        club:
+          type: string
+          format: uuid
+          title: Клуб
+    TokenObtainPair:
+      type: object
+      properties:
+        phone:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - phone
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    UserCreate:
+      type: object
+      properties:
+        phone:
+          type: string
+          title: Номер телефона
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 20
+        password1:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+      required:
+      - password1
+      - password2
+      - phone
+    UserRead:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+        avatar:
+          type: string
+          format: uri
+          title: Фото
+          pattern: (?:png|jpg|jpeg)$
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          title: Номер телефона
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 20
+      required:
+      - id
+      - phone
+    UserVerify:
+      type: object
+      properties:
+        user_session_id:
+          type: string
+          format: uuid
+        sms_code:
+          type: string
+      required:
+      - sms_code
+      - user_session_id
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
