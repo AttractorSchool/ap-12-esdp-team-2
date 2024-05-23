@@ -24,6 +24,16 @@ class CustomUserAdmin(UserAdmin):
         (None, {"fields": ("password",)}),
     )
     ordering = ("date_joined",)
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("phone", "password1", "password2"),
+            },
+        ),
+    )
+    search_fields = ("phone", "first_name", "last_name", "email")
 
 
 admin.site.register(User, CustomUserAdmin)

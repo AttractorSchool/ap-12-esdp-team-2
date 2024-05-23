@@ -20,6 +20,12 @@ class UserLoginSerializer(serializers.Serializer):
         return data
 
 
+class UserReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'avatar', 'email', 'phone']
+
+
 class UserCreateSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)

@@ -11,6 +11,16 @@ phone_regex_validator = RegexValidator(
 
 
 class User(AbstractUser):
+    """
+    Модель представляет пользователя приложения.
+
+    Attributes:
+        id (UUIDField): Уникальный идентификатор пользователя (автоматически генерируется).
+        avatar (ImageField): Фото профиля пользователя.
+        phone (CharField): Номер телефона пользователя.
+        email (EmailField): Email пользователя.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     avatar = models.ImageField(
         upload_to="user/avatars/",
@@ -31,6 +41,9 @@ class User(AbstractUser):
     USERNAME_FIELD = 'phone'
 
     def __str__(self):
+        """
+        Возвращает строковое представление пользователя.
+        """
         if self.first_name and self.last_name:
             return self.first_name + ' ' + self.last_name
         else:
