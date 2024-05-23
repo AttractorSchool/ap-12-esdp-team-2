@@ -1,6 +1,6 @@
-let RegisterURL = '/api/v1/accounts/register/';
-let RegisterVerifyURL = '/api/v1/accounts/verify/';
-let LoginURL = '/api/v1/accounts/token/'
+let RegisterURL = '/api/v1/register/';
+let RegisterVerifyURL = '/api/v1/verify/';
+let LoginURL = '/api/v1/token/'
 
 
 jQuery('#register_user_form').submit(function (e) { 

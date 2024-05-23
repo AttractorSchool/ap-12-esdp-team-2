@@ -1,6 +1,15 @@
+from enum import StrEnum
+
 from rest_framework import serializers
 from clubs import models
 from accounts.api.serializers import UserReadSerializer
+
+
+class ClubActionEnum(StrEnum):
+    UNLIKE = 'unlike'
+    LIKE = 'like'
+    JOIN = 'join'
+    LEAVE = 'leave'
 
 
 class ClubCategorySerializer(serializers.ModelSerializer):
@@ -29,6 +38,17 @@ class ClubCreateSerializer(serializers.ModelSerializer):
         club.save()
         club.managers.add(validated_data['creater'])
         return club
+
+
+class ClubUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Club
+        fields = '__all__'
+
+
+class ClubActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=ClubActionEnum)
 
 
 class ClubReadSerializer(serializers.ModelSerializer):
