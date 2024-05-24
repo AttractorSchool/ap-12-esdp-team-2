@@ -31,7 +31,7 @@ class ClubCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Club
-        fields = ('name', 'category', 'logo', 'creater', 'email', 'phone', 'description')
+        fields = ('name', 'category', 'logo', 'creater', 'email', 'phone', 'description', 'is_private')
 
     def create(self, validated_data):
         club = models.Club(**validated_data)
@@ -51,11 +51,30 @@ class ClubActionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=ClubActionEnum)
 
 
-class ClubReadSerializer(serializers.ModelSerializer):
+class ClubListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Club
+        fields = (
+            'id',
+            'name',
+            'category',
+            'logo',
+            'description',
+            'members_count',
+            'likes_count',
+            'is_private',
+        )
+
+
+class ClubDetailSerializer(serializers.ModelSerializer):
+    category = ClubCategorySerializer()
+    city = ClubCitySerializer()
+    members = UserReadSerializer(many=True)
+    likes = UserReadSerializer(many=True)
+    partners = ClubListSerializer(many=True)
     creater = UserReadSerializer()
     managers = UserReadSerializer(many=True)
-    likes = UserReadSerializer(many=True)
-    members = UserReadSerializer(many=True)
 
     class Meta:
         model = models.Club

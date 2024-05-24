@@ -164,6 +164,7 @@ class Club(models.Model):
         verbose_name='Клубы-партнеры',
         related_name='club_partners',
         blank=True,
+        symmetrical=True,
     )
     partners_count = models.PositiveIntegerField(default=0, verbose_name='Кол-во партнеров', editable=False)
 

@@ -16,8 +16,9 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         'club_action': serializers.ClubActionSerializer,
         'create': serializers.ClubCreateSerializer,
         'update': serializers.ClubUpdateSerializer,
+        'retrieve': serializers.ClubDetailSerializer,
     }
-    serializer_class = serializers.ClubReadSerializer
+    serializer_class = serializers.ClubListSerializer
 
     @action(detail=True, methods=['post'])
     def club_action(self, request, **kwargs):
@@ -28,6 +29,15 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         action_name = serializer.validated_data['action']
         getattr(club_services, action_name)(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == 'retrieve':
+            return (
+                queryset.
+                select_related('category', 'city', 'creater').
+                prefetch_related('members', 'partners', 'likes', 'managers'))
+        return queryset
 
 
 class ClubServiceViewSet(viewsets.ModelViewSet):
