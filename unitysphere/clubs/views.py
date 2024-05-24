@@ -75,34 +75,95 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
 
 
 class ClubServiceViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для управления услугами клубов.
+
+    Данный ViewSet позволяет выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
+    для модели ClubService, предоставляя RESTful API для управления услугами клубов.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все услуги клубов.
+        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с услугами клубов.
+        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubService в JSON.
+    """
     queryset = models.ClubService.objects.all()
     permission_classes = (ClubObjectsPermission,)
     serializer_class = serializers.ClubServiceSerializer
 
 
 class ClubEventViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для управления событиями клубов.
+
+    Этот ViewSet предоставляет возможность управлять событиями клубов, включая создание, чтение, обновление и удаление.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все будущие события клубов.
+        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с событиями клубов.
+        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubEvent в JSON.
+    """
     queryset = models.ClubEvent.objects.filter(start_datetime__gte=datetime.now())
     permission_classes = (ClubObjectsPermission, )
     serializer_class = serializers.ClubEventSerializer
 
 
 class ClubAdsViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для управления рекламными объявлениями клубов.
+
+    Данный ViewSet позволяет выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
+    для модели ClubAds, предоставляя RESTful API для управления рекламными объявлениями клубов.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все рекламные объявления клубов.
+        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с рекламными объявлениями клубов.
+        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubAds в JSON.
+    """
     queryset = models.ClubAds.objects.all()
     permission_classes = (ClubObjectsPermission, )
     serializer_class = serializers.ClubAdsSerializer
 
 
 class ClubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet для просмотра категорий клубов.
+
+    Этот ViewSet предоставляет только чтение (GET) данных о категориях клубов.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий только активные категории клубов.
+        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubCategory в JSON.
+    """
     queryset = models.ClubCategory.objects.filter(is_active=True)
     serializer_class = serializers.ClubCategorySerializer
 
 
 class ClubCityViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet для просмотра городов.
+
+    Этот ViewSet предоставляет только чтение (GET) данных о городах.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все города.
+        serializer_class (Serializer): Сериализатор для преобразования данных модели City в JSON.
+    """
     queryset = models.City.objects.all()
     serializer_class = serializers.ClubCitySerializer
 
 
 class ClubGalleryPhotoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для управления фотографиями галереи клубов.
+
+    Этот ViewSet предоставляет возможность выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
+    для модели ClubGalleryPhoto, позволяя управлять фотографиями галереи клубов через RESTful API.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все фотографии галереи клубов.
+        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с фотографиями галереи клубов.
+        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubGalleryPhoto в JSON.
+    """
     queryset = models.ClubGalleryPhoto.objects.all()
     permission_classes = (ClubObjectsPermission,)
     serializer_class = serializers.ClubGalleryPhotoSerializer
