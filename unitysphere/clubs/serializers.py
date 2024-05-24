@@ -52,6 +52,7 @@ class ClubActionSerializer(serializers.Serializer):
 
 
 class ClubListSerializer(serializers.ModelSerializer):
+    category = ClubCategorySerializer()
 
     class Meta:
         model = models.Club
@@ -64,6 +65,7 @@ class ClubListSerializer(serializers.ModelSerializer):
             'members_count',
             'likes_count',
             'is_private',
+            'created_at',
         )
 
 

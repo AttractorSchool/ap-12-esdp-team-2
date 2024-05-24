@@ -10,6 +10,18 @@ from . import mixins
 
 
 class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
+    """
+    ViewSet для управления клубами.
+
+    Данный ViewSet предоставляет стандартные действия CRUD для модели Club,
+    а также пользовательское действие `club_action`.
+
+    Атрибуты:
+        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий только активные клубы.
+        permission_classes (tuple): Классы разрешений, применяемые к этому ViewSet-у.
+        ACTION_SERIALIZERS (dict): Словарь, который сопоставляет действия с соответствующими сериализаторами.
+        serializer_class (Serializer): Сериализатор, используемый по умолчанию для действий, не указанных в ACTION_SERIALIZERS.
+    """
     queryset = models.Club.objects.filter(is_active=True)
     permission_classes = (ClubPermission,)
     ACTION_SERIALIZERS = {
@@ -22,6 +34,16 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def club_action(self, request, **kwargs):
+        """
+        Пользовательское действие для выполнения определенных операций с клубом.
+
+        Параметры:
+            request (Request): Объект запроса с данными.
+            **kwargs: Дополнительные аргументы.
+
+        Возвращает:
+            Response: HTTP-ответ с статусом 204 (No Content) при успешном выполнении действия.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         club = self.get_object()
@@ -31,12 +53,24 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
-        queryset = self.queryset
+        """
+        Возвращает набор данных для данного ViewSet-а.
+
+        В зависимости от действия, возвращает оптимизированный queryset с использованием
+        select_related и prefetch_related для уменьшения количества запросов к базе данных.
+
+        Возвращает:
+            QuerySet: Набор данных для текущего действия.
+        """
+        queryset = super().get_queryset()
         if self.action == 'retrieve':
             return (
-                queryset.
-                select_related('category', 'city', 'creater').
-                prefetch_related('members', 'partners', 'likes', 'managers'))
+                queryset
+                .select_related('category', 'city', 'creater')
+                .prefetch_related('members', 'partners', 'likes', 'managers')
+            )
+        elif self.action == 'list':
+            return queryset.select_related('category')
         return queryset
 
 
