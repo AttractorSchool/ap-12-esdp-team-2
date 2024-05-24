@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from . import serializers
 from clubs import models
 from .permissions import ClubPermission, ClubObjectsPermission
-from . import exeptions as club_exceptions
+from . import services
 from . import mixins
 
 
@@ -24,8 +24,9 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         club = self.get_object()
+        club_services = services.ClubServices(club)
         action_name = serializer.validated_data['action']
-        getattr(club, action_name)(request.user)
+        getattr(club_services, action_name)(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

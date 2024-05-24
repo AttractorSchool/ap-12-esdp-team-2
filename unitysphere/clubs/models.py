@@ -184,58 +184,6 @@ class Club(models.Model):
         self.is_active = False
         self.save()
 
-    def join(self, user):
-        """
-        Добавляет пользователя в члены клуба и обновляет количество участников.
-
-        Raises:
-            clubs_exceptions.UserAlreadyInClubException: Если пользователь уже является членом клуба.
-        """
-        if user in self.members.all():
-            raise clubs_exceptions.UserAlreadyInClubException
-        self.members.add(user)
-        self.members_count += 1
-        self.save()
-
-    def leave(self, user):
-        """
-        Удаляет пользователя из членов клуба и обновляет количество участников.
-
-        Raises:
-            clubs_exceptions.UserNotInClubException: Если пользователь не является членом клуба.
-        """
-        if user not in self.members.all():
-            raise clubs_exceptions.UserNotInClubException
-        self.members.remove(user)
-        self.members_count -= 1
-        self.save()
-
-    def like(self, user):
-        """
-        Добавляет пользователя в лайкнувшие клуб и обновляет количество лайков.
-
-        Raises:
-            clubs_exceptions.UserLikeAlreadyExistsException: Если пользователь уже лайкнул клуб.
-        """
-        if user in self.likes.all():
-            raise clubs_exceptions.UserLikeAlreadyExistsException
-        self.likes.add(user)
-        self.likes_count += 1
-        self.save()
-
-    def unlike(self, user):
-        """
-        Удаляет пользователя из лайкнувших клуб и обновляет количество лайков.
-
-        Raises:
-            clubs_exceptions.UserLikeDoesNotExistException: Если пользователь не лайкнул клуб.
-        """
-        if user not in self.likes.all():
-            raise clubs_exceptions.UserLikeDoesNotExistException
-        self.likes.remove(user)
-        self.likes_count -= 1
-        self.save()
-
 
 class ClubJoinRequest(models.Model):
     """
