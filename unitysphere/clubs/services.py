@@ -95,9 +95,12 @@ class FestivalServices:
 
         Raises:
             exceptions.ClubAlreadyExistsFestivalException: Если клуб уже участвует в фестивале.
+            exceptions.FestivalRequestAlreadyExistsException: Если у клуба уже есть заявка на участие в фестивале.
         """
         if festival.approved_clubs.filter(id=club.id).exists():
             raise exceptions.ClubAlreadyExistsFestivalException
+        if models.FestivalParticipationRequest.objects.filter(festival=festival, club=club).exists():
+            raise exceptions.FestivalRequestAlreadyExistsException
         models.FestivalParticipationRequest.objects.create(club=club, festival=festival)
 
     @staticmethod

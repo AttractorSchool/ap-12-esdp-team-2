@@ -559,3 +559,6 @@ class FestivalParticipationRequest(models.Model):
     class Meta:
         verbose_name_plural = 'Запросы на участие в фестивале'
         verbose_name = 'Запрос на участие в фестивале'
+        constraints = [
+            models.UniqueConstraint(fields=['club', 'festival'], name='unique_club_festival_request')
+        ]

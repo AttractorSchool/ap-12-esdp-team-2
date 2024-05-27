@@ -75,7 +75,29 @@ class ClubNotExistsFestivalException(APIException):
     default_code = 'club_in_festival_not_exists'
 
 
-class FestivalRequestNotFoundException(APIException):
-    status_code = status.HTTP_404_NOT_FOUND
-    default_detail = 'Запрос на участие в фестивале не найден'
-    default_code = 'request_not_found'
+class NotClubManagerException(APIException):
+    """
+    Исключение, выбрасываемое в случае, если пользователь не является менеджером клуба.
+
+    Attributes:
+        status_code (int): HTTP-код статуса, возвращаемый в ответе. По умолчанию 400 Bad Request.
+        default_detail (str): Сообщение об ошибке, возвращаемое по умолчанию. "Данное действие может выполнить только управляющие клуба".
+        default_code (str): Код ошибки, возвращаемый по умолчанию. "not_club_manager".
+    """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Данное действие может выполнить только управляющие клуба'
+    default_code = 'not_club_manager'
+
+
+class FestivalRequestAlreadyExistsException(APIException):
+    """
+    Исключение, выбрасываемое в случае, если у клуба уже существует запрос на участие в данном фестивале.
+
+    Attributes:
+        status_code (int): HTTP-код статуса, возвращаемый в ответе. По умолчанию 400 Bad Request.
+        default_detail (str): Сообщение об ошибке, возвращаемое по умолчанию. "У данного клуба уже есть запрос на участие в данном фестивале".
+        default_code (str): Код ошибки, возвращаемый по умолчанию. "festival_request_already_exists".
+    """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'У данного клуба уже есть запрос на участие в данном фестивале'
+    default_code = 'festival_request_already_exists'

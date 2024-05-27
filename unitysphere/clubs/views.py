@@ -1,11 +1,11 @@
 from datetime import datetime
-
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework import mixins as drf_mixins
 from rest_framework import permissions as drf_permissions
 from rest_framework.response import Response
 from . import serializers
+from . import exceptions
 from clubs import models
 from . import permissions
 from . import services
@@ -172,6 +172,21 @@ class ClubGalleryPhotoViewSet(viewsets.ModelViewSet):
 
 
 class FestivalViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
+    """
+    ViewSet для управления объектами Festival.
+
+    Этот ViewSet предоставляет возможность выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
+    для модели Festival, позволяя управлять фестивалями через RESTful API.
+
+    Помимо стандартных операций CRUD, ViewSet предоставляет следующие действия:
+    - festival_action: Выполнение действия (join, leave) с клубом на фестивале.
+
+    Атрибуты:
+        queryset: QuerySet всех фестивалей.
+        ACTION_SERIALIZERS: Словарь с сериализаторами для различных действий.
+        serializer_class: Сериализатор по умолчанию для создания или обновления фестиваля.
+        permission_classes: Кортеж с классами разрешений, применяемых ко всем действиям.
+    """
     queryset = models.Festival.objects.all()
     ACTION_SERIALIZERS = {
         'list': serializers.FestivalListSerializer,
@@ -183,10 +198,27 @@ class FestivalViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], permission_classes=[drf_permissions.IsAuthenticated])
     def festival_action(self, request, *args, **kwargs):
+        """
+        Выполняет действие join или leave с клубом на фестивале.
+
+        Доступные действия:
+        - join: Создает объект запроса FestivalParticipationRequest.
+        - leave: Удалить клуб из фестиваля.
+
+        Args:
+            request: HTTP-запрос.
+            *args: Дополнительные аргументы.
+            **kwargs: Дополнительные именованные аргументы.
+
+        Returns:
+            Response: HTTP-ответ с кодом состояния 204 (No Content) в случае успешного выполнения действия.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         festival = self.get_object()
         club = serializer.validated_data.get('club')
+        if not club.managers.filter(id=request.user.id).exists():
+            raise exceptions.NotClubManagerException
         action_name = serializer.validated_data.get('action')
         getattr(services.FestivalServices, action_name)(festival, club)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -195,11 +227,39 @@ class FestivalViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
 class FestivalParticipationRequestViewSet(drf_mixins.ListModelMixin,
                                           drf_mixins.RetrieveModelMixin,
                                           viewsets.GenericViewSet):
+    """
+    ViewSet для управления объектами FestivalParticipationRequest.
+
+    Этот ViewSet предоставляет возможность выполнять стандартные операции чтения (list, retrieve)
+    для модели FestivalParticipationRequest, позволяя управлять запросами на участие в фестивалях через RESTful API.
+
+    Помимо стандартных операций чтения, ViewSet предоставляет следующее действие:
+    - request_action: Выполнение действия ('approve', 'reject') с запросом на участие в фестивале.
+
+    Атрибуты:
+        permission_classes: Кортеж с классами разрешений, применяемых ко всем действиям.
+        queryset: QuerySet всех запросов на участие в фестивалях.
+    """
     permission_classes = (permissions.IsSuperUserOrReadOnly,)
     queryset = models.FestivalParticipationRequest.objects.all()
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[drf_permissions.IsAuthenticated])
     def request_action(self, request, *args, **kwargs):
+        """
+        Выполняет действие с запросом на участие в фестивале.
+
+        Доступные действия:
+        - approve: Одобрить запрос на участие в фестивале.
+        - reject: Отклонить запрос на участие в фестивале.
+
+        Args:
+            request: HTTP-запрос.
+            *args: Дополнительные аргументы.
+            **kwargs: Дополнительные именованные аргументы.
+
+        Returns:
+            Response: HTTP-ответ с кодом состояния 204 (No Content) в случае успешного выполнения действия.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         action_name = serializer.validated_data.get('action')
@@ -208,6 +268,15 @@ class FestivalParticipationRequestViewSet(drf_mixins.ListModelMixin,
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_serializer_class(self):
+        """
+        Возвращает класс сериализатора, используемого для текущего действия.
+
+        Если действие request_action, используется FestivalRequestActionSerializer,
+        иначе используется FestivalRequestSerializer.
+
+        Returns:
+            class: Класс сериализатора.
+        """
         if self.action == 'request_action':
             return serializers.FestivalRequestActionSerializer
         return serializers.FestivalRequestSerializer
