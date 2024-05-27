@@ -55,3 +55,21 @@ class InvalidClubActionExeption(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'Invalid club action'
     default_code = 'invalid_club_action'
+
+
+class ClubAlreadyExistsFestivalException(APIException):
+    """
+    Исключение, возникающее, когда пользователь пытается вступить в фестиваль, в котором уже состоит.
+    """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Вы уже участник фестиваля'
+    default_code = 'club_in_festival_already_exists'
+
+
+class ClubNotExistsFestivalException(APIException):
+    """
+    Исключение, возникающее, когда пользователь пытается вступить в фестиваль, в котором уже состоит.
+    """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Вы уже не являетесь участником фестиваля'
+    default_code = 'club_in_festival_not_exists'
