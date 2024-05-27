@@ -3,7 +3,6 @@ import uuid
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
 from accounts.models import phone_regex_validator
-from . import exeptions as clubs_exceptions
 
 
 class ClubCategory(models.Model):
@@ -503,11 +502,13 @@ class Festival(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    start_datetime = models.DateTimeField(verbose_name='Дата начала')
     location = models.CharField(max_length=200)
     approved_clubs = models.ManyToManyField(
         to='clubs.Club',
         related_name='approved_on_festival',
-        verbose_name='Приглашенные клубы'
+        verbose_name='Приглашенные клубы',
+        blank=True
     )
 
     class Meta:
@@ -554,3 +555,7 @@ class FestivalParticipationRequest(models.Model):
         Возвращает строковое представление запроса на участие в фестивале.
         """
         return f'{self.club.name} - {self.festival.name}'
+
+    class Meta:
+        verbose_name_plural = 'Запросы на участие в фестивале'
+        verbose_name = 'Запрос на участие в фестивале'

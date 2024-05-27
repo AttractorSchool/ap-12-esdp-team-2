@@ -24,6 +24,8 @@ class ClubPermission(IsAuthenticatedOrReadOnly):
     def has_object_permission(self, request, view, obj):
         if view.action in ('destroy', 'update', 'partial_update'):
             return obj.managers.filter(id=request.user.id).exists()
+        if obj.is_private:
+            return obj.members.filter(id=request.user.id).exists()
         return True
 
 
@@ -38,3 +40,10 @@ class ClubObjectsPermission(IsAuthenticatedOrReadOnly):
         if view.action in ('destroy', 'update', 'partial_update'):
             return request.user in obj.club.managers.filter(id=request.user.id).exists()
         return True
+
+
+class IsSuperUserOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_superuser

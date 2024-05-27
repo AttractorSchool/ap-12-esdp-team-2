@@ -41,3 +41,8 @@ class ClubServiceAdmin(admin.ModelAdmin):
 @admin.register(Festival)
 class FestivalAdmin(admin.ModelAdmin):
     list_display = ('name', 'location',)
+
+
+@admin.register(FestivalParticipationRequest)
+class FestivalParticipationRequestAdmin(admin.ModelAdmin):
+    list_display = ('club', 'festival', 'approved',)

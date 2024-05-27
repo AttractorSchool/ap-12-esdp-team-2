@@ -12,6 +12,16 @@ class ClubActionEnum(StrEnum):
     LEAVE = 'leave'
 
 
+class FestivalActionEnum(StrEnum):
+    JOIN = 'join'
+    LEAVE = 'leave'
+
+
+class FestivalRequestActionEnum(StrEnum):
+    APPROVE = 'approve'
+    REJECT = 'reject'
+
+
 class ClubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -83,6 +93,12 @@ class ClubDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ClubSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Club
+        fields = ('id', 'name')
+
+
 class ClubServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClubService
@@ -108,3 +124,45 @@ class ClubGalleryPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClubGalleryPhoto
         fields = '__all__'
+
+
+class FestivalListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Festival
+        fields = ('id', 'name', 'description', 'image')
+
+
+class FestivalRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Festival
+        fields = '__all__'
+
+
+class FestivalCreateOrUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Festival
+        fields = ('name', 'description', 'image', 'location', 'start_datetime')
+
+
+class FestivalActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=FestivalActionEnum)
+    club = serializers.PrimaryKeyRelatedField(queryset=models.Club.objects.filter(is_active=True))
+
+
+class FestivalSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Festival
+        fields = ('id', 'name')
+
+
+class FestivalRequestSerializer(serializers.ModelSerializer):
+    club = ClubSimpleSerializer()
+    festival = FestivalSimpleSerializer()
+
+    class Meta:
+        model = models.FestivalParticipationRequest
+        fields = ('id', 'club', 'festival')
+
+
+class FestivalRequestActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=FestivalRequestActionEnum)

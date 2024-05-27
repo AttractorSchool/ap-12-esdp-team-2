@@ -1,84 +1,143 @@
 from . import models
-from . import exeptions
+from . import exceptions
 
 
 class ClubServices:
     """
     Предоставляет методы для управления действиями относящихся клубу.
-
-    Attributes:
-        club (Club): Клуб, в котором осуществляются операции.
     """
-
-    def __init__(self, club):
-        """
-        Инициализирует объект ClubServices с указанным клубом.
-
-        Args:
-            club (Club): Клуб, для которого предоставляются услуги.
-        """
-        self.club = club
-
-    def join(self, user):
+    @staticmethod
+    def join(club, user):
         """
         Добавляет пользователя в члены клуба и обновляет количество участников.
 
         Args:
+            club (Club): Клуб, в который хочет вступить пользователь.
             user (User): Пользователь, который хочет вступить в клуб.
 
         Raises:
             clubs_exceptions.UserAlreadyInClubException: Если пользователь уже является членом клуба.
         """
-        if self.club.members.filter(id=user.id).exists():
-            raise exeptions.UserAlreadyInClubException
-        self.club.members.add(user)
-        self.club.members_count += 1
-        self.club.save()
+        if club.members.filter(id=user.id).exists():
+            raise exceptions.UserAlreadyInClubException
+        club.members.add(user)
+        club.members_count += 1
+        club.save()
 
-    def leave(self, user):
+    @staticmethod
+    def leave(club, user):
         """
         Удаляет пользователя из членов клуба и обновляет количество участников.
 
         Args:
+            club (Club): Клуб, который хочет покинуть пользователь.
             user (User): Пользователь, который хочет покинуть клуб.
 
         Raises:
             clubs_exceptions.UserNotInClubException: Если пользователь не является членом клуба.
         """
-        if not self.club.members.filter(id=user.id).exists():
-            raise exeptions.UserNotInClubException
-        self.club.members.remove(user)
-        self.club.members_count -= 1
-        self.club.save()
+        if not club.members.filter(id=user.id).exists():
+            raise exceptions.UserNotInClubException
+        club.members.remove(user)
+        club.members_count -= 1
+        club.save()
 
-    def like(self, user):
+    @staticmethod
+    def like(club, user):
         """
         Добавляет пользователя в лайкнувшие клуб и обновляет количество лайков.
 
         Args:
+            club (Club): Клуб, который хочет лайкнуть пользователь.
             user (User): Пользователь, который хочет лайкнуть клуб.
 
         Raises:
             clubs_exceptions.UserLikeAlreadyExistsException: Если пользователь уже лайкнул клуб.
         """
-        if self.club.likes.filter(id=user.id).exists():
-            raise exeptions.UserLikeAlreadyExistsException
-        self.club.likes.add(user)
-        self.club.likes_count += 1
-        self.club.save()
+        if club.likes.filter(id=user.id).exists():
+            raise exceptions.UserLikeAlreadyExistsException
+        club.likes.add(user)
+        club.likes_count += 1
+        club.save()
 
-    def unlike(self, user):
+    @staticmethod
+    def unlike(club, user):
         """
         Удаляет пользователя из лайкнувших клуб и обновляет количество лайков.
 
         Args:
+            club (Club): Клуб, у которого хочет удалить свой лайк пользователь.
             user (User): Пользователь, который хочет удалить свой лайк из клуба.
 
         Raises:
             clubs_exceptions.UserLikeDoesNotExistException: Если пользователь не лайкнул клуб.
         """
-        if not self.club.likes.filter(id=user.id).exists():
-            raise exeptions.UserLikeDoesNotExistException
-        self.club.likes.remove(user)
-        self.club.likes_count -= 1
-        self.club.save()
+        if not club.likes.filter(id=user.id).exists():
+            raise exceptions.UserLikeDoesNotExistException
+        club.likes.remove(user)
+        club.likes_count -= 1
+        club.save()
+
+
+class FestivalServices:
+    """
+    Класс FestivalServices предоставляет статические методы для управления участием клубов в фестивалях.
+    """
+
+    @staticmethod
+    def join(festival: models.Festival, club: models.Club):
+        """
+        Отправляет запрос на участие клуба в фестивале.
+
+        Args:
+            festival (models.Festival): Фестиваль, в который клуб хочет присоединиться.
+            club (models.Club): Клуб, который хочет присоединиться к фестивалю.
+
+        Raises:
+            exceptions.ClubAlreadyExistsFestivalException: Если клуб уже участвует в фестивале.
+        """
+        if festival.approved_clubs.filter(id=club.id).exists():
+            raise exceptions.ClubAlreadyExistsFestivalException
+        models.FestivalParticipationRequest.objects.create(club=club, festival=festival)
+
+    @staticmethod
+    def leave(festival: models.Festival, club: models.Club):
+        """
+        Удаляет клуб из фестиваля.
+
+        Args:
+            festival (models.Festival): Фестиваль, из которого клуб хочет выйти.
+            club (models.Club): Клуб, который хочет выйти из фестиваля.
+
+        Raises:
+            exceptions.ClubNotExistsFestivalException: Если клуб не участвует в фестивале.
+        """
+        if not festival.approved_clubs.filter(id=club.id).exists():
+            raise exceptions.ClubNotExistsFestivalException
+        festival.approved_clubs.remove(club)
+
+
+class FestivalRequestServices:
+
+    @staticmethod
+    def approve(request: models.FestivalParticipationRequest):
+        """
+        Одобряет запрос на участие клуба в фестивале.
+
+        Args:
+            request: Запрос на вступление фестиваль.
+        """
+        request.approved = True
+        request.save()
+        request.festival.approved_clubs.add(request.club)
+
+    @staticmethod
+    def reject(request: models.FestivalParticipationRequest):
+        """
+        Отклоняет запрос на участие клуба в фестивале.
+
+        Args:
+            request: Запрос на вступление фестиваль.
+        """
+        request.approved = False
+        request.save()

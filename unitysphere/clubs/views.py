@@ -1,10 +1,13 @@
 from datetime import datetime
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework import mixins as drf_mixins
+from rest_framework import permissions as drf_permissions
 from rest_framework.response import Response
 from . import serializers
 from clubs import models
-from .permissions import ClubPermission, ClubObjectsPermission
+from . import permissions
 from . import services
 from . import mixins
 
@@ -23,7 +26,7 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         serializer_class (Serializer): Сериализатор, используемый по умолчанию для действий, не указанных в ACTION_SERIALIZERS.
     """
     queryset = models.Club.objects.filter(is_active=True)
-    permission_classes = (ClubPermission,)
+    permission_classes = (permissions.ClubPermission,)
     ACTION_SERIALIZERS = {
         'club_action': serializers.ClubActionSerializer,
         'create': serializers.ClubCreateSerializer,
@@ -47,9 +50,8 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         club = self.get_object()
-        club_services = services.ClubServices(club)
         action_name = serializer.validated_data['action']
-        getattr(club_services, action_name)(request.user)
+        getattr(services.ClubServices, action_name)(club, request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
@@ -87,7 +89,7 @@ class ClubServiceViewSet(viewsets.ModelViewSet):
         serializer_class (Serializer): Сериализатор для преобразования данных модели ClubService в JSON.
     """
     queryset = models.ClubService.objects.all()
-    permission_classes = (ClubObjectsPermission,)
+    permission_classes = (permissions.ClubObjectsPermission,)
     serializer_class = serializers.ClubServiceSerializer
 
 
@@ -103,7 +105,7 @@ class ClubEventViewSet(viewsets.ModelViewSet):
         serializer_class (Serializer): Сериализатор для преобразования данных модели ClubEvent в JSON.
     """
     queryset = models.ClubEvent.objects.filter(start_datetime__gte=datetime.now())
-    permission_classes = (ClubObjectsPermission, )
+    permission_classes = (permissions.ClubObjectsPermission, )
     serializer_class = serializers.ClubEventSerializer
 
 
@@ -120,7 +122,7 @@ class ClubAdsViewSet(viewsets.ModelViewSet):
         serializer_class (Serializer): Сериализатор для преобразования данных модели ClubAds в JSON.
     """
     queryset = models.ClubAds.objects.all()
-    permission_classes = (ClubObjectsPermission, )
+    permission_classes = (permissions.ClubObjectsPermission, )
     serializer_class = serializers.ClubAdsSerializer
 
 
@@ -165,5 +167,47 @@ class ClubGalleryPhotoViewSet(viewsets.ModelViewSet):
         serializer_class (Serializer): Сериализатор для преобразования данных модели ClubGalleryPhoto в JSON.
     """
     queryset = models.ClubGalleryPhoto.objects.all()
-    permission_classes = (ClubObjectsPermission,)
+    permission_classes = (permissions.ClubObjectsPermission,)
     serializer_class = serializers.ClubGalleryPhotoSerializer
+
+
+class FestivalViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
+    queryset = models.Festival.objects.all()
+    ACTION_SERIALIZERS = {
+        'list': serializers.FestivalListSerializer,
+        'retrieve': serializers.FestivalRetrieveSerializer,
+        'festival_action': serializers.FestivalActionSerializer,
+    }
+    serializer_class = serializers.FestivalCreateOrUpdateSerializer
+    permission_classes = (permissions.IsSuperUserOrReadOnly,)
+
+    @action(detail=True, methods=['post'], permission_classes=[drf_permissions.IsAuthenticated])
+    def festival_action(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        festival = self.get_object()
+        club = serializer.validated_data.get('club')
+        action_name = serializer.validated_data.get('action')
+        getattr(services.FestivalServices, action_name)(festival, club)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FestivalParticipationRequestViewSet(drf_mixins.ListModelMixin,
+                                          drf_mixins.RetrieveModelMixin,
+                                          viewsets.GenericViewSet):
+    permission_classes = (permissions.IsSuperUserOrReadOnly,)
+    queryset = models.FestivalParticipationRequest.objects.all()
+
+    @action(detail=True, methods=['post'])
+    def request_action(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        action_name = serializer.validated_data.get('action')
+        festival_request = self.get_object()
+        getattr(services.FestivalRequestServices, action_name)(festival_request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_serializer_class(self):
+        if self.action == 'request_action':
+            return serializers.FestivalRequestActionSerializer
+        return serializers.FestivalRequestSerializer
