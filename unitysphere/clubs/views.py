@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from django.db.models import Q
 from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework import mixins as drf_mixins
@@ -7,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from . import serializers
+from . import serializers, filtersets
 from . import exceptions
 from clubs import models
 from . import permissions
@@ -40,6 +42,7 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         'join_requests': serializers.ClubJoinRequestSerializer,
     }
     serializer_class = serializers.ClubListSerializer
+    filterset_class = filtersets.ClubFilter
 
     @action(detail=True, methods=['post'], permission_classes=(IsAuthenticated,))
     def club_action(self, request, **kwargs):
@@ -298,7 +301,7 @@ class ClubJoinRequestViewSet(drf_mixins.RetrieveModelMixin,
                              drf_mixins.ListModelMixin,
                              drf_mixins.DestroyModelMixin,
                              viewsets.GenericViewSet):
-    permission_classes = (permissions.IsClubManager,)
+    permission_classes = (permissions.ClubJoinRequestPermission,)
     queryset = ClubJoinRequest.objects.all()
 
     @action(detail=True, methods=['post'])
@@ -314,3 +317,7 @@ class ClubJoinRequestViewSet(drf_mixins.RetrieveModelMixin,
         if self.action == 'request_action':
             return serializers.ClubJoinRequestActionSerializer
         return serializers.ClubJoinRequestSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(Q(user=self.request.user) | Q(club__managers=self.request.user)).distinct()

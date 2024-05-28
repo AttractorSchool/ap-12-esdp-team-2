@@ -58,3 +58,12 @@ class IsClubManager(permissions.BasePermission):
             return obj.club.managers.filter(id=request.user.id).exists()
         except AttributeError:
             return obj.managers.filter(id=request.user.id).exists()
+
+
+class ClubJoinRequestPermission(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if view.action == 'destroy':
+            return request.user == obj.user
+        if view.action == 'request_action':
+            return obj.club.managers.filter(id=request.user.id).exists()
+        return True
