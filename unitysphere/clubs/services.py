@@ -20,9 +20,14 @@ class ClubServices:
         """
         if club.members.filter(id=user.id).exists():
             raise exceptions.UserAlreadyInClubException
-        club.members.add(user)
-        club.members_count += 1
-        club.save()
+        if club.is_private:
+            if models.ClubJoinRequest.objects.filter(user=user, club=club).exists():
+                raise exceptions.ClubJoinRequestAlreadyExistsException
+            models.ClubJoinRequest.objects.create(club=club, user=user)
+        else:
+            club.members.add(user)
+            club.members_count += 1
+            club.save()
 
     @staticmethod
     def leave(club, user):
@@ -77,6 +82,20 @@ class ClubServices:
         club.likes.remove(user)
         club.likes_count -= 1
         club.save()
+
+
+class ClubRequestServices:
+    @staticmethod
+    def approve(request: models.ClubJoinRequest):
+        request.approved = True
+        request.save()
+        request.club.members.add(request.user)
+
+    @staticmethod
+    def reject(request: models.ClubJoinRequest):
+        request.approved = False
+        request.save()
+        request.club.members.remove(request.user)
 
 
 class FestivalServices:

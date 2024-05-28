@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 
 router = routers.DefaultRouter()
 router.register('clubs', views.ClubViewSet)
+router.register('club/requests', views.ClubJoinRequestViewSet)
 router.register('category', views.ClubCategoryViewSet)
 router.register('cities', views.ClubCityViewSet)
 router.register('services', views.ClubServiceViewSet)

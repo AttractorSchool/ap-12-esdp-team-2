@@ -17,7 +17,7 @@ class FestivalActionEnum(StrEnum):
     LEAVE = 'leave'
 
 
-class FestivalRequestActionEnum(StrEnum):
+class RequestActionEnum(StrEnum):
     APPROVE = 'approve'
     REJECT = 'reject'
 
@@ -165,4 +165,17 @@ class FestivalRequestSerializer(serializers.ModelSerializer):
 
 
 class FestivalRequestActionSerializer(serializers.Serializer):
-    action = serializers.ChoiceField(choices=FestivalRequestActionEnum)
+    action = serializers.ChoiceField(choices=RequestActionEnum)
+
+
+class ClubJoinRequestSerializer(serializers.ModelSerializer):
+    user = UserReadSerializer()
+    club = ClubSimpleSerializer()
+
+    class Meta:
+        model = models.ClubJoinRequest
+        fields = ('id', 'user', 'club')
+
+
+class ClubJoinRequestActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=RequestActionEnum)

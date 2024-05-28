@@ -9,10 +9,9 @@ class IsAuthenticatedOrReadOnly(permissions.BasePermission):
     В противном случае разрешение будет предоставлено только аутентифицированным пользователям.
     """
     def has_permission(self, request, view):
-        return (
-            request.method in permissions.SAFE_METHODS or
-            request.user and request.user.is_authenticated
-        )
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_authenticated
 
 
 class ClubPermission(IsAuthenticatedOrReadOnly):
@@ -47,3 +46,15 @@ class IsSuperUserOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return request.user.is_superuser
+
+
+class IsClubManager(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        try:
+            return obj.club.managers.filter(id=request.user.id).exists()
+        except AttributeError:
+            return obj.managers.filter(id=request.user.id).exists()

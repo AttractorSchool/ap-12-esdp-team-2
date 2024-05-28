@@ -101,3 +101,17 @@ class FestivalRequestAlreadyExistsException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'У данного клуба уже есть запрос на участие в данном фестивале'
     default_code = 'festival_request_already_exists'
+
+
+class ClubJoinRequestAlreadyExistsException(APIException):
+    """
+    Исключение, выбрасываемое в случае, если у клуба уже существует запрос на вступление в приватный клуб.
+
+    Attributes:
+        status_code (int): HTTP-код статуса, возвращаемый в ответе. По умолчанию 400 Bad Request.
+        default_detail (str): Сообщение об ошибке, возвращаемое по умолчанию. "У данного клуба уже есть запрос на участие в данном фестивале".
+        default_code (str): Код ошибки, возвращаемый по умолчанию. "festival_request_already_exists".
+    """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'У данного пользователя уже есть запрос на вступление в клуб'
+    default_code = 'club_join_request_already_exists'

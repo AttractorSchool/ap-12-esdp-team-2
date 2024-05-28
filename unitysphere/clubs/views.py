@@ -1,15 +1,20 @@
 from datetime import datetime
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework import mixins as drf_mixins
 from rest_framework import permissions as drf_permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from . import serializers
 from . import exceptions
 from clubs import models
 from . import permissions
 from . import services
 from . import mixins
+from .models import ClubJoinRequest
+from .serializers import ClubJoinRequestSerializer
 
 
 class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
@@ -32,10 +37,11 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         'create': serializers.ClubCreateSerializer,
         'update': serializers.ClubUpdateSerializer,
         'retrieve': serializers.ClubDetailSerializer,
+        'join_requests': serializers.ClubJoinRequestSerializer,
     }
     serializer_class = serializers.ClubListSerializer
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=(IsAuthenticated,))
     def club_action(self, request, **kwargs):
         """
         Пользовательское действие для выполнения определенных операций с клубом.
@@ -53,6 +59,12 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         action_name = serializer.validated_data['action']
         getattr(services.ClubServices, action_name)(club, request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['get'], permission_classes=(permissions.IsClubManager,))
+    def join_requests(self, request, **kwargs):
+        queryset = models.ClubJoinRequest.objects.filter(club=self.get_object())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         """
@@ -280,3 +292,25 @@ class FestivalParticipationRequestViewSet(drf_mixins.ListModelMixin,
         if self.action == 'request_action':
             return serializers.FestivalRequestActionSerializer
         return serializers.FestivalRequestSerializer
+
+
+class ClubJoinRequestViewSet(drf_mixins.RetrieveModelMixin,
+                             drf_mixins.ListModelMixin,
+                             drf_mixins.DestroyModelMixin,
+                             viewsets.GenericViewSet):
+    permission_classes = (permissions.IsClubManager,)
+    queryset = ClubJoinRequest.objects.all()
+
+    @action(detail=True, methods=['post'])
+    def request_action(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        request = self.get_object()
+        action_name = serializer.validated_data.get('action')
+        getattr(services.ClubRequestServices, action_name)(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_serializer_class(self):
+        if self.action == 'request_action':
+            return serializers.ClubJoinRequestActionSerializer
+        return serializers.ClubJoinRequestSerializer

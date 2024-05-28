@@ -211,7 +211,7 @@ class ClubJoinRequest(models.Model):
         related_name='club_join_requests',
         verbose_name='Клуб'
     )
-    approved = models.BooleanField(default=False, verbose_name='Принят')
+    approved = models.BooleanField(default=None, null=True, verbose_name='Принят')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -223,6 +223,13 @@ class ClubJoinRequest(models.Model):
             str: Строковое представление объекта, содержащее информацию о пользователе и клубе.
         """
         return f'Запрос на вступление: {self.user} -> {self.club}'
+
+    class Meta:
+        verbose_name = 'Запрос на вступление в клуб'
+        verbose_name_plural = 'Запросы на вступление в клуб'
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'club'], name='unique_user_club_join_request')
+        ]
 
 
 class ClubPartnerShipRequest(models.Model):
