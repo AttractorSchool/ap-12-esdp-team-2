@@ -42,6 +42,9 @@ class ClubObjectsPermission(IsAuthenticatedOrReadOnly):
 
 
 class IsSuperUserOrReadOnly(permissions.BasePermission):
+    """
+    Разрешение, позволяющее только суперпользователям выполнять небезопасные методы.
+    """
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -49,7 +52,9 @@ class IsSuperUserOrReadOnly(permissions.BasePermission):
 
 
 class IsClubManager(permissions.BasePermission):
-
+    """
+    Разрешение, проверяющее, является ли пользователь менеджером клуба.
+    """
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
@@ -61,6 +66,9 @@ class IsClubManager(permissions.BasePermission):
 
 
 class ClubJoinRequestPermission(permissions.BasePermission):
+    """
+    Разрешение для обработки запросов на вступление в клуб.
+    """
     def has_object_permission(self, request, view, obj):
         if view.action == 'destroy':
             return request.user == obj.user

@@ -7,4 +7,4 @@ class ClubFilter(filters.FilterSet):
 
     class Meta:
         model = models.Club
-        fields = ('is_private', 'members', 'managers')
+        fields = ('is_private', 'category', 'city', 'members', 'managers')

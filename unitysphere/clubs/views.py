@@ -1,13 +1,13 @@
 from datetime import datetime
 
 from django.db.models import Q
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework import mixins as drf_mixins
 from rest_framework import permissions as drf_permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 from . import serializers, filtersets
 from . import exceptions
@@ -16,7 +16,6 @@ from . import permissions
 from . import services
 from . import mixins
 from .models import ClubJoinRequest
-from .serializers import ClubJoinRequestSerializer
 
 
 class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
@@ -301,11 +300,35 @@ class ClubJoinRequestViewSet(drf_mixins.RetrieveModelMixin,
                              drf_mixins.ListModelMixin,
                              drf_mixins.DestroyModelMixin,
                              viewsets.GenericViewSet):
+    """
+    Вьюсет для обработки запросов на вступление в клуб. Этот вьюсет поддерживает
+    получение, перечисление и удаление запросов на вступление, а также обработку
+    пользовательских действий с запросами.
+
+    Разрешения:
+        - Требуется, чтобы у пользователя было разрешение ClubJoinRequestPermission.
+
+    Набор запросов:
+        - Все объекты ClubJoinRequest.
+    """
     permission_classes = (permissions.ClubJoinRequestPermission,)
     queryset = ClubJoinRequest.objects.all()
 
     @action(detail=True, methods=['post'])
     def request_action(self, request, *args, **kwargs):
+        """
+        Обрабатывает пользовательские действия с запросом на вступление, такие как approve или reject.
+
+        Принимает:
+            - request: Объект запроса, содержащий данные для сериализации.
+
+        Действия:
+            - Получает объект запроса на вступление.
+            - Выполняет действие, указанное в данных запроса.
+
+        Возвращает:
+            - HTTP 204 No Content при успешном выполнении действия.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         request = self.get_object()
@@ -314,10 +337,23 @@ class ClubJoinRequestViewSet(drf_mixins.RetrieveModelMixin,
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_serializer_class(self):
+        """
+        Определяет класс сериализатора в зависимости от действия.
+
+        Возвращает:
+            - ClubJoinRequestActionSerializer, если действие request_action.
+            - ClubJoinRequestSerializer для всех остальных случаев.
+        """
         if self.action == 'request_action':
             return serializers.ClubJoinRequestActionSerializer
         return serializers.ClubJoinRequestSerializer
 
     def get_queryset(self):
+        """
+        Определяет набор запросов, доступных пользователю.
+
+        Возвращает:
+            - Запросы, где пользователь является автором или менеджером клуба.
+        """
         qs = super().get_queryset()
         return qs.filter(Q(user=self.request.user) | Q(club__managers=self.request.user)).distinct()
