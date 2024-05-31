@@ -33,9 +33,17 @@ class ClubAdsAdmin(admin.ModelAdmin):
     list_display = ('title', 'type', 'club',)
 
 
+class ServiceImageInline(admin.TabularInline):
+    model = ClubServiceImage
+    can_delete = True
+    verbose_name_plural = 'Фото услуги'
+    extra = 5
+
+
 @admin.register(ClubService)
 class ClubServiceAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'club',)
+    inlines = (ServiceImageInline,)
 
 
 @admin.register(Festival)

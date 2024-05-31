@@ -319,7 +319,7 @@ class ClubServiceImage(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    club = models.ForeignKey(to='clubs.ClubService', on_delete=models.CASCADE, related_name='images')
+    service = models.ForeignKey(to='clubs.ClubService', on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(
         upload_to='club/service_images',
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
@@ -332,7 +332,7 @@ class ClubServiceImage(models.Model):
         """
         Возвращает строковое представление изображения.
         """
-        return f"Изображение для {self.club.name}"
+        return f"Изображение для {self.service.name}"
 
     class Meta:
         verbose_name = 'Изображение для услуги клуба'

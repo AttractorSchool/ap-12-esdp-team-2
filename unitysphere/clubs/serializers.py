@@ -105,6 +105,12 @@ class ClubServiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ClubServiceImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClubServiceImage
+        fields = '__all__'
+
+
 class ClubEventSerializer(serializers.ModelSerializer):
 
     class Meta:
