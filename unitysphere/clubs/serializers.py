@@ -1,6 +1,8 @@
 from enum import StrEnum
 
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
+
 from clubs import models
 from accounts.api.serializers import UserReadSerializer
 
@@ -99,16 +101,23 @@ class ClubSimpleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class ClubServiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ClubService
-        fields = '__all__'
-
-
 class ClubServiceImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClubServiceImage
         fields = '__all__'
+
+
+class ClubServiceSerializer(serializers.ModelSerializer):
+    images = SerializerMethodField()
+
+    class Meta:
+        model = models.ClubService
+        fields = ('id', 'name', 'description', 'price', 'images')
+
+    @property
+    def images(self):
+        images = ClubServiceImageSerializer(models.ClubServiceImage.filter(club=self.context['uuid']), many=True).data
+        return images
 
 
 class ClubEventSerializer(serializers.ModelSerializer):
