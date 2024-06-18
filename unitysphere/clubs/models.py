@@ -2,6 +2,8 @@ import uuid
 
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
+from django.urls import reverse
+
 from accounts.models import phone_regex_validator
 
 
@@ -184,6 +186,9 @@ class Club(models.Model):
         """
         self.is_active = False
         self.save()
+
+    def get_absolute_url(self):
+        return reverse('club_detail', kwargs={'pk': self.pk})
 
 
 class ClubJoinRequest(models.Model):

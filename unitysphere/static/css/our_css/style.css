@@ -63,6 +63,7 @@
 .action-btn {
     border-radius: 5px;
     text-align: center;
+    border: 1px solid #f7631b;
 }
 
 .action-btn:hover {
@@ -75,4 +76,24 @@
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     padding: 20px 0;
+}
+
+
+/*CLUB-DETAIL*/
+.club-detail-img {
+    border: 1px solid #eee;
+}
+
+.event-card {
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+.event-img img {
+    width: 100%;
+    height: 200px;
+}
+
+.event-title {
+    height: 80px;
 }

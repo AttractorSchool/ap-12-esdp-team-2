@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{%  static 'css/template_css/linearicons.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/nice-select.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/animate.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/main.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/our_css/style.css' %}">
+{% endblock %}
+
+{% block header %}
+    {% include 'partial/header.html' %}
+{% endblock %}
+
+{% block content %}
+    {% include 'partial/breadcrumb.html' %}
+    <section class="course-details-area pt-60 pb-60">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-3">
+                    <div class="main-image">
+                        <img class="img-fluid club-detail-img w-100" src="{{ club.logo.url }}" alt="">
+                    </div>
+                    <h4 class="text-center">{{ club.name }}</h4>
+                </div>
+                <div class="col-lg-4 right-contents">
+                    <ul>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Создатель</p> 
+                                <span">{{ club.creater }}</span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Категория</p>
+                                <span>{{ club.category }}</span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Город</p>
+                                <span>
+                                    {% if club.city %}
+                                        {{ club.city }}
+                                    {% else %}
+                                        Не указано
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Адрес</p>
+                                <span>
+                                    {% if club.address %}
+                                        {{ club.address }}
+                                    {% else %}
+                                        Не указано
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 right-contents">
+                    <ul>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Email</p> 
+                                <span>{{ club.email }}</span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Телефон</p>
+                                <span>{{ club.phone }}</span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Участники</p>
+                                <span>
+                                    {{ club.members_count }}
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Лайки</p>
+                                <span>
+                                    {{ club.likes_count }}
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                    <a href="#" class="primary-btn text-uppercase">Вступить</a>
+                    {% if request.user in club.managers %}
+                    <a href="#" class="primary-btn text-uppercase">Редактировать</a>
+                    <a href="#" class="primary-btn text-uppercase">Деактивировать</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 left-contents">
+                    <div class="main-image">
+                        <img class="img-fluid" src="img/m-img.jpg" alt="">
+                    </div>
+                    <div class="jq-tab-wrapper" id="horizontalTab">
+                        <div class="jq-tab-menu mx-auto">
+                            <div class="jq-tab-title active" data-tab="1">Анкета</div>
+                            <div class="jq-tab-title" data-tab="2">Фотогалерея</div>
+                            <div class="jq-tab-title" data-tab="3">Услуги</div>
+                            <div class="jq-tab-title" data-tab="4">События</div>
+                            <div class="jq-tab-title" data-tab="5">Посты</div>
+                        </div>
+                        <div class="jq-tab-content-wrapper">
+                            <div class="jq-tab-content active mt-2" data-tab="1">
+                                {{ club.description }}
+                            </div>
+                            <div class="jq-tab-content" data-tab="2">
+                                <div class="row">
+                                    {% for photo in photos|slice:":12" %}
+                                        <div class="col-lg-4 pb-4">
+                                            <a href="{{ photo.image.url }}" class="club-image-link">
+                                                <img src="{{ photo.image.url }}" alt="" class="club-gallery-image w-100 h-100">
+                                            </a>
+                                        </div>
+                                    {% empty %}
+                                        Фотогалерея пуста
+                                    {% endfor %}
+                                </div>
+                                {% if photos|length > 12 %}
+                                <a href="#" class="text-center d-block">Все фото</a>
+                                {% endif %}
+                            </div>
+                            <div class="jq-tab-content" data-tab="3">
+                                {% for service in services|slice:":12" %}
+                                <ul class="course-list w-75 mx-auto">
+                                    <li class="justify-content-between d-flex">
+                                        <p>{{ service.name }}</p>
+                                        <a class="primary-btn text-uppercase" href="#">Детали</a>
+                                    </li>
+                                </ul>
+                                {% empty %}
+                                    Список услуг пуст
+                                {% endfor %}
+                                {% if services|length > 12 %}
+                                    <a href="#" class="d-block text-center">Все услуги</a>
+                                {% endif %}
+                            </div>
+                            <div class="jq-tab-content" data-tab="4">
+                                <div class="row">
+                                    {% for event in events|slice:":12" %}
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="event-card">
+                                            <div class="event-img">
+                                                <img src="{{ event.banner.url }}" alt="">
+                                            </div>
+                                            <div class="event-detail">
+                                                <h5 class="event-title text-center y-border-eee">
+                                                    {{ event.title }}
+                                                </h5>
+                                                <a class="primary-btn action-btn text-uppercase d-block w-50 mx-auto my-2" href="#">Детали</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                        Список событии пуст
+                                    {% endfor %}
+                                    {% if events|length > 12 %}
+                                        <a href="#" class="d-block text-center">Все услуги</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="jq-tab-content" data-tab="5">	
+                                <div class="review-top row pt-40">
+                                    <div class="col-lg-3">
+                                        <div class="avg-review">
+                                            Average <br>
+                                            <span>5.0</span> <br>
+                                            (3 Ratings)
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <h4 class="mb-20">Provide Your Rating</h4>
+                                        <div class="d-flex flex-row reviews">
+                                            <span>Quality</span>
+                                            <div class="star">
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <span>Outstanding</span>
+                                        </div>
+                                        <div class="d-flex flex-row reviews">
+                                            <span>Puncuality</span>
+                                            <div class="star">
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <span>Outstanding</span>
+                                        </div>
+                                        <div class="d-flex flex-row reviews">
+                                            <span>Quality</span>
+                                            <div class="star">
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star checked"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <span>Outstanding</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="feedeback">
+                                    <h4 class="pb-20">Your Feedback</h4>
+                                    <textarea name="feedback" class="form-control" cols="10" rows="10"></textarea>
+                                    <a href="#" class="mt-20 primary-btn text-right text-uppercase">Submit</a>
+                                </div>
+                                <div class="comments-area mb-30">
+                                    <div class="comment-list">
+                                        <div class="single-comment single-reviews justify-content-between d-flex">
+                                            <div class="user justify-content-between d-flex">
+                                                <div class="thumb">
+                                                    <img src="img/blog/c1.jpg" alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    <h5><a href="#">Emilly Blunt</a>
+                                                    <div class="star">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    </h5>
+                                                    <p class="comment">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum ut sed, dolorum asperiores perspiciatis provident, odit maxime doloremque aliquam.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                    <div class="comment-list">
+                                        <div class="single-comment single-reviews justify-content-between d-flex">
+                                            <div class="user justify-content-between d-flex">
+                                                <div class="thumb">
+                                                    <img src="img/blog/c2.jpg" alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    <h5><a href="#">Elsie Cunningham</a>
+                                                    <div class="star">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    </h5>
+                                                    <p class="comment">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum ut sed, dolorum asperiores perspiciatis provident, odit maxime doloremque aliquam.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                    <div class="comment-list">
+                                        <div class="single-comment single-reviews justify-content-between d-flex">
+                                            <div class="user justify-content-between d-flex">
+                                                <div class="thumb">
+                                                    <img src="img/blog/c3.jpg" alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    <h5><a href="#">Maria Luna</a>
+                                                    <div class="star">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    </h5>
+                                                    <p class="comment">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum ut sed, dolorum asperiores perspiciatis provident, odit maxime doloremque aliquam.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                    <div class="comment-list">
+                                        <div class="single-comment single-reviews justify-content-between d-flex">
+                                            <div class="user justify-content-between d-flex">
+                                                <div class="thumb">
+                                                    <img src="img/blog/c4.jpg" alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    <h5><a href="#">Maria Luna</a>
+                                                    <div class="star">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    </h5>
+                                                    <p class="comment">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum ut sed, dolorum asperiores perspiciatis provident, odit maxime doloremque aliquam.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  						                                                                      
+                                </div>	                                	
+                            </div>                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </section>
+{% endblock %}
+
+{% block footer %}
+    {% include 'partial/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{%  static 'js/template_js/vendor/jquery-2.2.4.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="{%  static 'js/template_js/vendor/bootstrap.min.js' %}"></script>
+{#    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>#}
+    <script src="{%  static 'js/template_js/easing.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/hoverIntent.js' %}"></script>
+    <script src="{%  static 'js/template_js/superfish.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.ajaxchimp.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.tabs.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.nice-select.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
+    <script src="{%  static 'js/template_js/main.js' %}"></script>
+{% endblock %}

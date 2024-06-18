@@ -1,113 +1,40 @@
-<!DOCTYPE html>
-<html lang="zxx" class="no-js">
-<head>
-    {% load static %}
-    <!-- Mobile Specific Meta -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="img/favicon-32x32.png">
-    <!-- Author Meta -->
-    <meta name="author" content="colorlib">
-    <!-- Meta Description -->
-    <meta name="description" content="">
-    <!-- Meta Keyword -->
-    <meta name="keywords" content="">
-    <!-- meta character set -->
-    <meta charset="UTF-8">
-    <!-- Site Title -->
-    <title>Центр событий</title>
-    <script src="https://kit.fontawesome.com/77b427ccd5.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
-        <!--
-        CSS
-        ============================================= -->
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block styles %}
     <link rel="stylesheet" href="{%  static 'css/template_css/linearicons.css' %}">
     <link rel="stylesheet" href="{%  static 'css/template_css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{%  static 'css/template_css/bootstrap.css' %}">
     <link rel="stylesheet" href="{%  static 'css/template_css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{%  static 'css/template_css/nice-select.css' %}">							
+    <link rel="stylesheet" href="{%  static 'css/template_css/nice-select.css' %}">
     <link rel="stylesheet" href="{%  static 'css/template_css/animate.min.css' %}">
-    <link rel="stylesheet" href="{%  static 'css/template_css/owl.carousel.css' %}">			
-    <link rel="stylesheet" href="{%  static 'css/template_css/jquery-ui.css' %}">			
+    <link rel="stylesheet" href="{%  static 'css/template_css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/jquery-ui.css' %}">
     <link rel="stylesheet" href="{%  static 'css/template_css/main.css' %}">
     <link rel="stylesheet" href="{%  static 'css/our_css/style.css' %}">
-</head>
-<body>
-    <header id="header" id="home">
-    <div class="header-top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-sm-6 col-8 header-top-left no-padding">
-                    <ul>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                        <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                    </ul>			
-                </div>
-                <div class="col-lg-6 col-sm-6 col-4 header-top-right no-padding">
-                            
-                </div>
-            </div>			  					
-        </div>
-    </div>
-    <div class="container main-menu">
-        <div class="row align-items-center justify-content-between d-flex">
-          <div id="logo">
-            <a href="index.html"><img src="img/logo_v2.png" alt="" title="" style="width: 150px;"/></a>
-          </div>
-          <nav id="nav-menu-container">
-            <ul class="nav-menu">
-              <li><a href="index.html">ГЛАВНАЯ</a></li>
-              <li><a href="about.html">О НАС</a></li>
-              <li class="menu-has-children"><a href="">СООБЩЕСТВА</a>
-                <ul>
-                  <li><a href="blog-home.html">СПОРТИВНЫЕ КЛУБЫ</a></li>
-                  <li><a href="blog-single.html">ХОББИ КЛУБЫ</a></li>
-                  <li><a href="blog-single.html">ПРОФЕССИОНАЛЬНЫЕ КЛУБЫ</a></li>
-                </ul>
-              </li>
-              <li><a href="events.html">СОБЫТИЯ</a></li>
-              <li><a href="gallery.html">НОВОСТИ</a></li>
-              <li class="menu-has-children"><a href="">УСЛУГИ</a>
-                <ul>
-                  <li><a href="blog-home.html">УСЛУГИ ОТ КЛУБОВ</a></li>
-                  <li><a href="blog-single.html">УСЛУГИ ДЛЯ КЛУБОВ</a></li>
-                </ul>
-              </li>					          					          		          
-              <li class="menu-has-children"><a href="">Профиль</a>
-                <ul>
-                    {% if request.user.is_authenticated %}
-                      <li><a href="blog-home.html">ЛИЧНЫЙ КАБИНЕТ</a></li>
-                      <li><a href="blog-single.html">ВЫХОД</a></li>
-                    {% else %}
-                        <li><a href="blog-home.html">РЕГИСТРАЦИЯ</a></li>
-                        <li><a href="blog-single.html">ВХОД</a></li>
-                    {% endif %}
-                </ul>
-              </li>	
-            </ul>
-          </nav><!-- #nav-menu-container -->		    		
-        </div>
-    </div>
-    </header><!-- #header -->
+{% endblock %}
 
-        <!-- start banner Area -->
+{% block header %}
+    {% include 'partial/header.html' %}
+{% endblock %}
+
+{% block content %}
     <section class="banner-area relative" id="home">
-        <div class="overlay overlay-bg"></div>	
+        <div class="overlay overlay-bg"></div>
         <div class="container">
             <div class="row fullscreen d-flex align-items-center justify-content-between">
                 <div class="banner-content col-lg-9 col-md-12 mx-auto text-center">
                     <h2 class="text-uppercase text-white">
-                        ВАШЕ БУДУЩЕЕ ЗАВИСИТ ОТ ОКРУЖЕНИЯ, ПОЭТОМУ МЫ СОБИРАЕМ ТОЛЬКО ЛУЧШИЕ СООБЩЕСТВА ДЛЯ ВАС			
+                        ВАШЕ БУДУЩЕЕ ЗАВИСИТ ОТ ОКРУЖЕНИЯ, ПОЭТОМУ МЫ СОБИРАЕМ ТОЛЬКО ЛУЧШИЕ СООБЩЕСТВА ДЛЯ ВАС
                     </h2>
                     <p class="pt-10 pb-10">
                         "Найдите то, что вас вдохновляет, и позвольте этому вдохновению мотивировать вас к действию." - Tony Robbins
                     </p>
                     <a href="#" class="primary-btn text-uppercase">Найти сообщество</a>
-                </div>										
+                </div>
             </div>
-        </div>					
+        </div>
     </section>
         <!-- End banner Area -->
 
@@ -124,7 +51,7 @@
                             <p style="min-height: 90px;">
                                 Расскажите о своём проекте, чтобы собрать команду или привлечь бизнес партнеров.
                             </p>
-                            <a href="#">Заявить сейчас</a>									
+                            <a href="#">Заявить сейчас</a>
                         </div>
                     </div>
                 </div>
@@ -137,7 +64,7 @@
                             <p style="min-height: 90px;">
                                 Создайте сообщество вокруг своих интересов! Вместе мы создаем мир вдохновения и возможностей.
                             </p>
-                            <a href="#">Создать сейчас</a>									
+                            <a href="#">Создать сейчас</a>
                         </div>
                     </div>
                 </div>
@@ -150,7 +77,7 @@
                             <p style="min-height: 90px;">
                                 От спортивных клубов до хобби групп — здесь есть место для всех!
                             </p>
-                            <a href="#">Список сообществ</a>									
+                            <a href="#">Список сообществ</a>
                         </div>
                     </div>
                 </div>
@@ -163,12 +90,12 @@
                             <p style="min-height: 90px;">
                                 Опыт, единение, вдохновение: фестивали наших сообществ!
                             </p>
-                            <a href="#">Ближайшие фестивали</a>									
+                            <a href="#">Ближайшие фестивали</a>
                         </div>
                     </div>
-                </div>												
+                </div>
             </div>
-        </div>	
+        </div>
     </section>
 
         <!-- End feature Area -->
@@ -179,16 +106,16 @@
                     <div class="title text-center">
                         <h1 class="mb-10">Поддержка для сообществ</h1>
                         <!-- <p>
-                            Мы предлагаем широкий спектр услуг поддержки, 
-                            разработанных специально для содействия развитию и 
-                            процветанию вашего сообщества. Наша миссия состоит в том, 
-                            чтобы стать вашим надёжным партнёром в стремлении создать 
-                            сильное, взаимодействующее и вдохновляющее сообщество. 
+                            Мы предлагаем широкий спектр услуг поддержки,
+                            разработанных специально для содействия развитию и
+                            процветанию вашего сообщества. Наша миссия состоит в том,
+                            чтобы стать вашим надёжным партнёром в стремлении создать
+                            сильное, взаимодействующее и вдохновляющее сообщество.
                         </p> -->
                     </div>
                 </div>
-            </div>	
-            <div class="row">		
+            </div>
+            <div class="row">
                 <div class="col-lg-4">
                     <div class="single-cat-widget">
                         <div class="content relative">
@@ -199,7 +126,7 @@
                               </div>
                               <div class="content-details">
                                 <h4 class="content-title mx-auto text-uppercase w-75">Брендирование одежды</h4>
-                                <span></span>								        
+                                <span></span>
                                 <p class="w-75 mx-auto">Вышивка и печать логотипа сообществ на кепки, футболки, кофты, флаги и многом другом</p>
                               </div>
                             </a>
@@ -216,7 +143,7 @@
                               </div>
                               <div class="content-details">
                                 <h4 class="content-title mx-auto text-uppercase w-75">Консультация специалистов</h4>
-                                <span></span>								        
+                                <span></span>
                                 <p class="w-75 mx-auto">Юрист, бухгалтер, маркетолог, нотариус</p>
                               </div>
                             </a>
@@ -239,9 +166,9 @@
                             </a>
                         </div>
                     </div>
-                </div>												
+                </div>
             </div>
-        </div>	
+        </div>
     </section>
     <!-- Start cta-one Area -->
     <section class="cta-one-area relative section-gap">
@@ -251,18 +178,18 @@
                 <div class="wrap">
                     <h1 class="text-white">Единомышленники в один клик: ваш путь к новым связям.</h1>
                     <p class="mx-auto py-3">
-                        Наше приложение предоставляет уникальную платформу, 
-                        где вы можете найти тех, кто разделяет ваши 
-                        взгляды и увлечения, с легкостью и комфортом. 
-                        Откройте новые горизонты дружбы и сотрудничества 
-                        с нашим быстрым и простым поиском единомышленников. 
+                        Наше приложение предоставляет уникальную платформу,
+                        где вы можете найти тех, кто разделяет ваши
+                        взгляды и увлечения, с легкостью и комфортом.
+                        Откройте новые горизонты дружбы и сотрудничества
+                        с нашим быстрым и простым поиском единомышленников.
                     </p>
-                    <a class="primary-btn text-uppercase" href="#">Найти единомышленника</a>								
-                </div>					
+                    <a class="primary-btn text-uppercase" href="#">Найти единомышленника</a>
+                </div>
             </div>
-        </div>	
+        </div>
     </section>
-        <!-- End cta-one Area -->	
+        <!-- End cta-one Area -->
         <!-- Start popular-course Area -->
     {% if top_16_clubs %}
     <section class="popular-course-area section-gap">
@@ -278,14 +205,14 @@
                         </p>
                     </div>
                 </div>
-            </div>						
+            </div>
             <div class="row">
                 <div class="active-popular-carusel">
                     {% for club in top_16_clubs %}
                     <div class="single-popular-carusel club-item">
                         <div class="thumb-wrap relative">
                             <div class="thumb relative">
-                                <div class="overlay overlay-bg"></div>	
+                                <div class="overlay overlay-bg"></div>
                                 <img class="img-fluid" src="{{ club.logo.url}}" alt="">
                             </div>
                             <div class="custom-meta d-flex justify-content-between py-2">
@@ -297,15 +224,15 @@
                                         <i class="fa-solid fa-heart"></i> {{ club.likes_count }}
                                     </span>
                                 </div>
-                            </div>									
+                            </div>
                         </div>
                         <div class="details">
-                            <a href="#">
+                            <a href="{{ club.get_absolute_url }}">
                                 <h4 class="text-center">
                                     {{ club.name }}
                                 </h4>
                             </a>
-            
+
                         </div>
                         <a href="#" class="d-block primary-btn w-100 my-4 action-btn">Вступить</a>
                     </div>
@@ -313,7 +240,7 @@
                 </div>
             </div>
             <a href="#" class="d-block text-center">ВСЕ СООБЩЕСТВА</a>
-        </div>	
+        </div>
     </section>
     {% endif %}
         <!-- End popular-course Area -->
@@ -326,8 +253,8 @@
                     <div class="title text-center">
                         <h1 class="mb-10">БЛИЖАЙШИЕ СОБЫТИЯ</h1>
                         <p>
-                            Впереди много интересного: Откройте мир возможностей с 
-                            нашим списком ближайших событий! 
+                            Впереди много интересного: Откройте мир возможностей с
+                            нашим списком ближайших событий!
                         </p>
                     </div>
                 </div>
@@ -338,9 +265,9 @@
                     <div class="single-popular-carusel">
                         <div class="thumb-wrap relative">
                             <div class="thumb relative">
-                                <div class="overlay overlay-bg"></div>	
+                                <div class="overlay overlay-bg"></div>
                                 <img class="img-fluid" src="{{ event.banner.url }}" alt="">
-                            </div>							
+                            </div>
                         </div>
                         <div class="details">
                             <a href="#" class="mb-1"><h4 style="height: 50px;">{{ event.title }}</h4></a>
@@ -362,33 +289,28 @@
                 </div>
             </div>
             <a href="#" class="d-block text-center">ВСЕ СОБЫТИЯ</a>
-        </div>	
+        </div>
     </section>
     {% endif %}
-        <!-- End upcoming-event Area -->		
-        <!-- start footer Area -->		
-    <footer class="footer-area section-gap">
-        <div class="container">
-            <div class="row">
-                <h4 class="text-center mx-auto text-white">Центр событий, 2024</h4>
-            </div>						
-        </div>
-    </footer>	
-        <!-- End footer Area -->	
+    <!-- End upcoming-event Area -->
+{% endblock %}
 
+{% block footer %}
+    {% include 'partial/footer.html' %}
+{% endblock %}
 
+{% block scripts %}
     <script src="{%  static 'js/template_js/vendor/jquery-2.2.4.min.js' %}"></script>
-    <script src="{%  static 'js/template_js/vendor/bootstrap.min.js' %}"></script>			
+    <script src="{%  static 'js/template_js/vendor/bootstrap.min.js' %}"></script>
 {#    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>#}
-    <script src="{%  static 'js/template_js/easing.min.js' %}"></script>			
+    <script src="{%  static 'js/template_js/easing.min.js' %}"></script>
     <script src="{%  static 'js/template_js/hoverIntent.js' %}"></script>
-    <script src="{%  static 'js/template_js/superfish.min.js' %}"></script>	
+    <script src="{%  static 'js/template_js/superfish.min.js' %}"></script>
     <script src="{%  static 'js/template_js/jquery.ajaxchimp.min.js' %}"></script>
-    <script src="{%  static 'js/template_js/jquery.magnific-popup.min.js' %}"></script>	
-    <script src="{%  static 'js/template_js/jquery.tabs.min.js' %}"></script>						
-    <script src="{%  static 'js/template_js/jquery.nice-select.min.js' %}"></script>	
-    <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>									
-    <script src="{%  static 'js/template_js/mail-script.js' %}"></script>	
-    <script src="{%  static 'js/template_js/main.js' %}"></script>	
-</body>
-</html>
+    <script src="{%  static 'js/template_js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.tabs.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.nice-select.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
+    <script src="{%  static 'js/template_js/main.js' %}"></script>
+{% endblock %}
