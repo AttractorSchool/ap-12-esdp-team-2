@@ -1,0 +1,78 @@
+.custom-container {
+    padding: 0;
+}
+
+.event-description {
+    height: 300px;
+    word-wrap: break-word;
+    overflow-y: scroll;
+}
+
+/*.event-description::-webkit-scrollbar {*/
+/*    width: 1em;*/
+/*}*/
+
+.event-description::-webkit-scrollbar {
+    width: 6px;
+	background-color: #F5F5F5;
+}
+
+.event-description::-webkit-scrollbar {
+    background-color: #f7631b;
+    outline: 1px solid #333333;
+    height: 10px;
+}
+
+.event-description::-webkit-scrollbar-thumb
+{
+	background-color: #f7631b;
+}
+
+.event-description::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.event-key {
+    font-weight: bold;
+    color: black;
+}
+
+.event-value {
+    color: black;
+}
+
+.club_members, .club_likes {
+    color: #fff;
+    background: #f7631b;
+    border-radius: 5px;
+    padding: 2px;
+    display: inline-block;
+}
+
+.club-item {
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+.custom-meta {
+    padding: 0;
+}
+
+.action-btn {
+    border-radius: 5px;
+    text-align: center;
+}
+
+.action-btn:hover {
+    background: #fff;
+    border: 1px solid #f7631b;
+    color: #f7631b;
+}
+
+.y-border-eee {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+}

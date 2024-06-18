@@ -176,6 +176,7 @@ class Club(models.Model):
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
+        ordering = ('-members_count', '-likes_count', 'name')
 
     def delete(self, using=None, keep_parents=False):
         """
@@ -257,6 +258,7 @@ class ClubPartnerShipRequest(models.Model):
         related_name='partnership_receive_requests',
         verbose_name='Принимающий клуб',
     )
+    approved = models.BooleanField(verbose_name='Принято', null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

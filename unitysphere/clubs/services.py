@@ -84,7 +84,7 @@ class ClubServices:
         club.save()
 
 
-class ClubRequestServices:
+class ClubJoinRequestServices:
     @staticmethod
     def approve(request: models.ClubJoinRequest):
         request.approved = True
@@ -95,7 +95,20 @@ class ClubRequestServices:
     def reject(request: models.ClubJoinRequest):
         request.approved = False
         request.save()
-        request.club.members.remove(request.user)
+
+
+class ClubPartnershipRequestServices:
+
+    @staticmethod
+    def approve(request: models.ClubPartnerShipRequest) -> None:
+        request.approved = True
+        request.save()
+        request.club_accepter.partners.add(request.club_requester)
+
+    @staticmethod
+    def reject(request: models.ClubPartnerShipRequest) -> None:
+        request.approved = False
+        request.save()
 
 
 class FestivalServices:

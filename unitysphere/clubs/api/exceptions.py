@@ -115,3 +115,9 @@ class ClubJoinRequestAlreadyExistsException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'У данного пользователя уже есть запрос на вступление в клуб'
     default_code = 'club_join_request_already_exists'
+
+
+class PartnerShipAlreadyExistsException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Данные клубы уже являются партнерами'
+    default_code = 'partnership_already_exists'
