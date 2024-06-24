@@ -1,8 +1,10 @@
+import datetime
 import uuid
 
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
 from django.urls import reverse
+from pytz import timezone
 
 from accounts.models import phone_regex_validator
 
@@ -308,6 +310,10 @@ class ClubService(models.Model):
         """
         return self.name
 
+    @property
+    def get_first_img(self):
+        return ClubServiceImage.objects.filter(service=self).first()
+
     class Meta:
         verbose_name = 'Услуга клуба'
         verbose_name_plural = 'Услуги клуба'
@@ -426,6 +432,10 @@ class ClubEvent(models.Model):
         Возвращает строковое представление названия события.
         """
         return self.title
+
+    @property
+    def is_passed(self):
+        return datetime.datetime.now(tz=timezone('UTC')) > self.start_datetime
 
     class Meta:
         verbose_name = "Событие"

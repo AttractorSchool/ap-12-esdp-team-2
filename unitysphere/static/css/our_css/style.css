@@ -64,12 +64,30 @@
     border-radius: 5px;
     text-align: center;
     border: 1px solid #f7631b;
+    line-height: 21px;
+    color: #f7631b;
+    background: #fff;
 }
 
 .action-btn:hover {
-    background: #fff;
+    background: #f7631b;
     border: 1px solid #f7631b;
-    color: #f7631b;
+    color: #fff;
+}
+
+.info-btn {
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #0c4bee;
+    background: #fff;
+    line-height: 21px;
+    color: #0c4bee
+}
+
+.info-btn:hover {
+    background: #0c4bee;
+    border: 1px solid #0c4bee;
+    color: #fff;
 }
 
 .y-border-eee {
@@ -96,4 +114,89 @@
 
 .event-title {
     height: 80px;
+}
+
+.event-startdatetime {
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.event-passed {
+    color: red;
+}
+
+.event-not-passed {
+    color: green;
+}
+
+.custom-search-input {
+    color: #000;
+    padding: 5px 22px;
+    font-size: 14px;
+    border: 1px solid #f7631b;
+    float: left;
+    width: 80%;
+    background: #fff;
+}
+
+.custom-search-input::placeholder {
+    color: #fff;
+    opacity: 1;
+}
+
+.custom-search-button {
+    float: left;
+    width: 15%;
+    padding: 5px 0px;
+    background: #f7631b;
+    color: #fff;
+    font-size: 17px;
+    border: 1px solid #f7631b;
+    cursor: pointer;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.filter-option {
+    padding-left: 20px;
+    word-wrap: break-word;
+}
+
+.club-description {
+    height: 200px;
+    word-wrap: break-word;
+    overflow-y: scroll;
+}
+
+/*.event-description::-webkit-scrollbar {*/
+/*    width: 1em;*/
+/*}*/
+
+.club-description::-webkit-scrollbar {
+    width: 6px;
+	background-color: #F5F5F5;
+}
+
+.club-description::-webkit-scrollbar {
+    background-color: #f7631b;
+    outline: 1px solid #333333;
+    height: 10px;
+}
+
+.club-description::-webkit-scrollbar-thumb
+{
+	background-color: #f7631b;
+}
+
+.club-description::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.club-list {
+    row-gap: 30px;
+    margin: 30px 0 10px 0;
 }
