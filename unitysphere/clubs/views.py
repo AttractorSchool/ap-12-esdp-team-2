@@ -24,10 +24,7 @@ class ClubDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['link_1'] = 'СООБЩЕСТВА'
-        context['link_1_url'] = '/#'
-        context['link_2'] = self.get_object().name
-        context['link_2_url'] = self.get_object().get_absolute_url()
+        context['page_title'] = self.get_object().name
         context['photos'] = models.ClubGalleryPhoto.objects.filter(club=self.get_object())
         context['services'] = models.ClubService.objects.filter(club=self.get_object())
         context['events'] = models.ClubEvent.objects.annotate(
@@ -48,8 +45,7 @@ class ClubListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['link_1'] = 'СООБЩЕСТВА'
-        context['link_1_url'] = reverse('clubs')
+        context['page_title'] = 'ВСЕ СООБЩЕСТВА'
         context['search'] = self.request.GET.get('search')
         context['categories'] = models.ClubCategory.objects.all()
         return context
@@ -76,8 +72,7 @@ class CategoryClubsView(generic.DetailView):
         if search_query:
             clubs_list = clubs_list.filter(name__icontains=search_query)
         page_obj = self.get_paginator(clubs_list)
-        context['link_1'] = self.object.name
-        context['link_1_url'] = reverse('clubs')
+        context['page_title'] = self.object.name
         context['categories'] = models.ClubCategory.objects.all()
         context['is_paginated'] = page_obj.has_other_pages()
         context['page_obj'] = context['clubs'] = page_obj
@@ -93,6 +88,28 @@ class CategoryClubsView(generic.DetailView):
         except EmptyPage:
             page_obj = paginator.page(paginator.num_pages)
         return page_obj
+
+
+class ClubEventListView(generic.ListView):
+    model = models.ClubService
+    context_object_name = 'events'
+    template_name = 'clubs/club_events.html'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'События клубов'
+        return ctx
+
+    def get_queryset(self):
+        qs = models.ClubEvent.objects.annotate(
+            datetime_passed=Case(
+                When(start_datetime__lt=timezone.now(), then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField()
+            )
+        ).order_by('datetime_passed', 'start_datetime')
+        return qs
 
 
 class EventCalendarView(generic.ListView):

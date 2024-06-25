@@ -21,60 +21,38 @@
 
 {% block content %}
     {% include 'partial/breadcrumb.html' %}
-    <section class="club-filter my-4">
+    <section class="events-list-area section-gap event-page-lists">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="default-select" id="default-select">
-                        <select class="club-filter-select" onchange="redirectToPage(this)">
-                            <option value="/clubs" class="filter-option {% if not category %}selected{% endif %}">Все сообщества</option>
-                            {% for cat in categories %}
-                            <option value="/category/{{ cat.id }}" class="filter-option {% if category == cat %}selected{% endif %}">
-                                {{ cat.name }}</option>
-                            {% endfor %}
-                        </select>
+            <div class="row align-items-center">
+                {% for event in events %}
+                <div class="col-lg-6 pb-30">
+                    <div class="single-carusel row align-items-center">
+                        <div class="col-12 col-md-6 thumb">
+                            <img class="img-fluid" src="{{ event.banner.url }}" alt="">
+                        </div>
+                        <div class="detials col-12 col-md-6">
+                            <p>
+                                <span class="event-startdatetime">
+                                    <i class="fa-regular fa-calendar {% if event.is_passed %}event-passed{% else %}event-not-passed{% endif %}"></i>
+                                    {{ event.start_datetime|date:'d.m.Y H:i' }}
+                                </span>
+                            </p>
+                            <a href="event-details.html"><h4>{{ event.title }}</h4></a>
+                            <p>
+                                {{ event.description|slice:":200" }}...
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <form class="search-form" action="#">
-                        <input  class="custom-search-input" placeholder="Найти сообщества..." name="search" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Найти сообщества...'"value="{% if search %}{{ search }}{% endif %}">
-                        <button type="submit" class="custom-search-button"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="club-list mb-5">
-        <div class="container">
-            <div class="row club-list">
-                {% for club in clubs %}
-                    <div class="single-popular-carusel col-lg-3 col-md-6">
-                        <div class="thumb-wrap relative">
-                            <div class="thumb relative">
-                                <div class="overlay overlay-bg"></div>	
-                                <img class="img-fluid" src="{{ club.logo.url }}" alt="">
-                            </div>	                            
-                        </div>
-                        <div class="details">
-                            <a href="{{ club.get_absolute_url }}">
-                                <h6 class="mt-1 text-uppercase text-center">
-                                    {{ club.name }}
-                                </h6>
-                            </a>
-                        </div>
-                            <a href="{{ club.get_absolute_url }}" class="d-block primary-btn w-100 my-2 info-btn">Страница сообщества</a>
-                            <a href="#" class="d-block primary-btn w-100 my-2 action-btn">Вступить</a>
-                    
-                    </div>
                 {% empty %}
                     {% if search %}
                         <h5 class="text-danger text-center mx-auto">По запросу {{ search }} ничего не найдено</h5>
                     {% else %}
-                        <h5 class="text-danger text-center mx-auto">Список сообществ пуст</h5>
+                        <h5 class="text-danger text-center mx-auto">Список событии пуст</h5>
                     {% endif %}
                 {% endfor %}
             </div>
-        </div>
+        </div>	
     </section>
     <section class="pagination">
         
@@ -104,13 +82,4 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
-    <script>
-        function redirectToPage(selectElement) {
-            let selectedValue = selectElement.value;
-            window.location.href = selectedValue;
-        }
-        let currentOption = document.getElementById("current");
-        let selectedOption = document.querySelector(".filter-option.selected")
-        console.log(currentOption)
-    </script>
 {% endblock %}
