@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{%  static 'css/template_css/linearicons.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/nice-select.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/animate.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/template_css/main.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/our_css/style.css' %}">
+{% endblock %}
+
+{% block header %}
+    {% include 'partial/header.html' %}
+{% endblock %}
+
+{% block content %}
+    <section class="banner-area relative about-banner" id="home">
+        <div class="overlay overlay-bg"></div>
+        <div class="container">
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="about-content col-lg-12">
+                    <h1 class="text-white">
+                        О НАС
+                    </h1>
+                    <p class="text-white link-nav"><a href="/"> Главная страница </a>  <span class="lnr lnr-arrow-right"></span>  <a href="about.html"> О нас </a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- End Banner About -->
+
+        <!-- Start UnderBannerAbout -->
+    <section class="feature-area pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="single-feature">
+                        <div class="title">
+                            <h4>Хотите узнать больше?</h4>
+                        </div>
+                        <div class="desc-wrap">
+                            <p>
+                                Если у вас есть вопросы или предложения, мы всегда готовы помочь! Нажмите на кнопку ниже, чтобы связаться с нами через чат.
+                            </p>
+                            <a href="#">Присоединяйся сейчас</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="single-feature">
+                        <div class="title">
+                            <h4>Хотите открыт для себя мир новых знакомств?</h4>
+                        </div>
+                        <div class="desc-wrap">
+                            <p>
+                                Присоединяйтесь к нам и начните свое путешествие уже сегодня! Нажмите на одну из кнопок ниже, чтобы связаться с нами
+                            </p>
+                            <a href="#">Присоединяйся сейчас</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="single-feature">
+                        <div class="title">
+                            <h4>Хотите стать частью нашего сообщества?</h4>
+                        </div>
+                        <div class="desc-wrap">
+                            <p>
+                                Здесь каждый найдет что-то для себя: от профессиональных мероприятий до творческих мастерских
+                            </p>
+                            <a href="#">Присоединяйся сейчас</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- End UnderBannerAbout -->
+
+        <!--InformationSection-->
+    <section class="info-area pb-120">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6 no-padding info-area-left">
+                    <img class="img-fluid" src="{% static 'images/about-img.jpg' %}" alt="">
+                </div>
+                <div class="col-lg-6 info-area-right">
+                    <h1>Центр событий</h1>
+                    <p>Центр событий - это справочник организаций досуга и профессиональной деятельности, а также единомышленников, федераций, фан-клубов, сообществ, спортивных секций, самобытных групп. Здесь вы найдете информацию о культурных и образовательных учреждениях, мастер-классах, тренингах, концертных площадках, театральных студиях, а также о клубах по интересам, благотворительных организациях и волонтерских движениях.</p>
+                    <br>
+                    <h4>
+                        Центр событий объединяет тех, кто ищет <br> возможности для самореализации и развития <br>своих талантов
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Start MissionAbout -->
+    <section class="course-mission-area pb-120">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="menu-content pb-70 col-lg-8">
+                    <div class="title text-center">
+                        <h1 class="mb-10">Для пользователей</h1>
+                        <p>Здесь каждый найдет что-то для себя: от профессиональных мероприятий до творческих мастерских.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 accordion-left">
+                    <!-- accordion start -->
+                    <dl class="accordion">
+                        <dt>
+                            <a href="javascript:void(0);">1.1 Организации по трем категориям:</a>
+                        </dt>
+                        <dd>
+                            - Спорт<br>
+                            - Хобби<br>
+                            - Профессия<br>
+                            <i>Тут вы сможете вступить в понравившуюся вам организацию, принимать участие в ее клубных мероприятиях.</i>
+                        </dd>
+                        <dt>
+                            <a href="javascript:void(0);">1.2 Людей по направлению вашей профессиональной деятельности, хобби, спорту:</a>
+                        </dt>
+                        <dd>
+                            Тут вы можете дать объявление о поиске одного или нескольких человек, специалистов, единомышленников для личных целей.<br>
+                            Пример: "Меня зовут Батыр, ищу партнера для утренних пробежек в районе Весновки, буду рад единомышленнику".
+                        </dd>
+                        <dt>
+                            <a href="javascript:void(0);">1.3 Предлагаемые Центром акции (работа, услуги, товары):</a>
+                        </dt>
+                        <dd>
+                            - Спортивные клубы<br>
+                            - Хобби-клубы<br>
+                            - Профессиональные клубы
+                        </dd>
+                        <dt>
+                            <a href="javascript:void(0);">1.4 Специальные предложения Центра (работа, услуги, товары):</a>
+                        </dt>
+                        <dd>
+                            - Спортивные клубы<br>
+                            - Хобби-клубы<br>
+                            - Профессиональные клубы
+                        </dd>
+                        <dt>
+                            <a href="javascript:void(0);">1.5 Мероприятия, предлагаемые Центром:</a>
+                        </dt>
+                        <dd>
+                            - Спортивные клубы<br>
+                            - Хобби-клубы<br>
+                            - Профессиональные клубы
+                        </dd>
+                        <dt>
+                            <a href="javascript:void(0);">1.6 Лента новостей</a>
+                        </dt>
+                        <dd>
+                            Будьте в курсе последних событий и новостей нашего Центра.
+                        </dd>
+                        <dt>
+                            <a href="javascript:void(0);">1.7 Календарь мероприятий</a>
+                        </dt>
+                        <dd>
+                            Узнайте о предстоящих событиях и запланируйте свое участие.
+                        </dd>
+                    </dl>
+                    <!-- accordion end -->
+                </div>
+                <div class="col-md-6 video-container">
+                    <video width="100%" height="100%" poster="{% static 'images/logo_v2.png' %}" controls>
+                        <source src="http://fan-club.kz/video/club.webmhd.webm" type="video/webm">
+                        Ваш браузер не поддерживает этот формат
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- End MissionAbout -->
+
+        <!-- Start FormAbout -->
+    <section class="search-course-area relative">
+        <div class="overlay overlay-bg"></div>
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-lg-6 col-md-6 search-course-left">
+                    <h1 class="text-white">
+                        Get reduced fee <br>
+                        during this Summer!
+                    </h1>
+                    <p>
+                        inappropriate behavior is often laughed off as “boys will be boys,” women face higher conduct standards especially in the workplace. That’s why it’s crucial that, as women, our behavior on the job is beyond reproach.
+                    </p>
+                    <div class="row details-content">
+                        <div class="col single-detials">
+                            <span class="lnr lnr-graduation-hat"></span>
+                            <a href="#"><h4>Expert Instructors</h4></a>
+                            <p>
+                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+                            </p>
+                        </div>
+                        <div class="col single-detials">
+                            <span class="lnr lnr-license"></span>
+                            <a href="#"><h4>Certification</h4></a>
+                            <p>
+                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 search-course-right section-gap">
+                    <form class="form-wrap" action="#">
+                        <h4 class="text-white pb-20 text-center mb-30">Search for Available Course</h4>
+                        <input type="text" class="form-control" name="name" placeholder="Your Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Name'" >
+                        <input type="phone" class="form-control" name="phone" placeholder="Your Phone Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Phone Number'" >
+                        <input type="email" class="form-control" name="email" placeholder="Your Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email Address'" >
+                        <div class="form-select" id="service-select">
+                            <select>
+                                <option datd-display="">Choose Course</option>
+                                <option value="1">Course One</option>
+                                <option value="2">Course Two</option>
+                                <option value="3">Course Three</option>
+                                <option value="4">Course Four</option>
+                            </select>
+                        </div>
+                        <button class="primary-btn text-uppercase">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End FormAbout -->
+{% endblock %}
+
+{% block footer %}
+    {% include 'partial/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{%  static 'js/template_js/vendor/jquery-2.2.4.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/vendor/bootstrap.min.js' %}"></script>
+{#    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>#}
+    <script src="{%  static 'js/template_js/easing.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/hoverIntent.js' %}"></script>
+    <script src="{%  static 'js/template_js/superfish.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.ajaxchimp.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.tabs.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/jquery.nice-select.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
+    <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
+    <script src="{%  static 'js/template_js/main.js' %}"></script>
+{% endblock %}

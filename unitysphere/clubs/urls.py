@@ -9,4 +9,5 @@ urlpatterns = [
     path('club/events/', views.ClubEventListView.as_view(), name='club_events'),
     path('club/events/<uuid:pk>/', views.EventDetailView.as_view(), name='event_detail'),
     path('event-calendar/', views.EventCalendarView.as_view(), name='event_calendar'),
+    path('about/', views.AboutView.as_view(), name='about'),
 ]

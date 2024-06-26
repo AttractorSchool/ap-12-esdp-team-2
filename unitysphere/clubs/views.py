@@ -130,3 +130,7 @@ class EventCalendarView(generic.ListView):
     model = models.ClubEvent
     context_object_name = 'events'
     template_name = 'clubs/event_calendar.html'
+
+
+class AboutView(generic.TemplateView):
+    template_name = 'clubs/about.html'
