@@ -44,6 +44,9 @@ class ClubCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'pk': self.pk})
+
 
 class City(models.Model):
     """
@@ -191,6 +194,14 @@ class Club(models.Model):
 
     def get_absolute_url(self):
         return reverse('club_detail', kwargs={'pk': self.pk})
+
+    def get_managers_phone_str(self):
+        phones = ', '.join(manager.phone for manager in self.managers.all() if manager.phone)
+        return phones
+
+    def get_managers_email_str(self):
+        emails = ', '.join(manager.email for manager in self.managers.all() if manager.email)
+        return emails
 
 
 class ClubJoinRequest(models.Model):
@@ -440,6 +451,24 @@ class ClubEvent(models.Model):
     class Meta:
         verbose_name = "Событие"
         verbose_name_plural = "События"
+
+    def get_age_restriction_str(self):
+        if self.min_age is None and self.max_age is None:
+            return 'Без ограничении'
+        if self.min_age is None and self.max_age:
+            return f'Лицам до {self.max_age}'
+        if self.min_age and self.max_age is None:
+            return f'Лицам с {self.min_age}'
+        if self.min_age and self.max_age:
+            return f'{self.min_age} - {self.max_age}'
+
+    def get_entry_restriction_str(self):
+        if self.entry_requirements is None:
+            return 'Требовании нет'
+        return self.entry_requirements
+
+    def get_absolute_url(self):
+        return reverse('event_detail', kwargs={'pk': self.pk})
 
 
 class ClubAdType(models.Model):

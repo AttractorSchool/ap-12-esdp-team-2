@@ -12,6 +12,7 @@ class IndexView(generic.TemplateView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['categories'] = models.ClubCategory.objects.all()
         context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
         context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
         return context
@@ -24,6 +25,7 @@ class ClubDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['categories'] = models.ClubCategory.objects.all()
         context['page_title'] = self.get_object().name
         context['photos'] = models.ClubGalleryPhoto.objects.filter(club=self.get_object())
         context['services'] = models.ClubService.objects.filter(club=self.get_object())
@@ -91,7 +93,7 @@ class CategoryClubsView(generic.DetailView):
 
 
 class ClubEventListView(generic.ListView):
-    model = models.ClubService
+    model = models.ClubEvent
     context_object_name = 'events'
     template_name = 'clubs/club_events.html'
     paginate_by = 2
@@ -99,6 +101,7 @@ class ClubEventListView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'События клубов'
+        ctx['categories'] = models.ClubCategory.objects.all()
         return ctx
 
     def get_queryset(self):
@@ -110,6 +113,17 @@ class ClubEventListView(generic.ListView):
             )
         ).order_by('datetime_passed', 'start_datetime')
         return qs
+
+
+class EventDetailView(generic.DetailView):
+    model = models.ClubEvent
+    context_object_name = 'event'
+    template_name = 'clubs/event_detail.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = self.get_object().title
+        return ctx
 
 
 class EventCalendarView(generic.ListView):

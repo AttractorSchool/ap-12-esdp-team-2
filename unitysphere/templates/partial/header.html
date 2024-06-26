@@ -19,20 +19,20 @@
     <div class="container main-menu">
         <div class="row align-items-center justify-content-between d-flex">
           <div id="logo">
-            <a href="#"><img src="{% static 'images/logo_v2.png' %}" alt="" title="" style="width: 150px;"/></a>
+            <a href="{% url 'index' %}"><img src="{% static 'images/logo_v2.png' %}" alt="" title="" style="width: 150px;"/></a>
           </div>
           <nav id="nav-menu-container">
             <ul class="nav-menu">
-              <li><a href="#">ГЛАВНАЯ</a></li>
+              <li><a href="{% url 'index' %}">ГЛАВНАЯ</a></li>
               <li><a href="#">О НАС</a></li>
               <li class="menu-has-children"><a href="">СООБЩЕСТВА</a>
                 <ul>
-                  <li><a href="#">СПОРТИВНЫЕ КЛУБЫ</a></li>
-                  <li><a href="#">ХОББИ КЛУБЫ</a></li>
-                  <li><a href="#">ПРОФЕССИОНАЛЬНЫЕ КЛУБЫ</a></li>
+                    {% for cat in categories %}
+                  <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
+                    {% endfor %}
                 </ul>
               </li>
-              <li><a href="#">СОБЫТИЯ</a></li>
+              <li><a href="{% url 'club_events' %}">СОБЫТИЯ</a></li>
               <li><a href="#">НОВОСТИ</a></li>
               <li class="menu-has-children"><a href="">УСЛУГИ</a>
                 <ul>
