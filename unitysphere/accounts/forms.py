@@ -42,6 +42,19 @@ class UserLoginForm(AuthenticationForm):
     )
 
 
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('phone', 'email', 'avatar', 'first_name', 'last_name')
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'email': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+
+
 class VerifyUserForm(forms.Form):
     code = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control text-center'}),
