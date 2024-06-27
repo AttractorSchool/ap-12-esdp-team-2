@@ -43,7 +43,7 @@ class ClubListView(generic.ListView):
     model = models.Club
     context_object_name = 'clubs'
     template_name = 'clubs/clubs.html'
-    paginate_by = 2
+    paginate_by = 40
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,7 +64,7 @@ class CategoryClubsView(generic.DetailView):
     model = models.ClubCategory
     context_object_name = 'category'
     template_name = 'clubs/clubs.html'
-    paginate_by = 2
+    paginate_by = 40
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,7 +96,7 @@ class ClubEventListView(generic.ListView):
     model = models.ClubEvent
     context_object_name = 'events'
     template_name = 'clubs/club_events.html'
-    paginate_by = 2
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -123,6 +123,18 @@ class EventDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = self.get_object().title
+        return ctx
+
+
+class ClubServiceListView(generic.ListView):
+    model = models.ClubService
+    context_object_name = 'services'
+    template_name = 'clubs/club_services.html'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Услуги клубов'
         return ctx
 
 
