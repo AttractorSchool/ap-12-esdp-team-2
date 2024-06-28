@@ -39,15 +39,16 @@ class UserUpdateView(LoginRequiredMixin, generic.FormView):
     form_class = UserUpdateForm
     template_name = 'accounts/update_profile.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['page_title'] = 'Изменить профиль'
-        ctx['categories'] = ClubCategory.objects.all()
-        return ctx
-
     def get(self, request, *args, **kwargs):
         form = self.form_class(instance=request.user)
-        return self.render_to_response({'form': form})
+        page_title = 'Изменить профиль'
+        categories = ClubCategory.objects.all()
+        ctx = {
+            'page_title': page_title,
+            'categories': categories,
+            'form': form,
+        }
+        return self.render_to_response(ctx)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, instance=request.user)

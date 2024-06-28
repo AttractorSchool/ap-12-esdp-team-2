@@ -19,9 +19,10 @@
 
 {% block content %}
     {% include 'partial/breadcrumb.html' %}
-    <section class="course-details-area pt-60 pb-60 position-relative">
+    <section class="course-details-area pt-30 pb-60 position-relative">
     <div class="my-overlay" id="my-overlay" onclick="closeModals(this)"></div>
         <div class="container">
+            <h3 class="text-center mb-3">Профиль</h3>
             <div class="row justify-content-center">
                 <div class="col-lg-3">
                     <div class="main-image">
@@ -63,6 +64,9 @@
                             </span>
                         </li>
                     </ul>
+                    <a href="{% url 'user_update' %}" type="submit" class="btn btn-primary d-block w-100">
+                        Редактировать профиль
+                    </a>
                 </div>
             </div>
             <div class="row">
@@ -170,7 +174,7 @@
                 {% csrf_token %}
                 <label class="d-block text-center" for="about-input">О себе</label>
                 <input type="text" name="profile" id="profile-id" hidden="hidden" value="{{ request.user.profile.id }}">
-                <textarea class="profile-partial" name="about" cols="40" rows="10" id="about-input"></textarea>
+                <textarea class="profile-partial" name="about" cols="40" rows="10" id="about-input">{{ request.user.profile.about }}</textarea>
                 <button type="submit" class="btn btn-primary d-block w-100">
                     Сохранить
                 </button>
@@ -180,7 +184,7 @@
             <form action="" class="goals-update-form" id="update-goals">
                 {% csrf_token %}
                 <label class="d-block text-center" for="about-input">Цели на жизнь</label>
-                <textarea class="profile-partial" name="goals" cols="40" rows="10" id="goals-input"></textarea>
+                <textarea class="profile-partial" name="goals" cols="40" rows="10" id="goals-input">{{ request.user.profile.goals_for_life }}</textarea>
                 <button type="submit" class="btn btn-primary d-block w-100">
                     Сохранить
                 </button>
@@ -190,7 +194,7 @@
             <form action="" class="interests-update-form" id="update-interests">
                 {% csrf_token %}
                 <label class="d-block text-center" for="interests-input">Интересы</label>
-                <textarea class="profile-partial" name="goals" cols="40" rows="10" id="interests-input"></textarea>
+                <textarea class="profile-partial" name="goals" cols="40" rows="10" id="interests-input">{{ request.user.profile.interests }}</textarea>
                 <button type="submit" class="btn btn-primary d-block w-100">
                     Сохранить
                 </button>
