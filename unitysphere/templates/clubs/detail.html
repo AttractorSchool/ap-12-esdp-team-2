@@ -28,14 +28,32 @@
                     <div class="main-image">
                         <img class="img-fluid club-detail-img w-100" src="{{ club.logo.url }}" alt="">
                     </div>
-                    <h4 class="text-center">{{ club.name }}</h4>
+                    <div class="club-likes-members-count px-2 d-flex justify-content-between">
+                        <span class="font-weight-bold d-block">
+                            <i class="fa-regular fa-heart club-likes"></i>
+                            {{ club.likes_count }}
+                        </span>
+                        <span class="font-weight-bold d-block">
+                            <i class="fa-solid fa-user-group club-members"></i>
+                            {{ club.members_count }}
+                        </span>
+                    </div>
+                    {% if request.user in club.managers.all %}
+                        <a href="{% url 'club_edit' club.pk %}" class="btn btn-primary w-100 mt-1"><i class="fa-solid fa-pen mr-1"></i>Редактировать</a>
+                        <button class="btn btn-secondary w-100 mt-1"><i class="fa-solid fa-circle-minus mr-1"></i>Деактивировать</button>
+                    {% endif %}
+                    {% if request.user in club.members.all %}
+                        <button class="btn btn-danger w-100 mt-1"><i class="fa-solid fa-right-from-bracket mr-1"></i>Отписаться</button>
+                    {% else %}
+                        <button class="btn btn-success w-100 mt-1"><i class="fa-solid fa-arrow-right-to-bracket mr-1"></i>Подписаться</button>
+                    {% endif %}
                 </div>
                 <div class="col-lg-4 right-contents">
                     <ul>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
                                 <p>Создатель</p> 
-                                <span">{{ club.creater }}</span>
+                                <span>{{ club.creater }}</span>
                             </span>
                         </li>
                         <li>
@@ -68,10 +86,6 @@
                                 </span>
                             </span>
                         </li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 right-contents">
-                    <ul>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
                                 <p>Email</p> 
@@ -84,28 +98,7 @@
                                 <span>{{ club.phone }}</span>
                             </span>
                         </li>
-                        <li>
-                            <span class="justify-content-between d-flex" href="#">
-                                <p>Участники</p>
-                                <span>
-                                    {{ club.members_count }}
-                                </span>
-                            </span>
-                        </li>
-                        <li>
-                            <span class="justify-content-between d-flex" href="#">
-                                <p>Лайки</p>
-                                <span>
-                                    {{ club.likes_count }}
-                                </span>
-                            </span>
-                        </li>
                     </ul>
-                    <a href="#" class="primary-btn text-uppercase">Вступить</a>
-{#                    {% if request.user in club.managers %}#}
-                    <a href="#" class="primary-btn text-uppercase">Редактировать</a>
-                    <a href="#" class="primary-btn text-uppercase">Деактивировать</a>
-{#                    {% endif %}#}
                 </div>
             </div>
             <div class="row">
@@ -122,7 +115,7 @@
                             <div class="jq-tab-title" data-tab="5">Посты</div>
                         </div>
                         <div class="jq-tab-content-wrapper">
-                            <div class="jq-tab-content active mt-2" data-tab="1">
+                            <div class="jq-tab-content active mt-2 club-description" data-tab="1">
                                 {{ club.description }}
                             </div>
                             <div class="jq-tab-content" data-tab="2">
@@ -133,54 +126,58 @@
                                                 <img src="{{ photo.image.url }}" alt="" class="club-gallery-image w-100 h-100">
                                             </a>
                                         </div>
-                                        {% if forloop.last %}
-{#                                            {% if request.user in club.managers %}#}
-                                            <div class="col-lg-4 mb-4">
-                                                <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
-                                                    <a href="#" class="add-item">
-                                                        <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
-                                                        <span class="add-item-text d-block mt-2 text-center">Добавить фото</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-{#                                            {% endif %}#}
-                                        {% endif %}
                                     {% empty %}
-                                        Фотогалерея пуста
                                     {% endfor %}
+                                    {% if request.user in club.managers.all %}
+                                        <div class="col-lg-4 mb-4">
+                                            <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
+                                                <a href="#" class="add-item">
+                                                    <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
+                                                    <span class="add-item-text d-block mt-2 text-center">Добавить фото</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 {% if photos|length > 12 %}
                                 <a href="#" class="text-center d-block">Все фото</a>
                                 {% endif %}
                             </div>
                             <div class="jq-tab-content" data-tab="3">
-                                <div class="progress-table-wrap">
-                                    <div class="progress-table">
-                                {% for service in services|slice:":12" %}
-                                    {% if forloop.first %}
-                                    <div class="table-head justify-content-center">
-                                        <div class="serial">#</div>
-                                        <div class="country">Название услуги</div>
-                                        <div class="percentage">Цена(ТГ)</div>
+                                <div class="row">
+                                    {% for service in club.services.all|slice:":12" %}
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="event-card">
+                                            <div class="event-img">
+                                                <img src="{{ service.images.first.image.url }}" alt="">
+                                            </div>
+                                            <div class="event-detail">
+                                                <h5 class="event-title text-center y-border-eee">
+                                                    {{ service.name }}
+                                                </h5>
+                                                <p class="text-center">
+                                                    <b class="text-dark font-weight-bold">Цена:</b> {{ service.price }} Тг
+                                                </p>
+                                                <a class="primary-btn action-btn text-uppercase d-block w-50 mx-auto my-2" href="#">Детали</a>
+                                            </div>
+                                        </div>
                                     </div>
+                                    {% empty %}
+                                    {% endfor %}
+                                    {% if request.user in club.managers.all %}
+                                        <div class="col-lg-4 mb-4">
+                                            <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
+                                                <a href="#" class="add-item">
+                                                    <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
+                                                    <span class="add-item-text d-block mt-2 text-center">Добавить услугу</span>
+                                                </a>
+                                            </div>
+                                        </div>
                                     {% endif %}
-                                    <div class="table-row justify-content-center">
-                                        <div class="serial">{{ forloop.counter }}</div>
-                                        <div class="country">{{ service.name }}</div>
-                                        <div class="country">{{ service.price }}</div>
-                                        <a class="primary-btn action-btn text-uppercase" href="#">Детали</a>
-                                    </div>
-                                {% empty %}
-                                    Список услуг пуст
-                                {% endfor %}
-{#                                    {% if request.user in service.club.managers %}#}
-                                    <a href="#" class="add-service-link d-block text-center"><i class="fa-solid fa-plus"></i>Добавить услугу</a>
-{#                                    {% endif %}#}
-                                    </div>
+                                    {% if events|length > 12 %}
+                                        <a href="#" class="d-block text-center">Все услуги</a>
+                                    {% endif %}
                                 </div>
-                                {% if services|length > 12 %}
-                                    <a href="#" class="d-block text-center">Все услуги</a>
-                                {% endif %}
                             </div>
                             <div class="jq-tab-content" data-tab="4">
                                 <div class="row">
@@ -202,21 +199,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                        {% if forloop.last %}
-{#                                            {% if request.user in club.managers %}#}
-                                            <div class="col-lg-4 mb-4">
-                                                <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
-                                                    <a href="#" class="add-item">
-                                                        <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
-                                                        <span class="add-item-text d-block mt-2 text-center">Добавить событие</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-{#                                            {% endif %}#}
-                                        {% endif %}
                                     {% empty %}
-                                        Список событии пуст
                                     {% endfor %}
+                                    {% if request.user in club.managers.all %}
+                                        <div class="col-lg-4 mb-4">
+                                            <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
+                                                <a href="#" class="add-item">
+                                                    <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
+                                                    <span class="add-item-text d-block mt-2 text-center">Добавить событие</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                     {% if events|length > 12 %}
                                         <a href="#" class="d-block text-center">Все услуги</a>
                                     {% endif %}

@@ -43,11 +43,11 @@
               <li class="menu-has-children"><a href="">Профиль</a>
                 <ul>
                     {% if request.user.is_authenticated %}
-                      <li><a href="#">ЛИЧНЫЙ КАБИНЕТ</a></li>
-                      <li><a href="#">ВЫХОД</a></li>
+                      <li><a href="{{ request.user.get_absolute_url }}">ЛИЧНЫЙ КАБИНЕТ</a></li>
+                      <li><a href="{% url 'logout' %}">ВЫХОД</a></li>
                     {% else %}
-                        <li><a href="#">РЕГИСТРАЦИЯ</a></li>
-                        <li><a href="#">ВХОД</a></li>
+                        <li><a href="{% url 'register' %}">РЕГИСТРАЦИЯ</a></li>
+                        <li><a href="{% url 'login' %}">ВХОД</a></li>
                     {% endif %}
                 </ul>
               </li>	

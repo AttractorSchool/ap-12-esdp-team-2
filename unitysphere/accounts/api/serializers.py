@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers
 
-from accounts.models import User
+from accounts.models import User, Profile
 
 
 class UserLoginSerializer(serializers.Serializer):
@@ -45,3 +45,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserVerifySerializer(serializers.Serializer):
     user_session_id = serializers.UUIDField()
     sms_code = serializers.CharField()
+
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Profile
+        fields = '__all__'

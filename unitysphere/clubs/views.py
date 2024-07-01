@@ -1,9 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Case, When, Value, BooleanField
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
-from . import models
+from . import models, forms
 from calendar import HTMLCalendar
 
 
@@ -43,7 +45,7 @@ class ClubListView(generic.ListView):
     model = models.Club
     context_object_name = 'clubs'
     template_name = 'clubs/clubs.html'
-    paginate_by = 2
+    paginate_by = 40
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,11 +62,67 @@ class ClubListView(generic.ListView):
         return qs
 
 
+class ClubCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.Club
+    template_name = 'clubs/create_club.html'
+    form_class = forms.ClubForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['categories'] = models.ClubCategory.objects.all()
+        ctx['page_title'] = 'Создать сообщество'
+        return ctx
+
+    def form_valid(self, form):
+        if form.is_valid():
+            club = form.save(commit=False)
+            club.creater = self.request.user
+            club.save()
+            club.managers.add(self.request.user)
+            club.members_count += 1
+            club.members.add(self.request.user)
+            return redirect(club.get_absolute_url())
+        else:
+            return super().form_invalid(form)
+
+
+class ClubEditView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Club
+    template_name = 'clubs/create_club.html'
+    form_class = forms.ClubUpdateForm
+
+    def has_permission(self):
+        return self.request.user in self.get_object().managers.all()
+
+
+class ChooseClubManagersView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Club
+    template_name = 'clubs/choose_club_managers.html'
+    form_class = forms.SelectClubManagersForm
+
+    def has_permission(self):
+        return self.request.user in self.get_object().managers.all()
+
+    def form_valid(self, form):
+        users_after = form.data.getlist('managers')
+        check = self.form_class.required_at_least_one_manager
+        if form.is_valid() and check(users_after, form):
+            self.get_object().managers.set(form.cleaned_data.get('managers'))
+            return redirect(self.get_object().get_absolute_url())
+        else:
+            return render(self.request, self.template_name, context={'form': form})
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data()
+        ctx['page_title'] = 'Добавление/удаление руководителей'
+        return ctx
+
+
 class CategoryClubsView(generic.DetailView):
     model = models.ClubCategory
     context_object_name = 'category'
     template_name = 'clubs/clubs.html'
-    paginate_by = 2
+    paginate_by = 40
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,7 +154,7 @@ class ClubEventListView(generic.ListView):
     model = models.ClubEvent
     context_object_name = 'events'
     template_name = 'clubs/club_events.html'
-    paginate_by = 2
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -123,6 +181,18 @@ class EventDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = self.get_object().title
+        return ctx
+
+
+class ClubServiceListView(generic.ListView):
+    model = models.ClubService
+    context_object_name = 'services'
+    template_name = 'clubs/club_services.html'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Услуги клубов'
         return ctx
 
 

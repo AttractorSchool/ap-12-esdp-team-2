@@ -1,5 +1,5 @@
 {% extends 'accounts/auth_base.html' %}
-
+{% load static %}
 {% block content %}
 
 <div class="wrap d-md-flex">
@@ -15,18 +15,10 @@
             <h3 class="mb-4 text-center" id="form-title">Вход</h3>
         </div>
         {% include 'partial/form.html' with btn_text="Войти" form_method="post" form_id="login_user_form" %}
-        <form action="" method="post" id="verify_user_form" style="display: none">
-            <div class="mb-2 text-center">
-                <p class="verify-message" id="verify-message"></p>
-                {% csrf_token %}
-                <label class="d-inline-block mx-auto">Код</label>
-                <span style="color: red;" class="required">*</span>
-                <input type="text" name="sms_code" class="form-control text-center" maxlength="20" autofocus="" required="" id="id_sms_code">
-                <div class="block-errors" id="errors_sms_code"></div>
-            </div>
-            <button type="submit" class="btn btn-primary my-3 d-block mx-auto">Отправить</button>
-        </form>
     </div>
 </div>
 
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'js/our_js/login.js' %}"></script>
 {% endblock %}

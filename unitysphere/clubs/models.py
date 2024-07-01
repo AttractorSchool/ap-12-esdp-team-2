@@ -196,6 +196,7 @@ class Club(models.Model):
         return reverse('club_detail', kwargs={'pk': self.pk})
 
     def get_managers_phone_str(self):
+        wa_link = f'<a href="whatsapp://send?abid=phonenumber&text=Hello%2C%20World!">Send Message</a>'
         phones = ', '.join(manager.phone for manager in self.managers.all() if manager.phone)
         return phones
 
