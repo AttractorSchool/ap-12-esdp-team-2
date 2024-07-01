@@ -39,7 +39,7 @@
                         </span>
                     </div>
                     {% if request.user in club.managers.all %}
-                        <button class="btn btn-primary w-100 mt-1"><i class="fa-solid fa-pen mr-1"></i>Редактировать</button>
+                        <a href="{% url 'club_edit' club.pk %}" class="btn btn-primary w-100 mt-1"><i class="fa-solid fa-pen mr-1"></i>Редактировать</a>
                         <button class="btn btn-secondary w-100 mt-1"><i class="fa-solid fa-circle-minus mr-1"></i>Деактивировать</button>
                     {% endif %}
                     {% if request.user in club.members.all %}
@@ -115,7 +115,7 @@
                             <div class="jq-tab-title" data-tab="5">Посты</div>
                         </div>
                         <div class="jq-tab-content-wrapper">
-                            <div class="jq-tab-content active mt-2" data-tab="1">
+                            <div class="jq-tab-content active mt-2 club-description" data-tab="1">
                                 {{ club.description }}
                             </div>
                             <div class="jq-tab-content" data-tab="2">

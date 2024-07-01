@@ -63,6 +63,16 @@
                                 </span>
                             </span>
                         </li>
+                        {% if request.user == user %}
+                        <li>
+                            <span class="justify-content-between d-flex" href="#">
+                                <p>Отображать профиль при поиске единомышленников</p>
+                                <span>
+                                    <input type="checkbox" name="" id="display-in-allies" onchange="ProfileToSearchingInAllies(this)" {% if user.is_displayed_in_allies%} checked {% endif %}>
+                                </span>
+                            </span>
+                        </li>
+                        {% endif %}
                     </ul>
                     <a href="{% url 'user_update' %}" type="submit" class="btn btn-primary d-block w-100">
                         Редактировать профиль

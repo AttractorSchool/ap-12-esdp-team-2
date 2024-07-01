@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import make_password
 from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework import status, permissions as drf_permissions, generics
+from rest_framework.views import APIView
+
 from accounts.models import User, Profile
 from accounts import utils
 from accounts import constants
@@ -63,3 +65,12 @@ class ProfileUpdateAPIView(generics.UpdateAPIView):
     serializer_class = serializers.ProfileUpdateSerializer
     permission_classes = (permissions.IsProfileOwnerOrReadOnly,)
     queryset = Profile.objects.all()
+
+
+class UserToSearchingInAlliesList(APIView):
+    permission_classes = (drf_permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        request.user.is_displayed_in_allies = 1 - request.user.is_displayed_in_allies
+        request.user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)

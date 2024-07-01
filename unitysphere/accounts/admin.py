@@ -15,7 +15,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('phone', 'first_name', 'last_name', 'email')
     list_display_links = ('phone',)
     fieldsets = (
-        (_("Personal info"), {"fields": ("first_name", "last_name", "email", "avatar", "phone")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email", "avatar", "phone", "is_displayed_in_allies")}),
         (
             _("Permissions"),
             {

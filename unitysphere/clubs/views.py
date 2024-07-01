@@ -1,9 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Case, When, Value, BooleanField
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
-from . import models
+from . import models, forms
 from calendar import HTMLCalendar
 
 
@@ -58,6 +60,62 @@ class ClubListView(generic.ListView):
         if search_query:
             return qs.filter(name__icontains=search_query)
         return qs
+
+
+class ClubCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.Club
+    template_name = 'clubs/create_club.html'
+    form_class = forms.ClubForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['categories'] = models.ClubCategory.objects.all()
+        ctx['page_title'] = 'Создать сообщество'
+        return ctx
+
+    def form_valid(self, form):
+        if form.is_valid():
+            club = form.save(commit=False)
+            club.creater = self.request.user
+            club.save()
+            club.managers.add(self.request.user)
+            club.members_count += 1
+            club.members.add(self.request.user)
+            return redirect(club.get_absolute_url())
+        else:
+            return super().form_invalid(form)
+
+
+class ClubEditView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Club
+    template_name = 'clubs/create_club.html'
+    form_class = forms.ClubUpdateForm
+
+    def has_permission(self):
+        return self.request.user in self.get_object().managers.all()
+
+
+class ChooseClubManagersView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Club
+    template_name = 'clubs/choose_club_managers.html'
+    form_class = forms.SelectClubManagersForm
+
+    def has_permission(self):
+        return self.request.user in self.get_object().managers.all()
+
+    def form_valid(self, form):
+        users_after = form.data.getlist('managers')
+        check = self.form_class.required_at_least_one_manager
+        if form.is_valid() and check(users_after, form):
+            self.get_object().managers.set(form.cleaned_data.get('managers'))
+            return redirect(self.get_object().get_absolute_url())
+        else:
+            return render(self.request, self.template_name, context={'form': form})
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data()
+        ctx['page_title'] = 'Добавление/удаление руководителей'
+        return ctx
 
 
 class CategoryClubsView(generic.DetailView):

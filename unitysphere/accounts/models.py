@@ -37,6 +37,7 @@ class User(AbstractUser):
         validators=[phone_regex_validator]
     )
     email = models.EmailField(unique=True, null=True, blank=True)
+    is_displayed_in_allies = models.BooleanField(default=False)
     username = None
 
     USERNAME_FIELD = 'phone'

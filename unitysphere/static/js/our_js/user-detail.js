@@ -123,3 +123,23 @@ function updateField(fieldName, text) {
     field = document.getElementById(field_id)
     field.innerText = text
 }
+
+function ProfileToSearchingInAllies(checkbox) {
+    let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value
+    $.ajax({
+        type: "post",
+        url: `http://127.0.0.1:8000/api/v1/profile/to_searching_allies/`,
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem('apiToken'),
+            "X-CSRFToken": csrfToken
+        },
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            
+        },
+        error: function (response) {
+            console.log(response)
+        },
+    });
+}
