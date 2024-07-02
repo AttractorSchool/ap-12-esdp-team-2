@@ -1,4 +1,13 @@
-FROM ubuntu:latest
-LABEL authors="zhantemir"
+FROM python:3.11-alpine
 
-ENTRYPOINT ["top", "-b"]
+RUN apk add --no-cache netcat-openbsd postgresql-client
+
+COPY ./requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+#================================================
+# Code
+#================================================
+COPY . /proj
+WORKDIR /proj
