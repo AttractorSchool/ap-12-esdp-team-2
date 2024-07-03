@@ -6,6 +6,7 @@ urlpatterns = [
     path('clubs/', views.ClubListView.as_view(), name='clubs'),
     path('clubs/create/', views.ClubCreateView.as_view(), name='club_create'),
     path('clubs/<uuid:pk>/', views.ClubDetailView.as_view(), name='club_detail'),
+    path('clubs/<uuid:pk>/create_service', views.CreateServiceView.as_view(), name='create_service'),
     path('clubs/<uuid:pk>/update', views.ClubEditView.as_view(), name='club_edit'),
     path('clubs/<uuid:pk>/managers/edit/', views.ChooseClubManagersView.as_view(), name='club_managers_choose'),
     path('category/<uuid:pk>/', views.CategoryClubsView.as_view(), name='category_detail'),

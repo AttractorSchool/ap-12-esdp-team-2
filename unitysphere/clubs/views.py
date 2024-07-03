@@ -194,6 +194,34 @@ class ClubServiceListView(generic.ListView):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'Услуги клубов'
         return ctx
+    
+
+class CreateServiceView(generic.CreateView):
+    model = models.ClubService
+    form_class = forms.ClubServiceCreateForm
+    template_name = 'clubs/create_service.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Создать услугу'
+        return ctx
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            service = form.save(commit=False)
+            club_id = self.kwargs.get('pk')
+            club = models.Club.objects.get(id=club_id)
+            service.club = club
+            service.save()
+            photo = form.cleaned_data.get('photo')
+            photo_obj = models.ClubServiceImage.objects.create(
+                service=service,
+                image=photo
+            )
+            return redirect('index')
+        else:
+            return super().form_invalid(form)
+
 
 
 class EventCalendarView(generic.ListView):

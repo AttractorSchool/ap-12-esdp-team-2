@@ -16,6 +16,7 @@ class RegisterUserView(generic.FormView):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'Центр сообществ - Регистрация'
         return ctx
+    
 
 
 class LoginUserView(LoginView):

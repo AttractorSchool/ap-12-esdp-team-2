@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from accounts.models import User
-from .models import Club
+from .models import Club, ClubService
 
 
 class ClubForm(forms.ModelForm):
@@ -92,3 +92,19 @@ class SelectClubManagersForm(forms.ModelForm):
             form.add_error('managers', 'У клуба должен быть хотя бы один менеджер')
             return False
         return True
+
+
+class ClubServiceCreateForm(forms.ModelForm):
+    class Meta:
+        model = ClubService
+        fields = (
+            'name',
+            'description',
+            'price',
+        )
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+    photo = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}))
