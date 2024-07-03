@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from accounts.api.serializers import UserReadSerializer
 from clubs import models
-from clubs.serializers.club import ClubSimpleSerializer
-from clubs.serializers.festival_requests import RequestActionEnum
+from clubs.api.serializers import ClubSimpleSerializer
+from clubs.static import RequestActionEnum
 
 
 class ClubJoinRequestSerializer(serializers.ModelSerializer):

@@ -59,6 +59,7 @@ class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
         Возвращает:
             Response: HTTP-ответ с статусом 204 (No Content) при успешном выполнении действия.
         """
+        print(request.user)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         club = self.get_object()

@@ -265,3 +265,9 @@
 .errorlist li {
     color: red;
 }
+
+.without-bg {
+    background: none;
+    border: none;
+    cursor: pointer;
+}

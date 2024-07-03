@@ -1,5 +1,5 @@
 from . import models
-from . import exceptions
+from clubs.api import exceptions
 
 
 class ClubServices:
