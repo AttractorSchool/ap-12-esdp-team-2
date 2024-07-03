@@ -7,9 +7,11 @@ from django.utils.translation import gettext_lazy as _
 class RegisterUserForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = ['phone', ]
+        fields = ['phone', 'first_name', 'last_name']
         widgets = {
             'phone': forms.TextInput(attrs={'class': 'form-control text-center'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control text-center'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control text-center'}),
         }
 
     password1 = forms.CharField(
