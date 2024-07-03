@@ -1,15 +1,8 @@
-from enum import StrEnum
-
 from rest_framework import serializers
-
+from .club import ClubSimpleSerializer
+from .festival import FestivalSimpleSerializer
 from clubs import models
-from clubs.serializers.club import ClubSimpleSerializer
-from clubs.serializers.festival import FestivalSimpleSerializer
-
-
-class RequestActionEnum(StrEnum):
-    APPROVE = 'approve'
-    REJECT = 'reject'
+from clubs.static import RequestActionEnum
 
 
 class FestivalRequestSerializer(serializers.ModelSerializer):

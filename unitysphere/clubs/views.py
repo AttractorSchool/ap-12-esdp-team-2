@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Case, When, Value, BooleanField
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
@@ -18,7 +18,21 @@ class IndexView(generic.TemplateView):
         context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
         context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
         return context
-
+    
+def join_club(request, club_id):
+    club = get_object_or_404(models.Club, id=club_id)
+    user = request.user
+    
+    # логика добавления участника в клуб
+    club.members.add(user)
+    club.members_count += 1
+    club.save()
+    
+    # редирект на ссылку WhatsApp
+    if club.whatsapp_link:
+        return redirect(club.get_whatsapp_link())
+    
+    return redirect('club_detail', pk=club.id)
 
 class ClubDetailView(generic.DetailView):
     model = models.Club

@@ -18,6 +18,7 @@ class ClubForm(forms.ModelForm):
             'phone',
             'city',
             'address',
+            'whatsapp_link',
         )
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
@@ -28,6 +29,7 @@ class ClubForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'city': forms.Select(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'address': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'whatsapp_link': forms.TextInput(attrs={'placeholder': '+7757161577'}),
         }
 
 

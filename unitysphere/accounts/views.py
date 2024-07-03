@@ -1,7 +1,7 @@
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
-from django.urls import reverse
 from django.views import generic
 from .forms import RegisterUserForm, UserLoginForm, UserUpdateForm
 from .models import User
@@ -17,6 +17,24 @@ class RegisterUserView(generic.FormView):
         ctx['page_title'] = 'Центр сообществ - Регистрация'
         return ctx
     
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('index')
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if form.is_valid():
+            user = form.save()
+            login(self.request, user)
+            return redirect(self.get_success_url())
+        else:
+            return super().form_invalid(form)
+
+    def get_success_url(self):
+        success_url = self.request.META.get('HTTP_REFERER', '/')
+        return success_url
 
 
 class LoginUserView(LoginView):

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+.\v {% extends 'base.html' %}
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{%  static 'css/template_css/linearicons.css' %}">
@@ -74,9 +74,11 @@
                         </li>
                         {% endif %}
                     </ul>
+                    {% if request.user == user %}
                     <a href="{% url 'user_update' %}" type="submit" class="btn btn-primary d-block w-100">
                         Редактировать профиль
                     </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="row">
@@ -128,7 +130,13 @@
                                 <a href="#" type="button" class="btn btn-primary d-block mx-auto w-25 text-white" onclick="displayModal(this)" modal="profile-interests-form-block">Изменить</a>
                                 {% endif %}
                                 {% else %}
-                                <p class="text-center" id="user-interests-field">Информация не заполнена. Напишите свои интересы, чтобы ваш профиль отображался в поиске единомышленников</p>
+                                <p class="text-center" id="user-interests-field">
+                                    {% if request.user == user %}
+                                    Информация не заполнена. Напишите свои интересы, чтобы ваш профиль отображался в поиске единомышленников
+                                    {% else %}
+                                    Информация не заполнена.
+                                    {% endif %}
+                                </p>
                                 {% if request.user == user %}
                                 <a href="#" type="button" class="btn btn-primary d-block mx-auto w-25 text-white" onclick="displayModal(this)" modal="profile-interests-form-block">Заполнить</a>
                                 {% endif %}
