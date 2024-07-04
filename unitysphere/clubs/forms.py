@@ -101,7 +101,6 @@ class CreateClubEventForm(forms.ModelForm):
         model = models.ClubEvent
         exclude = (
             'old_datetime',
-            'club',
         )
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
@@ -125,3 +124,14 @@ class CreateClubEventForm(forms.ModelForm):
         validators=[MinValueValidator(1)],
         label='Максимальный допустимый возраст'
     )
+    club = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=models.Club.objects.all())
+
+
+class AddGalleryPhotoForm(forms.ModelForm):
+    class Meta:
+        model = models.ClubGalleryPhoto
+        fields = ('club', 'image')
+        widgets = {
+            'image': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+    club = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=models.Club.objects.all())

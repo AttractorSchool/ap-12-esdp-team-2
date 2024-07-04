@@ -195,6 +195,9 @@ class Club(models.Model):
     def get_absolute_url(self):
         return reverse('club_detail', kwargs={'pk': self.pk})
 
+    def get_gallery_url(self):
+        return reverse('club_photogallery', kwargs={'pk': self.pk})
+
     def get_managers_phone_str(self):
         wa_link = f'<a href="whatsapp://send?abid=phonenumber&text=Hello%2C%20World!">Send Message</a>'
         phones = ', '.join(manager.phone for manager in self.managers.all() if manager.phone)
@@ -394,8 +397,9 @@ class ClubGalleryPhoto(models.Model):
         return f'{self.club.name}-{self.image.name}'
 
     class Meta:
-        verbose_name = "Фотогалерея"
-        verbose_name_plural = "Фотогалерея"
+        verbose_name = "Фото"
+        verbose_name_plural = "Фото"
+        ordering = ('-created_at',)
 
 
 class ClubEvent(models.Model):

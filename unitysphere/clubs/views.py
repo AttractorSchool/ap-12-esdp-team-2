@@ -8,6 +8,9 @@ from django.views import generic
 from . import models, forms
 from calendar import HTMLCalendar
 
+from .api.serializers import club
+from .mixins import ClubRelatedObjectCreateMixin
+
 
 class IndexView(generic.TemplateView):
     template_name = 'clubs/index.html'
@@ -184,25 +187,14 @@ class EventDetailView(generic.DetailView):
         return ctx
 
 
-class CreateClubEventView(generic.CreateView):
+class CreateClubEventView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, generic.CreateView):
     model = models.ClubEvent
     form_class = forms.CreateClubEventForm
     template_name = 'clubs/create_event.html'
 
-    def form_valid(self, form):
-        if form.is_valid():
-            event = form.save(commit=False)
-            club = models.Club.objects.get(id=self.kwargs.get('pk'))
-            event.club = club
-            event.save()
-            return redirect(club.get_absolute_url())
-        else:
-            return super().form_invalid(form)
-
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        club = models.Club.objects.get(id=self.kwargs.get('pk'))
-        ctx['page_title'] = f'Организация события от клуба - {club}'
+        ctx['page_title'] = f'Организация события от клуба - {self.get_club()}'
         return ctx
 
 
@@ -238,8 +230,18 @@ class ClubPhotoGalleryView(generic.ListView):
         ctx = super().get_context_data(**kwargs)
         club = models.Club.objects.get(id=self.kwargs.get('pk'))
         ctx['page_title'] = f'{club} - Фотогалерея'
+        ctx['club'] = club
         return ctx
 
     def get_queryset(self):
         club = models.Club.objects.get(id=self.kwargs.get('pk'))
         return self.model.objects.filter(club=club)
+
+
+class ClubAddPhotoView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, generic.CreateView):
+    model = models.ClubGalleryPhoto
+    form_class = forms.AddGalleryPhotoForm
+    template_name = 'clubs/club_add_photo.html'
+
+    def get_success_url(self):
+        return self.get_club().get_gallery_url()
