@@ -57,6 +57,10 @@
                             <span id="join-btn-text">Вступить</span>
                         </button>
                     {% endif %}
+                    {% if request.user in club.managers.all %}
+                        <a href="{% url 'club_edit' club.pk %}" class="btn btn-primary w-100 mt-1"><i class="fa-solid fa-pen mr-1"></i>Редактировать</a>
+                        <a href="{% url 'club_managers_choose' club.pk %}" class="btn btn-info w-100 mt-1"><i class="fa-solid fa-user-group mr-1"></i>Руководители</a>
+                    {% endif %}
                 </div>
                 <div class="col-lg-4 right-contents">
                     <ul>
@@ -205,7 +209,7 @@
                                                     <i class="fa-regular fa-calendar {% if event.is_passed %}event-passed{% else %}event-not-passed{% endif %}"></i>
                                                     {{ event.start_datetime|date:'d.m.Y H:i' }}
                                                 </span>
-                                                <a class="primary-btn action-btn text-uppercase d-block w-50 mx-auto my-2" href="#">Детали</a>
+                                                <a class="primary-btn action-btn text-uppercase d-block w-50 mx-auto my-2" href="{% url 'event_detail' event.pk %}">Детали</a>
                                             </div>
                                         </div>
                                     </div>
@@ -214,7 +218,7 @@
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
                                             <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
-                                                <a href="#" class="add-item">
+                                                <a href="{% url 'event_create' club.pk %}" class="add-item">
                                                     <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
                                                     <span class="add-item-text d-block mt-2 text-center">Добавить событие</span>
                                                 </a>

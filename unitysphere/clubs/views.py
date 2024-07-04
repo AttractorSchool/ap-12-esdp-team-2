@@ -184,6 +184,28 @@ class EventDetailView(generic.DetailView):
         return ctx
 
 
+class CreateClubEventView(generic.CreateView):
+    model = models.ClubEvent
+    form_class = forms.CreateClubEventForm
+    template_name = 'clubs/create_event.html'
+
+    def form_valid(self, form):
+        if form.is_valid():
+            event = form.save(commit=False)
+            club = models.Club.objects.get(id=self.kwargs.get('pk'))
+            event.club = club
+            event.save()
+            return redirect(club.get_absolute_url())
+        else:
+            return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        ctx['page_title'] = f'Организация события от клуба - {club}'
+        return ctx
+
+
 class ClubServiceListView(generic.ListView):
     model = models.ClubService
     context_object_name = 'services'

@@ -21,16 +21,8 @@
 
 {% block content %}
     {% include 'partial/breadcrumb.html' %}
-    <section class="my-form-section w-75 mx-auto p-3">
-        <form action="" method="post" class="text-center">
-            {% csrf_token %}
-            <table class="mx-auto">
-                {{ form.media }}
-                {{ form.as_table }}
-                <script type="text/javascript" src="{% url 'jsi18n' %}"></script>
-            </table>
-            <button type="submit" class="btn btn-success">Save</button>
-        </form>
+    <section class="my-form-section w-50 mx-auto p-3">
+        {% include 'partial/form.html' with btn_text='Создать' %}
     </section>
 {% endblock %}
 
@@ -53,6 +45,5 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
-    <script type="text/javascript" src="{% url 'jsi18n' %}"></script>
 
 {% endblock %}
