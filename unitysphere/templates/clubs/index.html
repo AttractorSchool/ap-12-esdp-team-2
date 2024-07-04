@@ -234,7 +234,7 @@
                             </a>
 
                         </div>
-                        <a href="#" class="d-block primary-btn w-100 my-4 action-btn">Вступить</a>
+                        <a href="{% url 'club_detail' club.pk %}" class="d-block primary-btn w-100 my-4 action-btn">Вступить</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -283,7 +283,7 @@
                             </div>
                             <p class="event-description">{{ event.description }}</p>
                         </div>
-                        <a href="#" class="d-block primary-btn w-100 my-4 action-btn">Записаться</a>
+                        <a href="{% url 'event_detail' event.pk %}" class="d-block primary-btn w-100 my-4 action-btn">Записаться</a>
                     </div>
                     {% endfor %}
                 </div>

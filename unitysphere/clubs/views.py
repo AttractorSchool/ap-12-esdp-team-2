@@ -28,7 +28,7 @@ class ClubDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = models.ClubCategory.objects.all()
-        context['page_title'] = self.get_object().name
+        context['page_title'] = f'{self.get_object().name}'
         context['photos'] = models.ClubGalleryPhoto.objects.filter(club=self.get_object())
         context['services'] = models.ClubService.objects.filter(club=self.get_object())
         context['events'] = models.ClubEvent.objects.annotate(
@@ -77,9 +77,9 @@ class ClubCreateView(LoginRequiredMixin, generic.CreateView):
         if form.is_valid():
             club = form.save(commit=False)
             club.creater = self.request.user
+            club.members_count += 1
             club.save()
             club.managers.add(self.request.user)
-            club.members_count += 1
             club.members.add(self.request.user)
             return redirect(club.get_absolute_url())
         else:
@@ -226,3 +226,20 @@ class EventCalendarView(generic.ListView):
 
 class AboutView(generic.TemplateView):
     template_name = 'clubs/about.html'
+
+
+class ClubPhotoGalleryView(generic.ListView):
+    model = models.ClubGalleryPhoto
+    context_object_name = 'photos'
+    template_name = 'clubs/club_photogallery.html'
+    paginate_by = 40
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        ctx['page_title'] = f'{club} - Фотогалерея'
+        return ctx
+
+    def get_queryset(self):
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        return self.model.objects.filter(club=club)
