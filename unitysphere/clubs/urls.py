@@ -15,4 +15,7 @@ urlpatterns = [
     path('event-calendar/', views.EventCalendarView.as_view(), name='event_calendar'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('clubs/<int:club_id>/join/', views.join_club, name='join_club'),
+    path('service/<uuid:pk>/', views.ClubServiceDetailView.as_view(), name='service_detail'),
+    path('services/<uuid:pk>/edit/', views.UpdateServiceView.as_view(), name='edit_service'),
+
 ]

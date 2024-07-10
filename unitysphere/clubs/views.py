@@ -23,12 +23,10 @@ def join_club(request, club_id):
     club = get_object_or_404(models.Club, id=club_id)
     user = request.user
     
-    # логика добавления участника в клуб
     club.members.add(user)
     club.members_count += 1
     club.save()
     
-    # редирект на ссылку WhatsApp
     if club.whatsapp_link:
         return redirect(club.get_whatsapp_link())
     
@@ -235,7 +233,45 @@ class CreateServiceView(generic.CreateView):
             return redirect('index')
         else:
             return super().form_invalid(form)
+        
 
+
+class UpdateServiceView(generic.UpdateView):
+    model = models.ClubService
+    form_class = forms.ClubServiceCreateForm
+    template_name = 'clubs/update_service.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Редактировать услугу'
+        ctx['service'] = self.object
+        return ctx
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            service = form.save(commit=False)
+            service.save()
+            photo = form.cleaned_data.get('photo')
+            if photo:
+                photo_obj, created = models.ClubServiceImage.objects.get_or_create(
+                    service=service
+                )
+                photo_obj.image = photo
+                photo_obj.save()
+            return redirect('index')
+        else:
+            return super().form_invalid(form)
+        
+
+class ClubServiceDetailView(generic.DetailView):
+    model = models.ClubService
+    template_name = 'clubs/detail_service.html'
+    context_object_name = 'service'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.object.name
+        return context
 
 
 class EventCalendarView(generic.ListView):
