@@ -41,7 +41,7 @@ class ClubActionSerializerMixin:
 class CategoryListMixin:
 
     def get_categories(self):
-        return ClubCategory.objects.filter(active=True)
+        return ClubCategory.objects.filter(is_active=True)
 
 
 class ClubRelatedObjectCreateMixin(CategoryListMixin):
@@ -60,5 +60,5 @@ class ClubRelatedObjectCreateMixin(CategoryListMixin):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = f'{self.get_club()} - Добавить {self.model._meta.verbose_name}'
-        ctx['categories']
+        ctx['categories'] = self.get_categories()
         return ctx

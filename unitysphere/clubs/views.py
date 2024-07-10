@@ -32,8 +32,6 @@ class ClubDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['categories'] = models.ClubCategory.objects.all()
         context['page_title'] = f'{self.get_object().name}'
-        context['photos'] = models.ClubGalleryPhoto.objects.filter(club=self.get_object())
-        context['services'] = models.ClubService.objects.filter(club=self.get_object())
         context['events'] = models.ClubEvent.objects.annotate(
                                 datetime_passed=Case(
                                     When(start_datetime__lt=timezone.now(), then=Value(True)),

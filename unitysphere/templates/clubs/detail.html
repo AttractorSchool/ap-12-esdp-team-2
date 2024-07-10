@@ -134,7 +134,7 @@
                             </div>
                             <div class="jq-tab-content" data-tab="2">
                                 <div class="row">
-                                    {% for photo in photos|slice:":12" %}
+                                    {% for photo in club.gallery_photos.all|slice:":12" %}
                                         <div class="col-lg-4 pb-4">
                                             <a href="{{ photo.image.url }}" class="club-image-link">
                                                 <img src="{{ photo.image.url }}" alt="" class="club-gallery-image w-100 h-100">
@@ -145,7 +145,7 @@
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
                                             <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
-                                                <a href="#" class="add-item">
+                                                <a href="{% url 'club_photogallery_add' club.pk %}" class="add-item">
                                                     <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
                                                     <span class="add-item-text d-block mt-2 text-center">Добавить фото</span>
                                                 </a>
