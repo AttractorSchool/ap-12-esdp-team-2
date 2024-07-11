@@ -263,6 +263,17 @@ class FestivalListView(generic.ListView):
         return context
 
 
+class FestivalDetailView(generic.DetailView):
+    model = models.Festival
+    context_object_name = 'festival'
+    template_name = 'festivals/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'{self.get_object().name}'
+        return context
+
+
 class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
     model = models.Festival
     form_class = forms.FestivalForm
