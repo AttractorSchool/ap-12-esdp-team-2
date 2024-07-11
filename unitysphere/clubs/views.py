@@ -254,3 +254,9 @@ class FestivalListView(generic.ListView):
     model = models.Festival
     context_object_name = 'festivals'
     template_name = 'festivals/list.html'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'ФЕСТИВАЛИ'
+        return context
