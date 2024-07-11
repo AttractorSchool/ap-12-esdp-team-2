@@ -300,3 +300,14 @@ class FestivalUpdateView(PermissionRequiredMixin, generic.UpdateView):
 
     def has_permission(self):
         return self.request.user.is_superuser
+
+
+class FestivalDeleteView(PermissionRequiredMixin, generic.DeleteView):
+    model = models.Festival
+    context_object_name = 'festival'
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+    def get_success_url(self):
+        return reverse('festivals')

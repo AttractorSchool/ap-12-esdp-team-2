@@ -33,12 +33,13 @@
                                 <img class="img-fluid" src="{{ fest.image.url }}" alt="fest image">
                             </div>
                         </div>
-                        <div class="details">
+                        <div class="details mt-3 mb-4">
                             <a href="{{ fest.get_absolute_url }}">
                                 <h6 class="mt-1 text-uppercase text-center">
                                     {{ fest.name }}
                                 </h6>
                             </a>
+                            <p class="text-center">{{ fest.start_datetime }}</p>
                         </div>
                             <a href="{{ fest.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">Страница фестиваля</a>
                             <a href="#" class="d-block btn btn-success w-100 my-2">Записаться</a>

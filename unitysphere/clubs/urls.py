@@ -20,4 +20,5 @@ urlpatterns = [
     path('festivals/<uuid:pk>/', views.FestivalDetailView.as_view(), name='festival_detail'),
     path('festivals/create/', views.FestivalCreateView.as_view(), name='festival_create'),
     path('festivals/<uuid:pk>/update/', views.FestivalUpdateView.as_view(), name='festival_update'),
+    path('festivals/<uuid:pk>/delete/', views.FestivalDeleteView.as_view(), name='festival_delete'),
 ]
