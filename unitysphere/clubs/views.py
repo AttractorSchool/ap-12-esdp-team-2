@@ -118,6 +118,11 @@ class ChooseClubManagersView(PermissionRequiredMixin, generic.UpdateView):
         ctx['page_title'] = 'Добавление/удаление руководителей'
         return ctx
 
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial={'managers': self.get_object().managers.all()})
+        form.fields['managers'].queryset = self.get_object().members.all().union(self.get_object().managers.all())
+        return self.render_to_response({'form': form})
+
 
 class CategoryClubsView(generic.DetailView):
     model = models.ClubCategory

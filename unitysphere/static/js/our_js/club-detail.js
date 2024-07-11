@@ -22,8 +22,9 @@ function likeClub(btn) {
         error: function(response) {
             console.log(response.status)
             let currentURL = window.location.pathname
+            console.log(currentURL)
             if (response.status == 401) {
-                window.location.href = `${baseURL}/accounts/login/?next=${currentURL}`
+                window.location.href = `http://127.0.0.1:8000/accounts/login/?next=${currentURL}`
             }
         }
     });
