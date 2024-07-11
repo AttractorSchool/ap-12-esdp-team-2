@@ -286,3 +286,17 @@ class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
 
     def has_permission(self):
         return self.request.user.is_superuser
+
+
+class FestivalUpdateView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Festival
+    form_class = forms.FestivalForm
+    template_name = 'festivals/update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Изменить фестиваль'
+        return context
+
+    def has_permission(self):
+        return self.request.user.is_superuser
