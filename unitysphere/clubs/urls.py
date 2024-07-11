@@ -19,4 +19,5 @@ urlpatterns = [
     path('festivals/', views.FestivalListView.as_view(), name='festivals'),
     path('festivals/<uuid:pk>/', views.FestivalDetailView.as_view(), name='festival_detail'),
     path('festivals/create/', views.FestivalCreateView.as_view(), name='festival_create'),
+    path('festivals/<uuid:pk>/update/', views.FestivalUpdateView.as_view(), name='festival_update'),
 ]

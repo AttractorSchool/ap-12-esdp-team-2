@@ -277,7 +277,7 @@ class FestivalDetailView(generic.DetailView):
 class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
     model = models.Festival
     form_class = forms.FestivalForm
-    template_name = 'festivals/create.html'
+    template_name = 'festivals/create_update.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -291,7 +291,7 @@ class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
 class FestivalUpdateView(PermissionRequiredMixin, generic.UpdateView):
     model = models.Festival
     form_class = forms.FestivalForm
-    template_name = 'festivals/update.html'
+    template_name = 'festivals/create_update.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
