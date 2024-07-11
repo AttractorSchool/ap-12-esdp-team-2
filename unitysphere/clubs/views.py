@@ -248,3 +248,9 @@ class ClubAddPhotoView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, ge
 
     def get_success_url(self):
         return self.get_club().get_gallery_url()
+
+
+class FestivalListView(generic.ListView):
+    model = models.Festival
+    context_object_name = 'festivals'
+    template_name = 'festivals/list.html'
