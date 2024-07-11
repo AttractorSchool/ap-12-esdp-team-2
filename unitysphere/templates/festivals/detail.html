@@ -54,9 +54,18 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="#" class="btn btn-success w-100">
-                        Записаться
-                    </a>
+                    {% if user.is_superuser %}
+                        <a href="#" class="btn btn-primary w-100 mb-2">
+                            Редактировать
+                        </a>
+                        <a href="#" class="btn btn-danger w-100">
+                            Удалить
+                        </a>
+                    {% else %}
+                        <a href="#" class="btn btn-success w-100">
+                            Записаться
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
