@@ -21,41 +21,45 @@
 
 {% block content %}
     {% include 'partial/breadcrumb.html' %}
-
-    <section class="club-list mb-5">
+    <section class="event-details-area section-gap">
         <div class="container">
-            <div class="row club-list">
-                {% for fest in festivals %}
-                    <div class="single-popular-carusel col-lg-3 col-md-6">
-                        <div class="thumb-wrap relative">
-                            <div class="thumb relative">
-                                <div class="overlay overlay-bg"></div>
-                                <img class="img-fluid" src="{{ fest.image.url }}" alt="fest image">
-                            </div>
-                        </div>
-                        <div class="details">
-                            <a href="{{ fest.get_absolute_url }}">
-                                <h6 class="mt-1 text-uppercase text-center">
-                                    {{ fest.name }}
-                                </h6>
-                            </a>
-                        </div>
-                            <a href="{{ fest.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">Страница фестиваля</a>
-                            <a href="#" class="d-block btn btn-success w-100 my-2">Записаться</a>
-
+            <div class="row">
+                <div class="col-lg-7 event-details-left">
+                    <div class="main-img">
+                        <img class="img-fluid" src="{{ festival.image.url }}" alt="festival image">
                     </div>
-                {% empty %}
-                    <h5 class="text-danger text-center mx-auto">Нет доступных фестивалей</h5>
-                {% endfor %}
+                </div>
+                <div class="col-lg-5 event-details-right">
+                    <div class="single-event-details">
+                        <h4>Детали</h4>
+                        <ul class="mt-10">
+                            <li class="justify-content-between d-flex">
+                                <span>Начало</span>
+                                <span>
+                                    {{ festival.start_datetime|date:'d.m.Y H:i' }}
+                                </span>
+                            </li>
+                            <li class="justify-content-between d-flex">
+                                <span>Место проведения</span>
+                                <span>{{ festival.location }}</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="single-event-details">
+                        <h4>Описание</h4>
+                        <ul class="mt-10">
+                            <li class="justify-content-between d-flex">
+                                <span>{{ festival.description }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="btn btn-success w-100">
+                        Записаться
+                    </a>
+                </div>
             </div>
         </div>
-    </section>
-    <section class="pagination">
-
-        <div class="container">
-            {% include 'partial/pagination.html' %}
-        </div>
-
     </section>
 {% endblock %}
 
@@ -78,13 +82,4 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
-    <script>
-        function redirectToPage(selectElement) {
-            let selectedValue = selectElement.value;
-            window.location.href = selectedValue;
-        }
-        let currentOption = document.getElementById("current");
-        let selectedOption = document.querySelector(".filter-option.selected")
-        console.log(currentOption)
-    </script>
 {% endblock %}
