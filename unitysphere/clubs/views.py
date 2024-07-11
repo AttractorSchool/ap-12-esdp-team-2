@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 from . import models, forms
+from accounts import models as user_models
 from calendar import HTMLCalendar
 
 from .api.serializers import club
@@ -260,3 +261,12 @@ class FestivalListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'ФЕСТИВАЛИ'
         return context
+
+
+class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
+    model = models.Festival
+    form_class = forms.FestivalForm
+    template_name = 'clubs/create.html'
+
+    def has_permission(self):
+        return self.request.user.is_superuser
