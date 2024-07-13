@@ -63,9 +63,11 @@
                             <button class="btn btn-danger w-100">Удалить</button>
                         </form>
                     {% else %}
-                        <a href="#" class="btn btn-success w-100">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Записаться
-                        </a>
+                        </button>
+                        {% include 'partial/choose_club_modal.html' %}
                     {% endif %}
                 </div>
             </div>
@@ -74,7 +76,10 @@
 {% endblock %}
 
 {% block footer %}
-    {% include 'partial/footer.html' %}
+    <div style="position: fixed; bottom: 0; width: 100%">
+        {% include 'partial/footer.html' %}
+    </div>
+    
 {% endblock %}
 
 {% block scripts %}
@@ -92,4 +97,5 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock %}

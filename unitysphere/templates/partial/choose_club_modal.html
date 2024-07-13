@@ -1,0 +1,36 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    {% if created_clubs %}
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="exampleModalLabel">Выберите ваше сообщество</h2>
+      </div>
+      <div class="modal-body">
+
+        {% for club in created_clubs %}
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="selected_club" id="flexRadioDefault1">
+              <label class="form-check-label" for="flexRadioDefault1">
+                {{ club.name }}
+              </label>
+            </div>
+        {% endfor %}
+    {% else %}
+      <div class="modal-header mb-3 mt-3">
+        <h3 class="modal-title fs-5" id="exampleModalLabel">У вас нет сообществ</h3>
+
+      </div>
+      <div class="modal-body mb-5">
+        <a href="{% url 'club_create' %}">Создать сообщество</a>
+      </div>
+    {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        {% if created_clubs %}
+            <a href=""><button type="button" class="btn btn-primary">Отправить запрос</button></a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

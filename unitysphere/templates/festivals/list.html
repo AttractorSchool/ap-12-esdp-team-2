@@ -41,8 +41,15 @@
                             </a>
                             <p class="text-center">{{ fest.start_datetime }}</p>
                         </div>
-                            <a href="{{ fest.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">Страница фестиваля</a>
-                            <a href="#" class="d-block btn btn-success w-100 my-2">Записаться</a>
+                        <a href="{{ fest.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">
+                            Страница фестиваля
+                        </a>
+                        {% if not user.is_superuser %}
+                            <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Записаться
+                            </button>
+                            {% include 'partial/choose_club_modal.html' %}
+                        {% endif %}
 
                     </div>
                 {% empty %}
@@ -61,7 +68,9 @@
 {% endblock %}
 
 {% block footer %}
-    {% include 'partial/footer.html' %}
+    <div style="position: fixed; bottom: 0; width: 100%">
+        {% include 'partial/footer.html' %}
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -79,6 +88,8 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script>
         function redirectToPage(selectElement) {
             let selectedValue = selectElement.value;
