@@ -277,3 +277,13 @@
 .search-field:focus {
     outline: none;
 }
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-block {
+    flex: 1;
+}
