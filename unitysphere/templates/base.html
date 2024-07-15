@@ -15,12 +15,16 @@
     {% endblock %}
 </head>
 <body>
+    <div class="wrapper">
     {% block header %}
     {% endblock %}
+    <div class="content-block">
     {% block content %}
     {% endblock %}
+    </div>
     {% block footer %}
     {% endblock %}
+    </div>
     {% block scripts %}
     {% endblock %}
     

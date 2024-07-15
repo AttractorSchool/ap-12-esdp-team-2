@@ -141,6 +141,7 @@
                                             </a>
                                         </div>
                                     {% empty %}
+                                        <p class="text-center">Фотогалерея пуста</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
@@ -177,6 +178,7 @@
                                         </div>
                                     </div>
                                     {% empty %}
+                                        <p class="text-center">Список услуг пуст</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
@@ -214,6 +216,7 @@
                                         </div>
                                     </div>
                                     {% empty %}
+                                        <p class="text-center">Список событии пуст</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">

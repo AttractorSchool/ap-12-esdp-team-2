@@ -17,7 +17,6 @@ class IndexView(generic.TemplateView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.ClubCategory.objects.all()
         context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
         context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
         return context
@@ -30,7 +29,6 @@ class ClubDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.ClubCategory.objects.all()
         context['page_title'] = f'{self.get_object().name}'
         context['events'] = models.ClubEvent.objects.annotate(
                                 datetime_passed=Case(
@@ -52,7 +50,6 @@ class ClubListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'ВСЕ СООБЩЕСТВА'
         context['search'] = self.request.GET.get('search')
-        context['categories'] = models.ClubCategory.objects.all()
         return context
 
     def get_queryset(self):
@@ -70,7 +67,6 @@ class ClubCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['categories'] = models.ClubCategory.objects.all()
         ctx['page_title'] = 'Создать сообщество'
         return ctx
 
@@ -165,7 +161,6 @@ class ClubEventListView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'События клубов'
-        ctx['categories'] = models.ClubCategory.objects.all()
         return ctx
 
     def get_queryset(self):

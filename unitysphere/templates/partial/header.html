@@ -25,13 +25,8 @@
             <ul class="nav-menu">
               <li><a href="{% url 'index' %}">ГЛАВНАЯ</a></li>
               <li><a href="{% url 'about' %}">О НАС</a></li>
-              <li class="menu-has-children"><a href="">СООБЩЕСТВА</a>
-                <ul>
-                    {% for cat in categories %}
-                  <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
-                    {% endfor %}
-                </ul>
-              </li>
+              <li><a href="{% url 'clubs' %}">СООБЩЕСТВА</a></li>
+              <li><a href="{% url 'user_list' %}">ПОЛЬЗОВАТЕЛИ</a></li>
               <li><a href="{% url 'club_events' %}">СОБЫТИЯ</a></li>
               <li><a href="#">НОВОСТИ</a></li>
               <li class="menu-has-children"><a href="">УСЛУГИ</a>
