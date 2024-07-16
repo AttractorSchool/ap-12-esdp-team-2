@@ -261,7 +261,6 @@ class FestivalListView(generic.ListView):
         user = self.request.user
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'ФЕСТИВАЛИ'
-        context['created_clubs'] = user.created_clubs.values()
         return context
 
 
@@ -274,7 +273,8 @@ class FestivalDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         context['page_title'] = f'{self.get_object().name}'
-        context['created_clubs'] = user.created_clubs.values()
+        if self.request.user.is_authenticated:
+            context['created_clubs'] = user.created_clubs.values()
         return context
 
 

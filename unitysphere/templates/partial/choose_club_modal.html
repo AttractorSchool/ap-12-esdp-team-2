@@ -1,16 +1,19 @@
+{% load static %}
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
     {% if created_clubs %}
       <div class="modal-header">
-        <h2 class="modal-title fs-5" id="exampleModalLabel">Выберите ваше сообщество</h2>
+        <h2 class="modal-title fs-5" id="modal">Выберите ваше сообщество</h2>
+        <div id="lol"></div>
       </div>
       <div class="modal-body">
 
         {% for club in created_clubs %}
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="selected_club" id="flexRadioDefault1">
-              <label class="form-check-label" for="flexRadioDefault1">
+              <input class="form-check-input" type="radio" id="selectedClub" value="{{ club.id }}">
+              <label class="form-check-label" for="selectedClub">
                 {{ club.name }}
               </label>
             </div>
@@ -28,9 +31,17 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
         {% if created_clubs %}
-            <a href=""><button type="button" class="btn btn-primary">Отправить запрос</button></a>
+            <button type="button" class="btn btn-primary" id="FestivalParticipationRequest">
+                Отправить запрос
+            </button>
         {% endif %}
       </div>
     </div>
   </div>
 </div>
+
+{% block extra_scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/our_js/fest.js' %}"></script>
+{% endblock %}

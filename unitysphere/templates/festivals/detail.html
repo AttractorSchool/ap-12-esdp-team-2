@@ -58,15 +58,16 @@
                         <a href="{% url 'festival_update' festival.pk %}" class="btn btn-primary w-100 mb-2">
                             Редактировать
                         </a>
-                        <form action="{% url 'festival_delete' festival.pk %}" method="post" onsubmit="return confirm('Удалить задачу?')">
+                        <form action="{% url 'festival_delete' festival.pk %}" method="post" onsubmit="return confirm('Удалить фестиваль?')">
                             {% csrf_token %}
                             <button class="btn btn-danger w-100">Удалить</button>
                         </form>
-                    {% else %}
-                        <!-- Button trigger modal -->
+                    {% elif user.is_authenticated %}
                         <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Записаться
                         </button>
+                        <input type="hidden" id="festivalId" value="{{ festival.pk }}">
+                        <label for="festivalId"></label>
                         {% include 'partial/choose_club_modal.html' %}
                     {% endif %}
                 </div>
@@ -83,6 +84,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{%  static 'js/template_js/vendor/jquery-2.2.4.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="{%  static 'js/template_js/vendor/bootstrap.min.js' %}"></script>
@@ -98,4 +100,5 @@
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/our_js/fest.js' %}"></script>
 {% endblock %}

@@ -44,12 +44,6 @@
                         <a href="{{ fest.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">
                             Страница фестиваля
                         </a>
-                        {% if not user.is_superuser %}
-                            <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Записаться
-                            </button>
-                            {% include 'partial/choose_club_modal.html' %}
-                        {% endif %}
 
                     </div>
                 {% empty %}
