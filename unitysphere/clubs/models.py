@@ -106,6 +106,7 @@ class Club(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    whatsapp_link = models.CharField(max_length=100, verbose_name='Ссылка на WhatsApp', blank=True, null=True)
     name = models.CharField(max_length=100, unique=True, verbose_name='Имя сообщества')
     category = models.ForeignKey(
         'clubs.ClubCategory',
@@ -179,7 +180,11 @@ class Club(models.Model):
         Возвращает строковое представление имени клуба.
         """
         return self.name
-
+    def get_absolute_url(self):
+        return reverse('club_detail', kwargs={'pk': self.pk})
+    
+    def get_whatsapp_link(self):
+        return f"https://wa.me/{self.whatsapp_link}"
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
@@ -199,8 +204,7 @@ class Club(models.Model):
         return reverse('club_photogallery', kwargs={'pk': self.pk})
 
     def get_managers_phone_str(self):
-        wa_link = f'<a href="whatsapp://send?abid=phonenumber&text=Hello%2C%20World!">Send Message</a>'
-        phones = ', '.join(manager.phone for manager in self.managers.all() if manager.phone)
+        phones = ', '.join(manager.phone[:20] for manager in self.managers.all() if manager.phone)
         return phones
 
     def get_managers_email_str(self):

@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.validators import MinValueValidator
-
 from accounts.models import User
 from . import models
 
@@ -19,6 +18,7 @@ class ClubForm(forms.ModelForm):
             'phone',
             'city',
             'address',
+            'whatsapp_link',
         )
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
@@ -29,6 +29,7 @@ class ClubForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'city': forms.Select(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'address': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'whatsapp_link': forms.TextInput(attrs={'placeholder': '+7757161577'}),
         }
 
 
@@ -96,6 +97,22 @@ class SelectClubManagersForm(forms.ModelForm):
         return True
 
 
+class ClubServiceCreateForm(forms.ModelForm):
+    class Meta:
+        model = models.ClubService
+        fields = (
+            'name',
+            'description',
+            'price',
+        )
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+    photo = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}))
+
+    
 class CreateClubEventForm(forms.ModelForm):
     class Meta:
         model = models.ClubEvent
@@ -135,3 +152,4 @@ class AddGalleryPhotoForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
         }
     club = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=models.Club.objects.all())
+
