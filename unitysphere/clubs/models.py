@@ -106,7 +106,7 @@ class Club(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True, verbose_name='Имя клуба')
+    name = models.CharField(max_length=100, unique=True, verbose_name='Имя сообщества')
     category = models.ForeignKey(
         'clubs.ClubCategory',
         on_delete=models.PROTECT,

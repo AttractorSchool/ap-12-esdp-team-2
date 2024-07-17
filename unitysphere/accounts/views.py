@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.views import generic
 from .forms import RegisterUserForm, UserLoginForm, UserUpdateForm
 from .models import User
@@ -26,15 +27,10 @@ class RegisterUserView(generic.FormView):
 
     def form_valid(self, form):
         if form.is_valid():
-            user = form.save()
-            login(self.request, user)
-            return redirect(self.get_success_url())
+            form.save()
+            return redirect(reverse('login'))
         else:
             return super().form_invalid(form)
-
-    def get_success_url(self):
-        success_url = self.request.META.get('HTTP_REFERER', '/')
-        return success_url
 
 
 class LoginUserView(LoginView):
@@ -102,10 +98,8 @@ class UserUpdateView(LoginRequiredMixin, generic.FormView):
     def get(self, request, *args, **kwargs):
         form = self.form_class(instance=request.user)
         page_title = 'Изменить профиль'
-        categories = ClubCategory.objects.all()
         ctx = {
             'page_title': page_title,
-            'categories': categories,
             'form': form,
         }
         return self.render_to_response(ctx)
