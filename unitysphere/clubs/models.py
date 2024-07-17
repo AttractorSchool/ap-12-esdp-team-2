@@ -106,7 +106,6 @@ class Club(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    whatsapp_link = models.CharField(max_length=100, verbose_name='Ссылка на WhatsApp', blank=True, null=True)
     name = models.CharField(max_length=100, unique=True, verbose_name='Имя сообщества')
     category = models.ForeignKey(
         'clubs.ClubCategory',
@@ -121,6 +120,7 @@ class Club(models.Model):
         default='club/logos/club-icon.png',
         verbose_name='Логотип'
     )
+    whatsapp_group_link = models.URLField(verbose_name='Ссылка на группу Whatsapp', null=True, blank=True)
     creater = models.ForeignKey(
         'accounts.User',
         on_delete=models.PROTECT,
