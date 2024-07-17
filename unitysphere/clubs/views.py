@@ -8,13 +8,15 @@ from django.views import generic
 from . import models, forms
 from calendar import HTMLCalendar
 
+from .api.serializers import club
+from .mixins import ClubRelatedObjectCreateMixin
+
 
 class IndexView(generic.TemplateView):
     template_name = 'clubs/index.html'
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.ClubCategory.objects.all()
         context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
         context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
         return context
@@ -39,10 +41,7 @@ class ClubDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.ClubCategory.objects.all()
-        context['page_title'] = self.get_object().name
-        context['photos'] = models.ClubGalleryPhoto.objects.filter(club=self.get_object())
-        context['services'] = models.ClubService.objects.filter(club=self.get_object())
+        context['page_title'] = f'{self.get_object().name}'
         context['events'] = models.ClubEvent.objects.annotate(
                                 datetime_passed=Case(
                                     When(start_datetime__lt=timezone.now(), then=Value(True)),
@@ -63,7 +62,6 @@ class ClubListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'ВСЕ СООБЩЕСТВА'
         context['search'] = self.request.GET.get('search')
-        context['categories'] = models.ClubCategory.objects.all()
         return context
 
     def get_queryset(self):
@@ -81,7 +79,6 @@ class ClubCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['categories'] = models.ClubCategory.objects.all()
         ctx['page_title'] = 'Создать сообщество'
         return ctx
 
@@ -89,9 +86,9 @@ class ClubCreateView(LoginRequiredMixin, generic.CreateView):
         if form.is_valid():
             club = form.save(commit=False)
             club.creater = self.request.user
+            club.members_count += 1
             club.save()
             club.managers.add(self.request.user)
-            club.members_count += 1
             club.members.add(self.request.user)
             return redirect(club.get_absolute_url())
         else:
@@ -128,6 +125,11 @@ class ChooseClubManagersView(PermissionRequiredMixin, generic.UpdateView):
         ctx = super().get_context_data()
         ctx['page_title'] = 'Добавление/удаление руководителей'
         return ctx
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial={'managers': self.get_object().managers.all()})
+        form.fields['managers'].queryset = self.get_object().members.all().union(self.get_object().managers.all())
+        return self.render_to_response({'form': form})
 
 
 class CategoryClubsView(generic.DetailView):
@@ -171,7 +173,6 @@ class ClubEventListView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'События клубов'
-        ctx['categories'] = models.ClubCategory.objects.all()
         return ctx
 
     def get_queryset(self):
@@ -193,6 +194,17 @@ class EventDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = self.get_object().title
+        return ctx
+
+
+class CreateClubEventView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, generic.CreateView):
+    model = models.ClubEvent
+    form_class = forms.CreateClubEventForm
+    template_name = 'clubs/create_event.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = f'Организация события от клуба - {self.get_club()}'
         return ctx
 
 
@@ -282,3 +294,30 @@ class EventCalendarView(generic.ListView):
 
 class AboutView(generic.TemplateView):
     template_name = 'clubs/about.html'
+
+
+class ClubPhotoGalleryView(generic.ListView):
+    model = models.ClubGalleryPhoto
+    context_object_name = 'photos'
+    template_name = 'clubs/club_photogallery.html'
+    paginate_by = 40
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        ctx['page_title'] = f'{club} - Фотогалерея'
+        ctx['club'] = club
+        return ctx
+
+    def get_queryset(self):
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        return self.model.objects.filter(club=club)
+
+
+class ClubAddPhotoView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, generic.CreateView):
+    model = models.ClubGalleryPhoto
+    form_class = forms.AddGalleryPhotoForm
+    template_name = 'clubs/club_add_photo.html'
+
+    def get_success_url(self):
+        return self.get_club().get_gallery_url()

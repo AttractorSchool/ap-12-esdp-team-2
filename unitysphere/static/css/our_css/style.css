@@ -141,11 +141,6 @@
     background: #fff;
 }
 
-.custom-search-input::placeholder {
-    color: #fff;
-    opacity: 1;
-}
-
 .custom-search-button {
     float: left;
     width: 15%;
@@ -270,4 +265,26 @@
     background: none;
     border: none;
     cursor: pointer;
+}
+
+.search-field {
+    padding-left: 5px;
+    background: #f7631b;
+    color:#fff;
+    border: 1px solid #f7631b;
+}
+
+.search-field:focus {
+    outline: none;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-block {
+    flex: 1;
+
 }

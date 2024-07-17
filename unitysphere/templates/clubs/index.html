@@ -26,10 +26,11 @@
             <div class="row fullscreen d-flex align-items-center justify-content-between">
                 <div class="banner-content col-lg-9 col-md-12 mx-auto text-center">
                     <h2 class="text-uppercase text-white">
-                        <span class="your-future-txt">ВАШЕ БУДУЩЕЕ</span> ЗАВИСИТ ОТ ОКРУЖЕНИЯ, ПОЭТОМУ МЫ СОБИРАЕМ ТОЛЬКО ЛУЧШИЕ СООБЩЕСТВА ДЛЯ ВАС
+                        <span class="your-future-txt">ВАШЕ БУДУЩЕЕ</span>
+                        ЗАВИСИТ ОТ ОКРУЖЕНИЯ, СТРЕМИТЕСЬ К ТЕМ СООБЩЕСТВАМ, В КОТОРЫХ ВИДИТЕ СЕБЯ
                     </h2>
                     <p class="pt-10 pb-10">
-                        "Найдите то, что вас вдохновляет, и позвольте этому вдохновению мотивировать вас к действию." - Tony Robbins
+                        "Жизнь всегда будет направляться в том направлении, в каком движутся ваши действия."
                     </p>
                     <a href="{% url 'clubs' %}" class="primary-btn text-uppercase">Найти сообщество</a>
                 </div>
@@ -45,11 +46,11 @@
                 <div class="col-lg-3">
                     <div class="single-feature">
                         <div class="title">
-                            <h4>Заявить о проекте</h4>
+                            <h4>ЗАЯВИТЬ О СВОЁМ ПРОЕКТЕ (СТАРТАПЕ / БИЗНЕС ИДЕЕ)</h4>
                         </div>
                         <div class="desc-wrap">
                             <p style="min-height: 90px;">
-                                Расскажите о своём проекте, чтобы собрать команду или привлечь бизнес партнеров.
+                                РАССКАЖИТЕ О СВОЁМ ПРОЕКТЕ ЧТОБЫ СОБРАТЬ КОМАНДУ ИЛИ ПРИВЛЕЧЬ БИЗНЕС ПАРТНЕРОВ
                             </p>
                             <a href="#">Заявить сейчас</a>
                         </div>
@@ -62,9 +63,9 @@
                         </div>
                         <div class="desc-wrap">
                             <p style="min-height: 90px;">
-                                Создайте сообщество вокруг своих интересов! Вместе мы создаем мир вдохновения и возможностей.
+                                ЧЕМ ПОЛЕЗНЕЕ И ИНТЕРЕСНЕЕ БУДЕТ ВАШЕ СООБЩЕСТВО ТЕМ БОЛЬШЕ УЧАСТНИКОВ В НЕМ БУДЕТ, КОТОРЫМ ВЫ СМОЖЕТЕ ПРОДАВАТЬ СВОЙ ТОВАР ИЛИ УСЛУГИ
                             </p>
-                            <a href="#">Создать сейчас</a>
+                            <a href="{% url 'club_create' %}">Создать сейчас</a>
                         </div>
                     </div>
                 </div>
@@ -74,9 +75,10 @@
                             <h4>Вступайте в сообщества</h4>
                         </div>
                         <div class="desc-wrap">
-                            <p style="min-height: 90px;">
-                                От спортивных клубов до хобби групп — здесь есть место для всех!
-                            </p>
+
+                                <p>ХОТИТЕ РАЗВЛЕЧЕНИЙ - ХОББИ СООБЩЕСТВА</p>
+                                <p>ХОТИТЕ ЗАНИМАТЬСЯ СПОРТОМ - СПОРТ СООБЩЕСТВА</p>
+                                <p>ХОТИТЕ РАЗВИВАТЬСЯ КАК СПЕЦИАЛИСТ - ПРОФЕССИОНАЛЬНЫЕ СООБЩЕСТВА</p>
                             <a href="{% url 'clubs' %}">Список сообществ</a>
                         </div>
                     </div>
@@ -88,7 +90,7 @@
                         </div>
                         <div class="desc-wrap">
                             <p style="min-height: 90px;">
-                                Опыт, единение, вдохновение: фестивали наших сообществ!
+                                ЗДЕСЬ ВЫ МОЖЕТЕ ПОЗНАКОМИТЬСЯ С СООБЩЕСТВАМИ В ЖИВУЮ, ПОДАТЬ ЗАЯВКУ НА УЧАСТИЕ ИЛИ ПОСМОТРЕТЬ СПИСОК УЧАСТВУЮЩИХ 
                             </p>
                             <a href="#">Ближайшие фестивали</a>
                         </div>
@@ -184,7 +186,7 @@
                         Откройте новые горизонты дружбы и сотрудничества
                         с нашим быстрым и простым поиском единомышленников.
                     </p>
-                    <a class="primary-btn text-uppercase" href="#">Найти единомышленника</a>
+                    <a class="primary-btn text-uppercase" href="{% url 'user_list' %}">Найти единомышленника</a>
                 </div>
             </div>
         </div>
@@ -234,7 +236,7 @@
                             </a>
 
                         </div>
-                        <a href="#" class="d-block primary-btn w-100 my-4 action-btn">Вступить</a>
+                        <a href="{% url 'club_detail' club.pk %}" class="d-block primary-btn w-100 my-4 action-btn">Вступить</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -283,7 +285,7 @@
                             </div>
                             <p class="event-description">{{ event.description }}</p>
                         </div>
-                        <a href="#" class="d-block primary-btn w-100 my-4 action-btn">Записаться</a>
+                        <a href="{% url 'event_detail' event.pk %}" class="d-block primary-btn w-100 my-4 action-btn">Записаться</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -313,4 +315,6 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
+    <script src="{%  static 'js/our_js/main.js' %}"></script>
+    <script src="{%  static 'js/our_js/index.js' %}"></script>
 {% endblock %}

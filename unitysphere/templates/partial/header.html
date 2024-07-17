@@ -5,10 +5,10 @@
             <div class="row">
                 <div class="col-lg-6 col-sm-6 col-8 header-top-left no-padding">
                     <ul>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                        <li><a href="#"><i class="fa fa-behance"></i></a></li>
+                        <li><a href="https://www.instagram.com/fan_club.kz/" target="_blank">fan-club.kz<i class="fa-brands fa-instagram ml-1"></i></a></li>
+                        <li><a href="https://scena.kz/" target="_blank">scena.kz<i class="fa-solid fa-globe ml-1"></i></a></li>
+                        <li><a href="https://nurospan.kz/" target="_blank">nurospan.kz<i class="fa-solid fa-globe ml-1"></i></a></li>
+                        <li><img src="{% static 'images/Flag-Kazakhstan.webp' %}" alt="" style="height: 20px;"></li>
                     </ul>			
                 </div>
                 <div class="col-lg-6 col-sm-6 col-4 header-top-right no-padding">
@@ -25,13 +25,8 @@
             <ul class="nav-menu">
               <li><a href="{% url 'index' %}">ГЛАВНАЯ</a></li>
               <li><a href="{% url 'about' %}">О НАС</a></li>
-              <li class="menu-has-children"><a href="">СООБЩЕСТВА</a>
-                <ul>
-                    {% for cat in categories %}
-                  <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
-                    {% endfor %}
-                </ul>
-              </li>
+              <li><a href="{% url 'clubs' %}">СООБЩЕСТВА</a></li>
+              <li><a href="{% url 'user_list' %}">ПОЛЬЗОВАТЕЛИ</a></li>
               <li><a href="{% url 'club_events' %}">СОБЫТИЯ</a></li>
               <li><a href="#">НОВОСТИ</a></li>
               <li class="menu-has-children"><a href="">УСЛУГИ</a>
@@ -44,7 +39,7 @@
                 <ul>
                     {% if request.user.is_authenticated %}
                       <li><a href="{{ request.user.get_absolute_url }}">ЛИЧНЫЙ КАБИНЕТ</a></li>
-                      <li><a href="{% url 'logout' %}">ВЫХОД</a></li>
+                      <li><a href="{% url 'logout' %}" id="logout-btn">ВЫХОД</a></li>
                     {% else %}
                         <li><a href="{% url 'register' %}">РЕГИСТРАЦИЯ</a></li>
                         <li><a href="{% url 'login' %}">ВХОД</a></li>

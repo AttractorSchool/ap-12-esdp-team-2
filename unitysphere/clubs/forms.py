@@ -1,14 +1,14 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-
+from django.core.validators import MinValueValidator
 from accounts.models import User
-from .models import Club, ClubService
+from . import models
 
 
 class ClubForm(forms.ModelForm):
 
     class Meta:
-        model = Club
+        model = models.Club
         fields = (
             'name',
             'category',
@@ -36,7 +36,7 @@ class ClubForm(forms.ModelForm):
 class ClubUpdateForm(forms.ModelForm):
 
     class Meta:
-        model = Club
+        model = models.Club
         exclude = (
             'creater',
             'members',
@@ -49,6 +49,7 @@ class ClubUpdateForm(forms.ModelForm):
             'partners',
             'partners_count'
         )
+
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'category': forms.Select(attrs={'class': 'form-control text-center w-50 mx-auto'}),
@@ -75,7 +76,7 @@ class SelectClubManagersForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Club
+        model = models.Club
         fields = ['managers',]
 
     class Media:
@@ -98,7 +99,7 @@ class SelectClubManagersForm(forms.ModelForm):
 
 class ClubServiceCreateForm(forms.ModelForm):
     class Meta:
-        model = ClubService
+        model = models.ClubService
         fields = (
             'name',
             'description',
@@ -110,3 +111,45 @@ class ClubServiceCreateForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
         }
     photo = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}))
+
+    
+class CreateClubEventForm(forms.ModelForm):
+    class Meta:
+        model = models.ClubEvent
+        exclude = (
+            'old_datetime',
+        )
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'banner': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'location': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'start_datetime': forms.DateInput(attrs={'class': 'form-control text-center w-50 mx-auto', 'type': 'date'}),
+            'end_datetime': forms.DateInput(attrs={'class': 'form-control text-center w-50 mx-auto', 'type': 'date'}),
+            'entry_requirements': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+
+    min_age = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'min': '1', 'class': 'form-control text-center w-50 mx-auto'}),
+        min_value=1,
+        validators=[MinValueValidator(1)],
+        label='Минимальный допустимый возраст'
+    )
+    max_age = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'min': '1', 'class': 'form-control text-center w-50 mx-auto'}),
+        min_value=1,
+        validators=[MinValueValidator(1)],
+        label='Максимальный допустимый возраст'
+    )
+    club = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=models.Club.objects.all())
+
+
+class AddGalleryPhotoForm(forms.ModelForm):
+    class Meta:
+        model = models.ClubGalleryPhoto
+        fields = ('club', 'image')
+        widgets = {
+            'image': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+    club = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=models.Club.objects.all())
+

@@ -1,6 +1,7 @@
 import uuid
 from django.contrib.auth.hashers import make_password
 from django.core.cache import cache
+from django.contrib.auth import login
 from rest_framework.response import Response
 from rest_framework import status, permissions as drf_permissions, generics
 from rest_framework.views import APIView
@@ -23,11 +24,15 @@ class UserCreateAPIView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         session_id = uuid.uuid4()
         session_key = constants.USER_SESSION_KEY.format(session_id)
-        sms_code = utils.generate_sms_code(k=4)
+        sms_code = utils.generate_sms_code()
         phone = serializer.validated_data['phone']
+
+        # Here should be your logic for sending SMS code...
 
         user_data = {
             'phone': phone,
+            'first_name': serializer.validated_data['first_name'],
+            'last_name': serializer.validated_data['last_name'],
             'password': make_password(serializer.validated_data['password2']),
         }
 
@@ -36,7 +41,10 @@ class UserCreateAPIView(generics.CreateAPIView):
             'sms_code': sms_code,
         }
         cache.set(session_key, data, constants.USER_SESSION_KEY_TTL)
-        return Response({'session_id': session_id}, status=status.HTTP_202_ACCEPTED)
+        return Response(
+            {'session_id': session_id, 'phone': phone},
+            status=status.HTTP_202_ACCEPTED
+        )
 
 
 class UserVerifyAPIView(generics.GenericAPIView):
@@ -53,18 +61,26 @@ class UserVerifyAPIView(generics.GenericAPIView):
 
         if session['sms_code'] != serializer.validated_data['sms_code']:
             raise exceptions.SMSCodeInvalidException
-
         user = User.objects.create(**session['user_data'])
+        login(request, user)
         user.save()
-        tokens = utils.generate_tokens(user)
+        token = utils.generate_token(user)
 
-        return Response(tokens, status=status.HTTP_201_CREATED)
+        return Response(token, status=status.HTTP_201_CREATED)
 
 
-class ProfileUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = serializers.ProfileUpdateSerializer
-    permission_classes = (permissions.IsProfileOwnerOrReadOnly,)
-    queryset = Profile.objects.all()
+class ProfileUpdateAPIView(APIView):
+    permission_classes = (drf_permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        serializer = serializers.ProfileUpdateSerializer(instance=profile, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        for key, value in serializer.validated_data.items():
+            setattr(profile, key, value)
+        profile.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserToSearchingInAlliesList(APIView):

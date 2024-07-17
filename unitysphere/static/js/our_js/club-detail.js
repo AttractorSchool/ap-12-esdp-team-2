@@ -7,7 +7,7 @@ function likeClub(btn) {
     let club_id = btn.getAttribute("club_id")
     $.ajax({
         type: "post",
-        url: `http://127.0.0.1:8000/api/v1/clubs/${club_id}/club_action/`,
+        url: `http://${baseURL}/api/v1/clubs/${club_id}/club_action/`,
         data: action_data,
         headers: {'Authorization': 'Token ' + localStorage.getItem('apiToken')},
         success: function (response) {
@@ -22,8 +22,9 @@ function likeClub(btn) {
         error: function(response) {
             console.log(response.status)
             let currentURL = window.location.pathname
+            console.log(currentURL)
             if (response.status == 401) {
-                window.location.href = `${baseURL}/accounts/login/?next=${currentURL}`
+                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
             }
         }
     });
@@ -52,7 +53,7 @@ function dislikeClub(btn) {
         error: function(response) {
             let currentURL = window.location.pathname
             if (response.status == 401) {
-                window.location.href = `http://127.0.0.1:8000/accounts/login/?next=${currentURL}`
+                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
             }
         }
     });
@@ -86,7 +87,7 @@ function joinClub(btn) {
             console.log(response)
             let currentURL = window.location.pathname
             if (response.status == 401) {
-                window.location.href = `http://127.0.0.1:8000/accounts/login/?next=${currentURL}`
+                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
             }
         }
     });
@@ -120,7 +121,7 @@ function leaveClub(btn) {
             console.log(response)
             let currentURL = window.location.pathname
             if (response.status == 401) {
-                window.location.href = `http://127.0.0.1:8000/accounts/login/?next=${currentURL}`
+                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
             }
         }
     });

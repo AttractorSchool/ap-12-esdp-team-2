@@ -1,3 +1,4 @@
+from .models import ClubCategory, Club
 
 
 class ClubActionSerializerMixin:
@@ -35,3 +36,29 @@ class ClubActionSerializerMixin:
         if serializer := self.ACTION_SERIALIZERS.get(self.action):
             return serializer
         return super().get_serializer_class()
+
+
+class CategoryListMixin:
+
+    def get_categories(self):
+        return ClubCategory.objects.filter(is_active=True)
+
+
+class ClubRelatedObjectCreateMixin(CategoryListMixin):
+
+    def get_club(self):
+        return Club.objects.get(id=self.kwargs.get('pk'))
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['club'] = self.get_club()
+        return initial
+
+    def has_permission(self):
+        return self.get_club().managers.filter(id=self.request.user.id).exists()
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = f'{self.get_club()} - Добавить {self.model._meta.verbose_name}'
+        ctx['categories'] = self.get_categories()
+        return ctx

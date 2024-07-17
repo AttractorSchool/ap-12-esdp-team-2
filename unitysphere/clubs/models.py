@@ -106,8 +106,8 @@ class Club(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True, verbose_name='Имя клуба')
     whatsapp_link = models.CharField(max_length=100, verbose_name='Ссылка на WhatsApp', blank=True, null=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name='Имя сообщества')
     category = models.ForeignKey(
         'clubs.ClubCategory',
         on_delete=models.PROTECT,
@@ -199,6 +199,9 @@ class Club(models.Model):
 
     def get_absolute_url(self):
         return reverse('club_detail', kwargs={'pk': self.pk})
+
+    def get_gallery_url(self):
+        return reverse('club_photogallery', kwargs={'pk': self.pk})
 
     def get_managers_phone_str(self):
         phones = ', '.join(manager.phone[:20] for manager in self.managers.all() if manager.phone)
@@ -398,8 +401,9 @@ class ClubGalleryPhoto(models.Model):
         return f'{self.club.name}-{self.image.name}'
 
     class Meta:
-        verbose_name = "Фотогалерея"
-        verbose_name_plural = "Фотогалерея"
+        verbose_name = "Фото"
+        verbose_name_plural = "Фото"
+        ordering = ('-created_at',)
 
 
 class ClubEvent(models.Model):

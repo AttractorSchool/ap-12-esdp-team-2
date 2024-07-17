@@ -7,7 +7,10 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c "until pg_isready -h fnclub-db -U postgres; do echo waiting for postgres; sleep 2; done &&
+            python /proj/unitysphere/manage.py makemigrations &&
              python /proj/unitysphere/manage.py migrate &&
+             python /proj/unitysphere/manage.py loaddata /proj/unitysphere/fixtures/auth.json &&
+             python /proj/unitysphere/manage.py loaddata /proj/unitysphere/fixtures/content.json &&
              python /proj/unitysphere/manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
