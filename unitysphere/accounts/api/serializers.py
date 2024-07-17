@@ -48,8 +48,7 @@ class UserVerifySerializer(serializers.Serializer):
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Profile
-        fields = '__all__'
+        exclude = ('user',)

@@ -61,7 +61,6 @@ class UserVerifyAPIView(generics.GenericAPIView):
 
         if session['sms_code'] != serializer.validated_data['sms_code']:
             raise exceptions.SMSCodeInvalidException
-        print(session['user_data'])
         user = User.objects.create(**session['user_data'])
         login(request, user)
         user.save()
@@ -70,10 +69,18 @@ class UserVerifyAPIView(generics.GenericAPIView):
         return Response(token, status=status.HTTP_201_CREATED)
 
 
-class ProfileUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = serializers.ProfileUpdateSerializer
-    permission_classes = (permissions.IsProfileOwnerOrReadOnly,)
-    queryset = Profile.objects.all()
+class ProfileUpdateAPIView(APIView):
+    permission_classes = (drf_permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        serializer = serializers.ProfileUpdateSerializer(instance=profile, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        for key, value in serializer.validated_data.items():
+            setattr(profile, key, value)
+        profile.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserToSearchingInAlliesList(APIView):

@@ -26,8 +26,8 @@ $("#update-about").submit(function (e) {
 
 
     $.ajax({
-        type: "put",
-        url: `http://${baseURL}/api/v1/profile/${profileID}/update/`,
+        type: "post",
+        url: `http://${baseURL}/api/v1/profile/update/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken
@@ -61,8 +61,8 @@ $("#update-goals").submit(function (e) {
 
 
     $.ajax({
-        type: "put",
-        url: `http://${baseURL}/api/v1/profile/${profileID}/update/`,
+        type: "post",
+        url: `http://${baseURL}/api/v1/profile/update/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken
@@ -95,8 +95,8 @@ $("#update-interests").submit(function (e) {
 
 
     $.ajax({
-        type: "put",
-        url: `http://${baseURL}/api/v1/profile/${profileID}/update/`,
+        type: "post",
+        url: `http://${baseURL}/api/v1/profile/update/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken
