@@ -54,6 +54,7 @@ class ClubUpdateForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'category': forms.Select(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'logo': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'whatsapp_group_link': forms.URLInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'email': forms.EmailInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),

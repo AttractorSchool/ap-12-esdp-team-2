@@ -65,6 +65,7 @@ function joinClub(btn) {
         'action': 'join'
     }
     let club_id = btn.getAttribute("club_id")
+    let wa_link = btn.getAttribute("wa")
     $.ajax({
         type: "post",
         url: `http://${baseURL}/api/v1/clubs/${club_id}/club_action/`,
@@ -82,6 +83,7 @@ function joinClub(btn) {
             join_btn.innerText = 'Покинуть'
             joinClubBtn.classList.remove('btn-success')
             joinClubBtn.classList.add('btn-danger')
+            window.open(wa_link, '_blank');
         },
         error: function(response) {
             console.log(response)
