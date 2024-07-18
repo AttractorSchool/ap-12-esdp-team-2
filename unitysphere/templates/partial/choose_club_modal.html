@@ -8,15 +8,20 @@
         <h2 class="modal-title fs-5" id="modal">Выберите ваше сообщество</h2>
       </div>
       <div class="modal-body">
+        
+            
+        <select type="radio" id="selectedClub" class="form-select form-select-lg mb-3" >
+            {% for club in created_clubs %}
+                <option value="{{ club.id }}">{{ club.name }}</option>
+            {% endfor %}
+            
+        </select>
+        <div class="fest-req-error-block" id="festResponseText">
+        
+        </div>
+   
+        
 
-        {% for club in created_clubs %}
-            <div class="form-check">
-              <input class="form-check-input" type="radio" id="selectedClub" value="{{ club.id }}">
-              <label class="form-check-label" for="selectedClub">
-                {{ club.name }}
-              </label>
-            </div>
-        {% endfor %}
     {% else %}
       <div class="modal-header mb-3 mt-3">
         <h3 class="modal-title fs-5" id="exampleModalLabel">У вас нет сообществ</h3>
