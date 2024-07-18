@@ -8020,10 +8020,10 @@ a.text-info:hover, a.text-info:focus {
 a.text-warning:hover, a.text-warning:focus {
   color: #ba8b00 !important; }
 
-.text-danger {
+.response-text {
   color: #dc3545 !important; }
 
-a.text-danger:hover, a.text-danger:focus {
+a.response-text:hover, a.response-text:focus {
   color: #a71d2a !important; }
 
 .text-light {
