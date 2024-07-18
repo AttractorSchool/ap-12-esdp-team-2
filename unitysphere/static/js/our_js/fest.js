@@ -1,6 +1,4 @@
-let baseURL = "http://localhost:8000/api/v1/festivals"
-
-    let modal = $("#lol")
+let baseURL = "http://127.0.0.1:8000/api/v1/festivals"
 
 let btn = $('#FestivalParticipationRequest')
     btn.click(function (e) {
