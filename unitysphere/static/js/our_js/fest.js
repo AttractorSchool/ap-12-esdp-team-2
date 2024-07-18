@@ -4,23 +4,31 @@ let btn = $('#FestivalParticipationRequest')
     btn.click(function (e) {
     let club = $('#selectedClub').val();
     let festival = $('#festivalId').val();
+    let festResponseElm = $('#festResponseText');
+    festResponseElm.removeClass('text-danger', 'text-success')
 
     $.ajax({
         url: `${baseURL}/${festival}/festival_action/`,
         type: 'post',
         dataType: 'json',
         contentType: 'application/json',
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem('apiToken'),
+        },
         data: JSON.stringify({
-            action: "join",
-            club: club,
+            "action": "join",
+            "club": club,
         }),
         success: function (response) {
             console.log(response)
-            btn.attr( "disabled", true).html("Запрос отправлен").addClass("btn-light")
+            festResponseElm.innerText = ''
+            festResponseElm.html('Запрос отправлен').addClass('text-success')
         },
         error: function(response, status){
             console.log(response, status)
-            btn.attr( "disabled", true).html("Ошибка в запросе").addClass("btn-light")
+            let festErrorsElm = document.getElementById('festResponseText')
+            festResponseElm.innerText = ''
+            festResponseElm.html(response.responseJSON.detail).addClass('text-danger')
         }
     })
 });
