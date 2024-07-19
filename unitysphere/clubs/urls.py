@@ -17,8 +17,12 @@ urlpatterns = [
     path('club/events/<uuid:pk>/', views.EventDetailView.as_view(), name='event_detail'),
     path('event-calendar/', views.EventCalendarView.as_view(), name='event_calendar'),
     path('about/', views.AboutView.as_view(), name='about'),
+    path('festivals/', views.FestivalListView.as_view(), name='festivals'),
+    path('festivals/<uuid:pk>/', views.FestivalDetailView.as_view(), name='festival_detail'),
+    path('festivals/create/', views.FestivalCreateView.as_view(), name='festival_create'),
+    path('festivals/<uuid:pk>/update/', views.FestivalUpdateView.as_view(), name='festival_update'),
+    path('festivals/<uuid:pk>/delete/', views.FestivalDeleteView.as_view(), name='festival_delete'),
     path('clubs/<int:club_id>/join/', views.join_club, name='join_club'),
     path('service/<uuid:pk>/', views.ClubServiceDetailView.as_view(), name='service_detail'),
     path('services/<uuid:pk>/edit/', views.UpdateServiceView.as_view(), name='edit_service'),
-
 ]

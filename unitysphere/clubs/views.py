@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 from . import models, forms
+from accounts import models as user_models
 from calendar import HTMLCalendar
 
 from .api.serializers import club
@@ -321,3 +322,68 @@ class ClubAddPhotoView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, ge
 
     def get_success_url(self):
         return self.get_club().get_gallery_url()
+
+
+class FestivalListView(generic.ListView):
+    model = models.Festival
+    context_object_name = 'festivals'
+    template_name = 'festivals/list.html'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'ФЕСТИВАЛИ'
+        return context
+
+
+class FestivalDetailView(generic.DetailView):
+    model = models.Festival
+    context_object_name = 'festival'
+    template_name = 'festivals/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['page_title'] = f'{self.get_object().name}'
+        if self.request.user.is_authenticated:
+            context['created_clubs'] = user.created_clubs.values()
+        return context
+
+
+class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
+    model = models.Festival
+    form_class = forms.FestivalForm
+    template_name = 'festivals/create_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Новый фестиваль'
+        return context
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+
+class FestivalUpdateView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Festival
+    form_class = forms.FestivalForm
+    template_name = 'festivals/create_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Изменить фестиваль'
+        return context
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+
+class FestivalDeleteView(PermissionRequiredMixin, generic.DeleteView):
+    model = models.Festival
+    context_object_name = 'festival'
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+    def get_success_url(self):
+        return reverse('festivals')

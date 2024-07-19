@@ -154,3 +154,27 @@ class AddGalleryPhotoForm(forms.ModelForm):
         }
     club = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=models.Club.objects.all())
 
+
+class FestivalForm(forms.ModelForm):
+    class Meta:
+        model = models.Festival
+        fields = ('name', 'description', 'image', 'start_datetime', 'location')
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control text-center w-50 mx-auto',
+                'placeholder': 'Напишите название'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control text-center w-50 mx-auto',
+                'placeholder': 'Напишите важные данные'
+            }),
+            'image': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'start_datetime': forms.DateTimeInput(attrs={
+                'class': 'form-control text-center w-50 mx-auto',
+                'type': 'datetime', 'placeholder': 'Пример заполнения: "01.01.2024 10:00"'
+            }),
+            'location': forms.TextInput(attrs={
+                'class': 'form-control text-center w-50 mx-auto',
+                'placeholder': 'Напишите место проведения'
+            }),
+        }

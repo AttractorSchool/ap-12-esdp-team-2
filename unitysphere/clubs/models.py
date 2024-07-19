@@ -565,7 +565,7 @@ class Festival(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     start_datetime = models.DateTimeField(verbose_name='Дата начала')
-    location = models.CharField(max_length=200)
+    location = models.CharField(max_length=200, verbose_name='Локация')
     approved_clubs = models.ManyToManyField(
         to='clubs.Club',
         related_name='approved_on_festival',
@@ -582,6 +582,9 @@ class Festival(models.Model):
         Возвращает строковое представление названия фестиваля.
         """
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('festival_detail', kwargs={'pk': self.pk})
 
 
 class FestivalParticipationRequest(models.Model):

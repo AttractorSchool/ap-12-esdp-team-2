@@ -3,7 +3,7 @@
     <div class="block-errors" id="errors_non_field_errors">
     {% if form.non_field_errors %}
         {% for err in form.non_field_errors %}
-          <p class="text-danger text-center">{{ err }}</p>
+          <p class="festResponseText text-center">{{ err }}</p>
         {% endfor %}
     {% endif %}
     </div>
@@ -21,7 +21,7 @@
         <div class="block-errors" id="errors_{{ field.name }}">
             {% if field.errors %}
                 {% for error in field.errors %}
-                    <p class="text-danger text-center">{{ error }}</p>
+                    <p class="festResponseText text-center">{{ error }}</p>
                 {% endfor %}
             {% endif %}
         </div>

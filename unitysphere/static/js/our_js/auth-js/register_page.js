@@ -116,11 +116,11 @@ function insertFieldErrors(field_name, errors) {
         blockErrors = document.getElementById(`errors_${field_name}`)
     }
     if(typeof errors === 'string') {
-        let errorElm = `<p class='text-danger text-center'>${errors}</p>`;
+        let errorElm = `<p class='festResponseText text-center'>${errors}</p>`;
         blockErrors.innerHTML += errorElm
     } else {
         for (let i = 0; i < errors.length; i++) {
-            let errorElm = `<p class='text-danger text-center'>${errors[i]}</p>`;
+            let errorElm = `<p class='festResponseText text-center'>${errors[i]}</p>`;
             blockErrors.innerHTML += errorElm
         }
     }
