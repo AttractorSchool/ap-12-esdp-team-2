@@ -27,7 +27,7 @@ $("#update-about").submit(function (e) {
 
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/profile/update/`,
+        url: `/api/v1/profile/update/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken
@@ -62,7 +62,7 @@ $("#update-goals").submit(function (e) {
 
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/profile/update/`,
+        url: `/api/v1/profile/update/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken
@@ -96,7 +96,7 @@ $("#update-interests").submit(function (e) {
 
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/profile/update/`,
+        url: `/api/v1/profile/update/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken
@@ -128,7 +128,7 @@ function ProfileToSearchingInAllies(checkbox) {
     let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/profile/to_searching_allies/`,
+        url: `/api/v1/profile/to_searching_allies/`,
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('apiToken'),
             "X-CSRFToken": csrfToken

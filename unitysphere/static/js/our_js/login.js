@@ -7,7 +7,7 @@ $('#login_user_form').submit(function (e) {
     let password = $("#id_password2").val();
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/login/`,
+        url: `/api/v1/login/`,
         data: JSON.stringify({username: login, password: password}),
         dataType: 'json',
         contentType: 'application/json',

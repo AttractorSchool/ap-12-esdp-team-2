@@ -7,7 +7,7 @@ function likeClub(btn) {
     let club_id = btn.getAttribute("club_id")
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/clubs/${club_id}/club_action/`,
+        url: `/api/v1/clubs/${club_id}/club_action/`,
         data: action_data,
         headers: {'Authorization': 'Token ' + localStorage.getItem('apiToken')},
         success: function (response) {
@@ -24,7 +24,7 @@ function likeClub(btn) {
             let currentURL = window.location.pathname
             console.log(currentURL)
             if (response.status == 401) {
-                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
+                window.location.href = `/accounts/login/?next=${currentURL}`
             }
         }
     });
@@ -37,7 +37,7 @@ function dislikeClub(btn) {
     let club_id = btn.getAttribute("club_id")
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/clubs/${club_id}/club_action/`,
+        url: `/api/v1/clubs/${club_id}/club_action/`,
         data: action_data,
         headers: {'Authorization': 'Token ' + localStorage.getItem('apiToken')},
         success: function (response) {
@@ -53,7 +53,7 @@ function dislikeClub(btn) {
         error: function(response) {
             let currentURL = window.location.pathname
             if (response.status == 401) {
-                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
+                window.location.href = `/accounts/login/?next=${currentURL}`
             }
         }
     });
@@ -68,7 +68,7 @@ function joinClub(btn) {
     let wa_link = btn.getAttribute("wa")
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/clubs/${club_id}/club_action/`,
+        url: `/api/v1/clubs/${club_id}/club_action/`,
         data: action_data,
         headers: {'Authorization': 'Token ' + localStorage.getItem('apiToken')},
         success: function (response) {
@@ -89,7 +89,7 @@ function joinClub(btn) {
             console.log(response)
             let currentURL = window.location.pathname
             if (response.status == 401) {
-                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
+                window.location.href = `/accounts/login/?next=${currentURL}`
             }
         }
     });
@@ -103,7 +103,7 @@ function leaveClub(btn) {
     let club_id = btn.getAttribute("club_id")
     $.ajax({
         type: "post",
-        url: `http://${baseURL}/api/v1/clubs/${club_id}/club_action/`,
+        url: `/api/v1/clubs/${club_id}/club_action/`,
         data: action_data,
         headers: {'Authorization': 'Token ' + localStorage.getItem('apiToken')},
         success: function (response) {
@@ -123,7 +123,7 @@ function leaveClub(btn) {
             console.log(response)
             let currentURL = window.location.pathname
             if (response.status == 401) {
-                window.location.href = `http://${baseURL}/accounts/login/?next=${currentURL}`
+                window.location.href = `/accounts/login/?next=${currentURL}`
             }
         }
     });
