@@ -24,7 +24,7 @@ urlpatterns = [
     path('festivals/<uuid:pk>/update/', views.FestivalUpdateView.as_view(), name='festival_update'),
     path('festivals/<uuid:pk>/delete/', views.FestivalDeleteView.as_view(), name='festival_delete'),
     path('festivals/<uuid:pk>/requests/', views.FestivalRequests.as_view(), name='festival_requests'),
-    path('festivals/<uuid:pk>/approved/', views.FestivalDeleteView.as_view(), name='festival_delete'),
+    path('festivals/<uuid:pk>/approved/', views.FestivalApprovedClubs.as_view(), name='festival_approved_clubs'),
 
     path('service/<uuid:pk>/', views.ClubServiceDetailView.as_view(), name='service_detail'),
     path('services/<uuid:pk>/edit/', views.UpdateServiceView.as_view(), name='edit_service'),

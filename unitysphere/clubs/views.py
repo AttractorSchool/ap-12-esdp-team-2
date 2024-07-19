@@ -380,15 +380,36 @@ class FestivalRequests(generic.ListView):
     model = models.FestivalParticipationRequest
     context_object_name = 'requests'
     template_name = 'festivals/request_list.html'
-    paginate_by = 2
+    paginate_by = 50
 
     def get_queryset(self):
         festival_id = self.kwargs.get('pk')
-        festival = models.Festival.objects.get(pk=festival_id)
-        return festival.requests.exclude(approved=True)
+        self.festival = models.Festival.objects.get(pk=festival_id)
+        return self.festival.requests.exclude(approved=True).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Желающие участвовать'
+        context['festival'] = self.festival
+        context['page_title'] = f'{self.festival} - Запросы на фестиваль'
         context['user'] = self.request.user
         return context
+
+
+class FestivalApprovedClubs(generic.ListView):
+    model = models.FestivalParticipationRequest
+    context_object_name = 'requests'
+    template_name = 'festivals/approved_clubs.html'
+    paginate_by = 50
+
+    def get_queryset(self):
+        festival_id = self.kwargs.get('pk')
+        self.festival = models.Festival.objects.get(pk=festival_id)
+        return self.festival.requests.filter(approved=True).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['festival'] = self.festival
+        context['page_title'] = f'{self.festival} - Участники фестиваля'
+        context['user'] = self.request.user
+        return context
+

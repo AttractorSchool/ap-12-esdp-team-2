@@ -39,20 +39,16 @@
                                 </h6>
                             </a>
                             <div class="request-status-block d-flex justify-content-center mb-1">
-                                <span class="request_status_key d-block mr-1">
-                                    Статус запроса:
-                                </span>
 
-                                <span class="request_status d-block font-weight-bold {% if request.approved %}text-success{% else %}text-danger{% endif %}" id="request-status-{{ request.id }}">
-                                    {{ request.request_status_str }}
+                                <span class="request_status d-block font-weight-bold text-center" id="request-status-{{ request.id }}">
+
                                 </span>
                             </div>
                         </div>
                         {% if user.is_superuser %}
                         {% csrf_token %}
                         <div class="request-actions d-flex">
-                            <button type="button" class="btn btn-success d-block w-100 mr-1" request-id="{{ request.id }}" onclick="ApproveFestivalRequest(this)">Принять</button>
-                            <button type="button" class="btn btn-danger d-block w-100" request-id="{{ request.id }}" onclick="RejectFestivalRequest(this)">Отклонить</button>
+                            <button type="button" class="btn btn-danger d-block w-100" request-id="{{ request.id }}" onclick="DeleteClubFromFestival(this)">Удалить</button>
                         </div>
                         {% endif %}
                     </div>
@@ -64,7 +60,7 @@
     </section>
     <section>
         <div class="container">
-            <a href="{% url 'festival_approved_clubs' festival.id %}" class="text-center d-block">На страницу участников</a>
+            <a href="{% url 'festival_requests' festival.id %}" class="text-center d-block">На страницу запросов</a>
         </div>
     </section>
     <section class="pagination">
