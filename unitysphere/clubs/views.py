@@ -21,19 +21,6 @@ class IndexView(generic.TemplateView):
         context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
         context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
         return context
-    
-def join_club(request, club_id):
-    club = get_object_or_404(models.Club, id=club_id)
-    user = request.user
-    
-    club.members.add(user)
-    club.members_count += 1
-    club.save()
-    
-    if club.whatsapp_link:
-        return redirect(club.get_whatsapp_link())
-    
-    return redirect('club_detail', pk=club.id)
 
 
 class ClubDetailView(generic.DetailView):
@@ -387,3 +374,20 @@ class FestivalDeleteView(PermissionRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return reverse('festivals')
+
+
+class FestivalRequests(generic.ListView):
+    model = models.FestivalParticipationRequest
+    context_object_name = 'requests'
+    template_name = 'festivals/request_list.html'
+    paginate_by = 2
+
+    def get_queryset(self):
+        festival_id = self.kwargs.get('pk')
+        festival = models.Festival.objects.get(pk=festival_id)
+        return festival.requests.exclude(approved=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Желающие участвовать'
+        return context

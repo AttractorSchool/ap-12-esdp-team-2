@@ -582,6 +582,9 @@ class Festival(models.Model):
     def get_absolute_url(self):
         return reverse('festival_detail', kwargs={'pk': self.pk})
 
+    def get_not_approved_clubs(self):
+        return self.requests.exclude(approved=True)
+
 
 class FestivalParticipationRequest(models.Model):
     """

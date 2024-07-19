@@ -45,11 +45,11 @@
                             </li>
                             <li class="justify-content-between d-flex">
                                 <span>Будут участвовать</span>
-                                <a href="#">{{ festival.approved_clubs|length }}</a>
+                                <a href="#">{{ festival.approved_clubs.all|length }}</a>
                             </li>
                             <li class="justify-content-between d-flex">
                                 <span>Хотят участвовать</span>
-                                <a href="#">{{ festival.requests|length }}</a>
+                                <a href="{% url 'festival_requests' festival.id %}">{{ festival.get_not_approved_clubs|length }}</a>
                             </li>
 
                         </ul>
