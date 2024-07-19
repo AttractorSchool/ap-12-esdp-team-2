@@ -3,14 +3,15 @@
     <div class="block-errors" id="errors_non_field_errors">
     {% if form.non_field_errors %}
         {% for err in form.non_field_errors %}
-          <p class="text-danger text-center">{{ err }}</p>
+          <p class="festResponseText text-center">{{ err }}</p>
         {% endfor %}
     {% endif %}
     </div>
-    <div class="block-errors" id="errors_detail">
-        
-    </div>
-    {% for field in form %}
+
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    {% for field in form.visible_fields %}
     <div class="mb-2 text-center">
         <label class="d-inline-block mx-auto">{{ field.label }}</label>
         {% if field.field.required %}
@@ -20,7 +21,7 @@
         <div class="block-errors" id="errors_{{ field.name }}">
             {% if field.errors %}
                 {% for error in field.errors %}
-                    <p class="text-danger text-center">{{ error }}</p>
+                    <p class="festResponseText text-center">{{ error }}</p>
                 {% endfor %}
             {% endif %}
         </div>

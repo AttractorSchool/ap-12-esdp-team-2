@@ -1,9 +1,12 @@
+import datetime
 import uuid
 
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
+from django.urls import reverse
+from pytz import timezone
+
 from accounts.models import phone_regex_validator
-from . import exeptions as clubs_exceptions
 
 
 class ClubCategory(models.Model):
@@ -40,6 +43,9 @@ class ClubCategory(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'pk': self.pk})
 
 
 class City(models.Model):
@@ -100,7 +106,7 @@ class Club(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True, verbose_name='Имя клуба')
+    name = models.CharField(max_length=100, unique=True, verbose_name='Имя сообщества')
     category = models.ForeignKey(
         'clubs.ClubCategory',
         on_delete=models.PROTECT,
@@ -114,6 +120,7 @@ class Club(models.Model):
         default='club/logos/club-icon.png',
         verbose_name='Логотип'
     )
+    whatsapp_group_link = models.URLField(verbose_name='Ссылка на группу Whatsapp', null=True, blank=True)
     creater = models.ForeignKey(
         'accounts.User',
         on_delete=models.PROTECT,
@@ -174,9 +181,13 @@ class Club(models.Model):
         """
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('club_detail', kwargs={'pk': self.pk})
+
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
+        ordering = ('-members_count', '-likes_count', 'name')
 
     def delete(self, using=None, keep_parents=False):
         """
@@ -184,6 +195,17 @@ class Club(models.Model):
         """
         self.is_active = False
         self.save()
+
+    def get_gallery_url(self):
+        return reverse('club_photogallery', kwargs={'pk': self.pk})
+
+    def get_managers_phone_str(self):
+        phones = ', '.join(manager.phone[:20] for manager in self.managers.all() if manager.phone)
+        return phones
+
+    def get_managers_email_str(self):
+        emails = ', '.join(manager.email for manager in self.managers.all() if manager.email)
+        return emails
 
 
 class ClubJoinRequest(models.Model):
@@ -212,7 +234,7 @@ class ClubJoinRequest(models.Model):
         related_name='club_join_requests',
         verbose_name='Клуб'
     )
-    approved = models.BooleanField(default=False, verbose_name='Принят')
+    approved = models.BooleanField(default=None, null=True, verbose_name='Принят')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -224,6 +246,13 @@ class ClubJoinRequest(models.Model):
             str: Строковое представление объекта, содержащее информацию о пользователе и клубе.
         """
         return f'Запрос на вступление: {self.user} -> {self.club}'
+
+    class Meta:
+        verbose_name = 'Запрос на вступление в клуб'
+        verbose_name_plural = 'Запросы на вступление в клуб'
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'club'], name='unique_user_club_join_request')
+        ]
 
 
 class ClubPartnerShipRequest(models.Model):
@@ -251,6 +280,7 @@ class ClubPartnerShipRequest(models.Model):
         related_name='partnership_receive_requests',
         verbose_name='Принимающий клуб',
     )
+    approved = models.BooleanField(verbose_name='Принято', null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -295,6 +325,10 @@ class ClubService(models.Model):
         """
         return self.name
 
+    @property
+    def get_first_img(self):
+        return ClubServiceImage.objects.filter(service=self).first()
+
     class Meta:
         verbose_name = 'Услуга клуба'
         verbose_name_plural = 'Услуги клуба'
@@ -313,7 +347,7 @@ class ClubServiceImage(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    club = models.ForeignKey(to='clubs.ClubService', on_delete=models.CASCADE, related_name='images')
+    service = models.ForeignKey(to='clubs.ClubService', on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(
         upload_to='club/service_images',
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
@@ -326,7 +360,7 @@ class ClubServiceImage(models.Model):
         """
         Возвращает строковое представление изображения.
         """
-        return f"Изображение для {self.club.name}"
+        return f"Изображение для {self.service.name}"
 
     class Meta:
         verbose_name = 'Изображение для услуги клуба'
@@ -363,8 +397,9 @@ class ClubGalleryPhoto(models.Model):
         return f'{self.club.name}-{self.image.name}'
 
     class Meta:
-        verbose_name = "Фотогалерея"
-        verbose_name_plural = "Фотогалерея"
+        verbose_name = "Фото"
+        verbose_name_plural = "Фото"
+        ordering = ('-created_at',)
 
 
 class ClubEvent(models.Model):
@@ -414,9 +449,31 @@ class ClubEvent(models.Model):
         """
         return self.title
 
+    @property
+    def is_passed(self):
+        return datetime.datetime.now(tz=timezone('UTC')) > self.start_datetime
+
     class Meta:
         verbose_name = "Событие"
         verbose_name_plural = "События"
+
+    def get_age_restriction_str(self):
+        if self.min_age is None and self.max_age is None:
+            return 'Без ограничении'
+        if self.min_age is None and self.max_age:
+            return f'Лицам до {self.max_age}'
+        if self.min_age and self.max_age is None:
+            return f'Лицам с {self.min_age}'
+        if self.min_age and self.max_age:
+            return f'{self.min_age} - {self.max_age}'
+
+    def get_entry_restriction_str(self):
+        if self.entry_requirements is None:
+            return 'Требовании нет'
+        return self.entry_requirements
+
+    def get_absolute_url(self):
+        return reverse('event_detail', kwargs={'pk': self.pk})
 
 
 class ClubAdType(models.Model):
@@ -503,11 +560,13 @@ class Festival(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    location = models.CharField(max_length=200)
+    start_datetime = models.DateTimeField(verbose_name='Дата начала')
+    location = models.CharField(max_length=200, verbose_name='Локация')
     approved_clubs = models.ManyToManyField(
         to='clubs.Club',
         related_name='approved_on_festival',
-        verbose_name='Приглашенные клубы'
+        verbose_name='Приглашенные клубы',
+        blank=True
     )
 
     class Meta:
@@ -519,6 +578,12 @@ class Festival(models.Model):
         Возвращает строковое представление названия фестиваля.
         """
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('festival_detail', kwargs={'pk': self.pk})
+
+    def get_not_approved_clubs(self):
+        return self.requests.exclude(approved=True)
 
 
 class FestivalParticipationRequest(models.Model):
@@ -554,3 +619,19 @@ class FestivalParticipationRequest(models.Model):
         Возвращает строковое представление запроса на участие в фестивале.
         """
         return f'{self.club.name} - {self.festival.name}'
+
+    @property
+    def request_status_str(self):
+        if self.approved:
+            return 'Принят'
+        if self.approved is None:
+            return 'В ожидании'
+        if not self.approved:
+            return 'Отклонен'
+
+    class Meta:
+        verbose_name_plural = 'Запросы на участие в фестивале'
+        verbose_name = 'Запрос на участие в фестивале'
+        constraints = [
+            models.UniqueConstraint(fields=['club', 'festival'], name='unique_club_festival_request')
+        ]

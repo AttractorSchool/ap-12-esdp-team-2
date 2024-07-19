@@ -1,169 +1,420 @@
-from datetime import datetime
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from . import serializers
-from clubs import models
-from .permissions import ClubPermission, ClubObjectsPermission
-from . import services
-from . import mixins
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Case, When, Value, BooleanField
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse
+from django.utils import timezone
+from django.views import generic
+from . import models, forms
+from accounts import models as user_models
+from calendar import HTMLCalendar
+
+from .api.serializers import club
+from .mixins import ClubRelatedObjectCreateMixin
 
 
-class ClubViewSet(mixins.ClubActionSerializerMixin, viewsets.ModelViewSet):
-    """
-    ViewSet для управления клубами.
+class IndexView(generic.TemplateView):
+    template_name = 'clubs/index.html'
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
+        context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
+        return context
 
-    Данный ViewSet предоставляет стандартные действия CRUD для модели Club,
-    а также пользовательское действие `club_action`.
 
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий только активные клубы.
-        permission_classes (tuple): Классы разрешений, применяемые к этому ViewSet-у.
-        ACTION_SERIALIZERS (dict): Словарь, который сопоставляет действия с соответствующими сериализаторами.
-        serializer_class (Serializer): Сериализатор, используемый по умолчанию для действий, не указанных в ACTION_SERIALIZERS.
-    """
-    queryset = models.Club.objects.filter(is_active=True)
-    permission_classes = (ClubPermission,)
-    ACTION_SERIALIZERS = {
-        'club_action': serializers.ClubActionSerializer,
-        'create': serializers.ClubCreateSerializer,
-        'update': serializers.ClubUpdateSerializer,
-        'retrieve': serializers.ClubDetailSerializer,
-    }
-    serializer_class = serializers.ClubListSerializer
+class ClubDetailView(generic.DetailView):
+    model = models.Club
+    context_object_name = 'club'
+    template_name = 'clubs/detail.html'
 
-    @action(detail=True, methods=['post'])
-    def club_action(self, request, **kwargs):
-        """
-        Пользовательское действие для выполнения определенных операций с клубом.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'{self.get_object().name}'
+        context['events'] = models.ClubEvent.objects.annotate(
+                                datetime_passed=Case(
+                                    When(start_datetime__lt=timezone.now(), then=Value(True)),
+                                    default=Value(False),
+                                    output_field=BooleanField()
+                                )
+                            ).filter(club=self.get_object()).order_by('datetime_passed', 'start_datetime')
+        return context
 
-        Параметры:
-            request (Request): Объект запроса с данными.
-            **kwargs: Дополнительные аргументы.
 
-        Возвращает:
-            Response: HTTP-ответ с статусом 204 (No Content) при успешном выполнении действия.
-        """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        club = self.get_object()
-        club_services = services.ClubServices(club)
-        action_name = serializer.validated_data['action']
-        getattr(club_services, action_name)(request.user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class ClubListView(generic.ListView):
+    model = models.Club
+    context_object_name = 'clubs'
+    template_name = 'clubs/clubs.html'
+    paginate_by = 40
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'ВСЕ СООБЩЕСТВА'
+        context['search'] = self.request.GET.get('search')
+        return context
 
     def get_queryset(self):
-        """
-        Возвращает набор данных для данного ViewSet-а.
+        qs = super().get_queryset()
+        search_query = self.request.GET.get('search')
+        if search_query:
+            return qs.filter(name__icontains=search_query)
+        return qs
 
-        В зависимости от действия, возвращает оптимизированный queryset с использованием
-        select_related и prefetch_related для уменьшения количества запросов к базе данных.
 
-        Возвращает:
-            QuerySet: Набор данных для текущего действия.
-        """
-        queryset = super().get_queryset()
-        if self.action == 'retrieve':
-            return (
-                queryset
-                .select_related('category', 'city', 'creater')
-                .prefetch_related('members', 'partners', 'likes', 'managers')
+class ClubCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.Club
+    template_name = 'clubs/create_club.html'
+    form_class = forms.ClubForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Создать сообщество'
+        return ctx
+
+    def form_valid(self, form):
+        if form.is_valid():
+            club = form.save(commit=False)
+            club.creater = self.request.user
+            club.members_count += 1
+            club.save()
+            club.managers.add(self.request.user)
+            club.members.add(self.request.user)
+            return redirect(club.get_absolute_url())
+        else:
+            return super().form_invalid(form)
+
+
+class ClubEditView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Club
+    template_name = 'clubs/create_club.html'
+    form_class = forms.ClubUpdateForm
+
+    def has_permission(self):
+        return self.request.user in self.get_object().managers.all()
+
+
+class ChooseClubManagersView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Club
+    template_name = 'clubs/choose_club_managers.html'
+    form_class = forms.SelectClubManagersForm
+
+    def has_permission(self):
+        return self.request.user in self.get_object().managers.all()
+
+    def form_valid(self, form):
+        users_after = form.data.getlist('managers')
+        check = self.form_class.required_at_least_one_manager
+        if form.is_valid() and check(users_after, form):
+            self.get_object().managers.set(form.cleaned_data.get('managers'))
+            return redirect(self.get_object().get_absolute_url())
+        else:
+            return render(self.request, self.template_name, context={'form': form})
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data()
+        ctx['page_title'] = 'Добавление/удаление руководителей'
+        return ctx
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial={'managers': self.get_object().managers.all()})
+        form.fields['managers'].queryset = self.get_object().members.all().union(self.get_object().managers.all())
+        return self.render_to_response({'form': form})
+
+
+class CategoryClubsView(generic.DetailView):
+    model = models.ClubCategory
+    context_object_name = 'category'
+    template_name = 'clubs/clubs.html'
+    paginate_by = 40
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        clubs_list = models.Club.objects.filter(category=self.get_object())
+        search_query = self.request.GET.get('search')
+        context['search'] = search_query
+        if search_query:
+            clubs_list = clubs_list.filter(name__icontains=search_query)
+        page_obj = self.get_paginator(clubs_list)
+        context['page_title'] = self.object.name
+        context['categories'] = models.ClubCategory.objects.all()
+        context['is_paginated'] = page_obj.has_other_pages()
+        context['page_obj'] = context['clubs'] = page_obj
+        return context
+
+    def get_paginator(self, clubs_list):
+        paginator = Paginator(clubs_list, self.paginate_by)
+        page = self.request.GET.get('page')
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+        return page_obj
+
+
+class ClubEventListView(generic.ListView):
+    model = models.ClubEvent
+    context_object_name = 'events'
+    template_name = 'clubs/club_events.html'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'События клубов'
+        return ctx
+
+    def get_queryset(self):
+        qs = models.ClubEvent.objects.annotate(
+            datetime_passed=Case(
+                When(start_datetime__lt=timezone.now(), then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField()
             )
-        elif self.action == 'list':
-            return queryset.select_related('category')
-        return queryset
+        ).order_by('datetime_passed', 'start_datetime')
+        return qs
 
 
-class ClubServiceViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для управления услугами клубов.
+class EventDetailView(generic.DetailView):
+    model = models.ClubEvent
+    context_object_name = 'event'
+    template_name = 'clubs/event_detail.html'
 
-    Данный ViewSet позволяет выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
-    для модели ClubService, предоставляя RESTful API для управления услугами клубов.
-
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все услуги клубов.
-        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с услугами клубов.
-        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubService в JSON.
-    """
-    queryset = models.ClubService.objects.all()
-    permission_classes = (ClubObjectsPermission,)
-    serializer_class = serializers.ClubServiceSerializer
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = self.get_object().title
+        return ctx
 
 
-class ClubEventViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для управления событиями клубов.
+class CreateClubEventView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, generic.CreateView):
+    model = models.ClubEvent
+    form_class = forms.CreateClubEventForm
+    template_name = 'clubs/create_event.html'
 
-    Этот ViewSet предоставляет возможность управлять событиями клубов, включая создание, чтение, обновление и удаление.
-
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все будущие события клубов.
-        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с событиями клубов.
-        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubEvent в JSON.
-    """
-    queryset = models.ClubEvent.objects.filter(start_datetime__gte=datetime.now())
-    permission_classes = (ClubObjectsPermission, )
-    serializer_class = serializers.ClubEventSerializer
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = f'Организация события от клуба - {self.get_club()}'
+        return ctx
 
 
-class ClubAdsViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для управления рекламными объявлениями клубов.
+class ClubServiceListView(generic.ListView):
+    model = models.ClubService
+    context_object_name = 'services'
+    template_name = 'clubs/club_services.html'
+    paginate_by = 2
 
-    Данный ViewSet позволяет выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
-    для модели ClubAds, предоставляя RESTful API для управления рекламными объявлениями клубов.
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Услуги клубов'
+        return ctx
+    
 
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все рекламные объявления клубов.
-        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с рекламными объявлениями клубов.
-        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubAds в JSON.
-    """
-    queryset = models.ClubAds.objects.all()
-    permission_classes = (ClubObjectsPermission, )
-    serializer_class = serializers.ClubAdsSerializer
+class CreateServiceView(generic.CreateView):
+    model = models.ClubService
+    form_class = forms.ClubServiceCreateForm
+    template_name = 'clubs/create_service.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Создать услугу'
+        return ctx
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            service = form.save(commit=False)
+            club_id = self.kwargs.get('pk')
+            club = models.Club.objects.get(id=club_id)
+            service.club = club
+            service.save()
+            photo = form.cleaned_data.get('photo')
+            photo_obj = models.ClubServiceImage.objects.create(
+                service=service,
+                image=photo
+            )
+            return redirect('index')
+        else:
+            return super().form_invalid(form)
+        
+
+class UpdateServiceView(generic.UpdateView):
+    model = models.ClubService
+    form_class = forms.ClubServiceCreateForm
+    template_name = 'clubs/update_service.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Редактировать услугу'
+        ctx['service'] = self.object
+        return ctx
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            service = form.save(commit=False)
+            service.save()
+            photo = form.cleaned_data.get('photo')
+            if photo:
+                photo_obj, created = models.ClubServiceImage.objects.get_or_create(
+                    service=service
+                )
+                photo_obj.image = photo
+                photo_obj.save()
+            return redirect('index')
+        else:
+            return super().form_invalid(form)
+        
+
+class ClubServiceDetailView(generic.DetailView):
+    model = models.ClubService
+    template_name = 'clubs/detail_service.html'
+    context_object_name = 'service'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.object.name
+        return context
 
 
-class ClubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet для просмотра категорий клубов.
-
-    Этот ViewSet предоставляет только чтение (GET) данных о категориях клубов.
-
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий только активные категории клубов.
-        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubCategory в JSON.
-    """
-    queryset = models.ClubCategory.objects.filter(is_active=True)
-    serializer_class = serializers.ClubCategorySerializer
+class EventCalendarView(generic.ListView):
+    model = models.ClubEvent
+    context_object_name = 'events'
+    template_name = 'clubs/event_calendar.html'
 
 
-class ClubCityViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet для просмотра городов.
+class AboutView(generic.TemplateView):
+    template_name = 'clubs/about.html'
 
-    Этот ViewSet предоставляет только чтение (GET) данных о городах.
-
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все города.
-        serializer_class (Serializer): Сериализатор для преобразования данных модели City в JSON.
-    """
-    queryset = models.City.objects.all()
-    serializer_class = serializers.ClubCitySerializer
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'О НАС'
+        return ctx
 
 
-class ClubGalleryPhotoViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для управления фотографиями галереи клубов.
+class ClubPhotoGalleryView(generic.ListView):
+    model = models.ClubGalleryPhoto
+    context_object_name = 'photos'
+    template_name = 'clubs/club_photogallery.html'
+    paginate_by = 40
 
-    Этот ViewSet предоставляет возможность выполнять стандартные операции CRUD (создание, чтение, обновление, удаление)
-    для модели ClubGalleryPhoto, позволяя управлять фотографиями галереи клубов через RESTful API.
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        ctx['page_title'] = f'{club} - Фотогалерея'
+        ctx['club'] = club
+        return ctx
 
-    Атрибуты:
-        queryset (QuerySet): Базовый набор данных для этого ViewSet-а, включающий все фотографии галереи клубов.
-        permission_classes (tuple): Классы разрешений, применяемые для проверки прав доступа к операциям с фотографиями галереи клубов.
-        serializer_class (Serializer): Сериализатор для преобразования данных модели ClubGalleryPhoto в JSON.
-    """
-    queryset = models.ClubGalleryPhoto.objects.all()
-    permission_classes = (ClubObjectsPermission,)
-    serializer_class = serializers.ClubGalleryPhotoSerializer
+    def get_queryset(self):
+        club = models.Club.objects.get(id=self.kwargs.get('pk'))
+        return self.model.objects.filter(club=club)
+
+
+class ClubAddPhotoView(ClubRelatedObjectCreateMixin, PermissionRequiredMixin, generic.CreateView):
+    model = models.ClubGalleryPhoto
+    form_class = forms.AddGalleryPhotoForm
+    template_name = 'clubs/club_add_photo.html'
+
+    def get_success_url(self):
+        return self.get_club().get_gallery_url()
+
+
+class FestivalListView(generic.ListView):
+    model = models.Festival
+    context_object_name = 'festivals'
+    template_name = 'festivals/list.html'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'ФЕСТИВАЛИ'
+        return context
+
+
+class FestivalDetailView(generic.DetailView):
+    model = models.Festival
+    context_object_name = 'festival'
+    template_name = 'festivals/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['page_title'] = self.get_object().name
+        if self.request.user.is_authenticated:
+            context['created_clubs'] = user.managed_clubs.values()
+        return context
+
+
+class FestivalCreateView(PermissionRequiredMixin, generic.CreateView):
+    model = models.Festival
+    form_class = forms.FestivalForm
+    template_name = 'festivals/create_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Новый фестиваль'
+        return context
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+
+class FestivalUpdateView(PermissionRequiredMixin, generic.UpdateView):
+    model = models.Festival
+    form_class = forms.FestivalForm
+    template_name = 'festivals/create_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Изменить фестиваль'
+        return context
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+
+class FestivalDeleteView(PermissionRequiredMixin, generic.DeleteView):
+    model = models.Festival
+    context_object_name = 'festival'
+
+    def has_permission(self):
+        return self.request.user.is_superuser
+
+    def get_success_url(self):
+        return reverse('festivals')
+
+
+class FestivalRequests(generic.ListView):
+    model = models.FestivalParticipationRequest
+    context_object_name = 'requests'
+    template_name = 'festivals/request_list.html'
+    paginate_by = 50
+
+    def get_queryset(self):
+        festival_id = self.kwargs.get('pk')
+        self.festival = models.Festival.objects.get(pk=festival_id)
+        return self.festival.requests.exclude(approved=True).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['festival'] = self.festival
+        context['page_title'] = f'{self.festival} - Запросы на фестиваль'
+        context['user'] = self.request.user
+        return context
+
+
+class FestivalApprovedClubs(generic.ListView):
+    model = models.FestivalParticipationRequest
+    context_object_name = 'requests'
+    template_name = 'festivals/approved_clubs.html'
+    paginate_by = 50
+
+    def get_queryset(self):
+        festival_id = self.kwargs.get('pk')
+        self.festival = models.Festival.objects.get(pk=festival_id)
+        return self.festival.requests.filter(approved=True).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['festival'] = self.festival
+        context['page_title'] = f'{self.festival} - Участники фестиваля'
+        context['user'] = self.request.user
+        return context
+
