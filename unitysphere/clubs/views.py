@@ -390,4 +390,5 @@ class FestivalRequests(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Желающие участвовать'
+        context['user'] = self.request.user
         return context

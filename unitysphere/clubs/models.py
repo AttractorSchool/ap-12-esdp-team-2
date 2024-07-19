@@ -620,6 +620,15 @@ class FestivalParticipationRequest(models.Model):
         """
         return f'{self.club.name} - {self.festival.name}'
 
+    @property
+    def request_status_str(self):
+        if self.approved:
+            return 'Принят'
+        if self.approved is None:
+            return 'В ожидании'
+        if not self.approved:
+            return 'Отклонен'
+
     class Meta:
         verbose_name_plural = 'Запросы на участие в фестивале'
         verbose_name = 'Запрос на участие в фестивале'

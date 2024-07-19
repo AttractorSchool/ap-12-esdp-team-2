@@ -34,12 +34,31 @@
                         </div>
                         <div class="details">
                             <a href="{{ request.club.get_absolute_url }}">
-                                <h6 class="mt-1 text-uppercase text-center">
+                                <h6 class="mt-1 text-uppercase text-center mb-1">
                                     {{ request.club.name }}
                                 </h6>
                             </a>
+                            <div class="request-status-block d-flex justify-content-center mb-1">
+                                <span class="request_status_key d-block mr-1">
+                                    Статус запроса:
+                                </span>
+                                {% if request.approved %}
+                                <span class="request_status d-block text-success">
+                                    {{ request.request_status_str }}
+                                </span>
+                                {% else %}
+                                <span class="request_status d-block text-danger">
+                                    {{ request.request_status_str }}
+                                </span>
+                                {% endif %}
+                            </div>
                         </div>
-                            <a href="{{ request.club.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">Страница сообщества</a>
+                        {% if user.is_superuser %}
+                        <div class="request-actions d-flex">
+                            <button type="button" class="btn btn-success d-block w-100 mr-1">Принять</button>
+                            <button type="button" class="btn btn-danger d-block w-100">Отклонить</button>
+                        </div>
+                        {% endif %}
                     </div>
                 {% empty %}
                     <h5 class="festResponseText text-center mx-auto">Список запросов пуст</h5>
