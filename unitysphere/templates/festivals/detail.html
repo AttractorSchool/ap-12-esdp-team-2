@@ -43,6 +43,14 @@
                                 <span>Место проведения</span>
                                 <span>{{ festival.location }}</span>
                             </li>
+                            <li class="justify-content-between d-flex">
+                                <span>Будут участвовать</span>
+                                <a href="#">{{ festival.approved_clubs|length }}</a>
+                            </li>
+                            <li class="justify-content-between d-flex">
+                                <span>Хотят участвовать</span>
+                                <a href="#">{{ festival.requests|length }}</a>
+                            </li>
 
                         </ul>
                     </div>
@@ -50,7 +58,7 @@
                         <h4>Описание</h4>
                         <ul class="mt-10">
                             <li class="justify-content-between d-flex">
-                                <span>{{ festival.description }}</span>
+                                <span class="festival-description">{{ festival.description }}</span>
                             </li>
                         </ul>
                     </div>

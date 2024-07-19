@@ -3,6 +3,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.validators import MinValueValidator
 from accounts.models import User
 from . import models
+from django.contrib.admin import widgets
 
 
 class ClubForm(forms.ModelForm):
@@ -171,7 +172,7 @@ class FestivalForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'start_datetime': forms.DateTimeInput(attrs={
                 'class': 'form-control text-center w-50 mx-auto',
-                'type': 'datetime', 'placeholder': 'Пример заполнения: "01.01.2024 10:00"'
+                'type': 'datetime-local', 'placeholder': 'Пример заполнения: "01.01.2024 10:00"'
             }),
             'location': forms.TextInput(attrs={
                 'class': 'form-control text-center w-50 mx-auto',

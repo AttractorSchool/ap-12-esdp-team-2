@@ -286,5 +286,11 @@
 
 .content-block {
     flex: 1;
+    margin-bottom: 50px;
 
+}
+
+.festival-description {
+    word-wrap: break-word;
+    width: 100%;
 }

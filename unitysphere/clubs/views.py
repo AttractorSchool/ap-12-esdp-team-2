@@ -35,6 +35,7 @@ def join_club(request, club_id):
     
     return redirect('club_detail', pk=club.id)
 
+
 class ClubDetailView(generic.DetailView):
     model = models.Club
     context_object_name = 'club'
@@ -248,7 +249,6 @@ class CreateServiceView(generic.CreateView):
             return super().form_invalid(form)
         
 
-
 class UpdateServiceView(generic.UpdateView):
     model = models.ClubService
     form_class = forms.ClubServiceCreateForm
@@ -344,9 +344,9 @@ class FestivalDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        context['page_title'] = f'{self.get_object().name}'
+        context['page_title'] = self.get_object().name
         if self.request.user.is_authenticated:
-            context['created_clubs'] = user.created_clubs.values()
+            context['created_clubs'] = user.managed_clubs.values()
         return context
 
 

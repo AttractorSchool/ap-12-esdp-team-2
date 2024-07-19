@@ -180,11 +180,10 @@ class Club(models.Model):
         Возвращает строковое представление имени клуба.
         """
         return self.name
+
     def get_absolute_url(self):
         return reverse('club_detail', kwargs={'pk': self.pk})
-    
-    def get_whatsapp_link(self):
-        return f"https://wa.me/{self.whatsapp_link}"
+
     class Meta:
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
@@ -196,9 +195,6 @@ class Club(models.Model):
         """
         self.is_active = False
         self.save()
-
-    def get_absolute_url(self):
-        return reverse('club_detail', kwargs={'pk': self.pk})
 
     def get_gallery_url(self):
         return reverse('club_photogallery', kwargs={'pk': self.pk})
