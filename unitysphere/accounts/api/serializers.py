@@ -32,7 +32,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['phone', 'password1', 'password2']
+        fields = ['phone', 'first_name', 'last_name', 'password1', 'password2']
 
     def validate(self, attrs):
         if attrs['password1'] != attrs['password2']:
@@ -48,8 +48,7 @@ class UserVerifySerializer(serializers.Serializer):
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Profile
-        fields = '__all__'
+        exclude = ('user',)

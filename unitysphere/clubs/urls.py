@@ -6,6 +6,7 @@ urlpatterns = [
     path('clubs/', views.ClubListView.as_view(), name='clubs'),
     path('clubs/create/', views.ClubCreateView.as_view(), name='club_create'),
     path('clubs/<uuid:pk>/', views.ClubDetailView.as_view(), name='club_detail'),
+    path('clubs/<uuid:pk>/create_service', views.CreateServiceView.as_view(), name='create_service'),
     path('clubs/<uuid:pk>/photogallery/', views.ClubPhotoGalleryView.as_view(), name='club_photogallery'),
     path('clubs/<uuid:pk>/photogallery/add/', views.ClubAddPhotoView.as_view(), name='club_photogallery_add'),
     path('clubs/<uuid:pk>/update', views.ClubEditView.as_view(), name='club_edit'),
@@ -21,4 +22,7 @@ urlpatterns = [
     path('festivals/create/', views.FestivalCreateView.as_view(), name='festival_create'),
     path('festivals/<uuid:pk>/update/', views.FestivalUpdateView.as_view(), name='festival_update'),
     path('festivals/<uuid:pk>/delete/', views.FestivalDeleteView.as_view(), name='festival_delete'),
+    path('clubs/<int:club_id>/join/', views.join_club, name='join_club'),
+    path('service/<uuid:pk>/', views.ClubServiceDetailView.as_view(), name='service_detail'),
+    path('services/<uuid:pk>/edit/', views.UpdateServiceView.as_view(), name='edit_service'),
 ]

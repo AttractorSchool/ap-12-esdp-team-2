@@ -1,4 +1,5 @@
 import uuid
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, FileExtensionValidator
 from django.db import models
@@ -23,6 +24,8 @@ class User(AbstractUser):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
     avatar = models.ImageField(
         upload_to="user/avatars/",
         default='user/avatars/user.png',
@@ -36,7 +39,7 @@ class User(AbstractUser):
         verbose_name="Номер телефона",
         validators=[phone_regex_validator]
     )
-    email = models.EmailField(unique=True, null=True, blank=True)
+    email = models.EmailField(unique=True, null=True)
     is_displayed_in_allies = models.BooleanField(default=False)
     username = None
 
@@ -56,6 +59,11 @@ class User(AbstractUser):
 
     def get_formatted_phone(self):
         return self.phone.split('+')[1]
+
+    def save(self, *args, **kwargs):
+        if not self.email:
+            self.email = None
+        super().save(*args, **kwargs)
 
 
 class Profile(models.Model):

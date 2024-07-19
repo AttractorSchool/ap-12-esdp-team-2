@@ -53,9 +53,10 @@
                             <span id="join-btn-text">Покинуть</span>
                         </button>
                     {% else %}
-                        <button class="btn btn-success w-100 mt-1" onclick="joinClub(this)" club_id="{{ club.id }}" id="join-club-btn"><i class="fa-solid fa-arrow-right-to-bracket mr-1" id="join-icon"></i>
+                        <button class="btn btn-success w-100 mt-1" onclick="joinClub(this)" club_id="{{ club.id }}" id="join-club-btn" wa="{{ club.whatsapp_group_link }}"><i class="fa-solid fa-arrow-right-to-bracket mr-1" id="join-icon"></i>
                             <span id="join-btn-text">Вступить</span>
                         </button>
+
                     {% endif %}
                     {% if request.user in club.managers.all %}
                         <a href="{% url 'club_edit' club.pk %}" class="btn btn-primary w-100 mt-1"><i class="fa-solid fa-pen mr-1"></i>Редактировать</a>
@@ -141,6 +142,7 @@
                                             </a>
                                         </div>
                                     {% empty %}
+                                        <p class="text-center">Фотогалерея пуста</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
@@ -172,16 +174,17 @@
                                                 <p class="text-center">
                                                     <b class="text-dark font-weight-bold">Цена:</b> {{ service.price }} Тг
                                                 </p>
-                                                <a class="primary-btn action-btn text-uppercase d-block w-50 mx-auto my-2" href="#">Детали</a>
-                                            </div>
+                                                <a class="primary-btn action-btn text-uppercase d-block w-50 mx-auto my-2" href="{% url 'service_detail' service.id %}">Детали</a>
+                                            </div>                                            
                                         </div>
                                     </div>
                                     {% empty %}
+                                        <p class="text-center">Список услуг пуст</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
                                             <div class="event-card d-flex align-items-center justify-content-center w-100 h-100">
-                                                <a href="#" class="add-item">
+                                                <a href="{% url 'create_service' club.pk %}" class="add-item">
                                                     <i class="fa-solid fa-circle-plus" style="font-size: 130px"></i>
                                                     <span class="add-item-text d-block mt-2 text-center">Добавить услугу</span>
                                                 </a>
@@ -214,6 +217,7 @@
                                         </div>
                                     </div>
                                     {% empty %}
+                                        <p class="text-center">Список событии пуст</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">

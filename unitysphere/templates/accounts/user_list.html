@@ -23,52 +23,43 @@
     {% include 'partial/breadcrumb.html' %}
     <section class="club-filter my-4">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="default-select" id="default-select">
-                        <select class="club-filter-select" onchange="redirectToPage(this)">
-                            <option value="/clubs" class="filter-option {% if not category %}selected{% endif %}">Все сообщества</option>
-                            {% for cat in categories %}
-                            <option value="/category/{{ cat.id }}" class="filter-option {% if category == cat %}selected{% endif %}">
-                                {{ cat.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+            <form class="search-form" action="#">
+                <div class="inner-form d-flex w-75 mx-auto">
+                <select name="search-field" id="" class="search-field">
+                    <option value="name" {% if search_field == 'name' %}selected{% endif %}>По имени</option>
+                    <option value="interests" {% if search_field == 'interests' %}selected{% endif %}>По интересам</option>
+                    <option value="all" {% if search_field == 'all' %}selected{% endif %}>Искать все</option>
+                </select>
+                <input  class="custom-search-input" name="search" type="text" value="{% if search %}{{ search }}{% endif %}" placeholder="Найти пользователей">
+                <button type="submit" class="custom-search-button"><i class="fa fa-search"></i></button>
                 </div>
-                <div class="col-lg-6">
-                    <form class="search-form" action="#">
-                        <input  class="custom-search-input" placeholder="Найти сообщества..." name="search" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Найти сообщества...'"value="{% if search %}{{ search }}{% endif %}">
-                        <button type="submit" class="custom-search-button"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-            </div>
+            </form>
         </div>
     </section>
     <section class="club-list mb-5">
         <div class="container">
             <div class="row club-list">
-                {% for club in clubs %}
+                {% for user in users %}
                     <div class="single-popular-carusel col-lg-3 col-md-6">
                         <div class="thumb-wrap relative">
                             <div class="thumb relative">
                                 <div class="overlay overlay-bg"></div>	
-                                <img class="img-fluid" src="{{ club.logo.url }}" alt="">
+                                <img class="img-fluid" src="{{ user.avatar.url }}" alt="">
                             </div>	                            
                         </div>
                         <div class="details">
-                            <a href="{{ club.get_absolute_url }}">
+                            <a href="{{ user.get_absolute_url }}">
                                 <h6 class="mt-1 text-uppercase text-center">
-                                    {{ club.name }}
+                                    {{ user }}
                                 </h6>
                             </a>
                         </div>
-                            <a href="{{ club.get_absolute_url }}" class="d-block btn btn-primary w-100 my-2">Страница сообщества</a>
                     </div>
                 {% empty %}
                     {% if search %}
-                        <h5 class="festResponseText text-center mx-auto">По запросу {{ search }} ничего не найдено</h5>
+                        <h5 class="text-danger text-center mx-auto">По запросу {{ search }} ничего не найдено</h5>
                     {% else %}
-                        <h5 class="festResponseText text-center mx-auto">Список сообществ пуст</h5>
+                        <h5 class="text-danger text-center mx-auto">Список пользователей пуст</h5>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -102,13 +93,4 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
-    <script>
-        function redirectToPage(selectElement) {
-            let selectedValue = selectElement.value;
-            window.location.href = selectedValue;
-        }
-        let currentOption = document.getElementById("current");
-        let selectedOption = document.querySelector(".filter-option.selected")
-        console.log(currentOption)
-    </script>
 {% endblock %}

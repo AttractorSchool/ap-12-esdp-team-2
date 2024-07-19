@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.validators import MinValueValidator
-
 from accounts.models import User
 from . import models
 
@@ -14,6 +13,7 @@ class ClubForm(forms.ModelForm):
             'name',
             'category',
             'logo',
+            'whatsapp_group_link',
             'description',
             'email',
             'phone',
@@ -24,6 +24,7 @@ class ClubForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'category': forms.Select(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'logo': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'whatsapp_group_link': forms.URLInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'email': forms.EmailInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
@@ -53,6 +54,7 @@ class ClubUpdateForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'category': forms.Select(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'logo': forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'whatsapp_group_link': forms.URLInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'email': forms.EmailInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
             'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
@@ -96,6 +98,22 @@ class SelectClubManagersForm(forms.ModelForm):
         return True
 
 
+class ClubServiceCreateForm(forms.ModelForm):
+    class Meta:
+        model = models.ClubService
+        fields = (
+            'name',
+            'description',
+            'price',
+        )
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+    photo = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}))
+
+    
 class CreateClubEventForm(forms.ModelForm):
     class Meta:
         model = models.ClubEvent

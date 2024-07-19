@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Case, When, Value, BooleanField
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
@@ -18,11 +18,22 @@ class IndexView(generic.TemplateView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.ClubCategory.objects.all()
         context['top_16_clubs'] = models.Club.objects.all().order_by('-members_count', '-likes_count')[:16]
         context['nearest_16_events'] = models.ClubEvent.objects.all().order_by('start_datetime')[:16]
         return context
-
+    
+def join_club(request, club_id):
+    club = get_object_or_404(models.Club, id=club_id)
+    user = request.user
+    
+    club.members.add(user)
+    club.members_count += 1
+    club.save()
+    
+    if club.whatsapp_link:
+        return redirect(club.get_whatsapp_link())
+    
+    return redirect('club_detail', pk=club.id)
 
 class ClubDetailView(generic.DetailView):
     model = models.Club
@@ -31,7 +42,6 @@ class ClubDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.ClubCategory.objects.all()
         context['page_title'] = f'{self.get_object().name}'
         context['events'] = models.ClubEvent.objects.annotate(
                                 datetime_passed=Case(
@@ -53,7 +63,6 @@ class ClubListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'ВСЕ СООБЩЕСТВА'
         context['search'] = self.request.GET.get('search')
-        context['categories'] = models.ClubCategory.objects.all()
         return context
 
     def get_queryset(self):
@@ -71,7 +80,6 @@ class ClubCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['categories'] = models.ClubCategory.objects.all()
         ctx['page_title'] = 'Создать сообщество'
         return ctx
 
@@ -166,7 +174,6 @@ class ClubEventListView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'События клубов'
-        ctx['categories'] = models.ClubCategory.objects.all()
         return ctx
 
     def get_queryset(self):
@@ -212,6 +219,72 @@ class ClubServiceListView(generic.ListView):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'Услуги клубов'
         return ctx
+    
+
+class CreateServiceView(generic.CreateView):
+    model = models.ClubService
+    form_class = forms.ClubServiceCreateForm
+    template_name = 'clubs/create_service.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Создать услугу'
+        return ctx
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            service = form.save(commit=False)
+            club_id = self.kwargs.get('pk')
+            club = models.Club.objects.get(id=club_id)
+            service.club = club
+            service.save()
+            photo = form.cleaned_data.get('photo')
+            photo_obj = models.ClubServiceImage.objects.create(
+                service=service,
+                image=photo
+            )
+            return redirect('index')
+        else:
+            return super().form_invalid(form)
+        
+
+
+class UpdateServiceView(generic.UpdateView):
+    model = models.ClubService
+    form_class = forms.ClubServiceCreateForm
+    template_name = 'clubs/update_service.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Редактировать услугу'
+        ctx['service'] = self.object
+        return ctx
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            service = form.save(commit=False)
+            service.save()
+            photo = form.cleaned_data.get('photo')
+            if photo:
+                photo_obj, created = models.ClubServiceImage.objects.get_or_create(
+                    service=service
+                )
+                photo_obj.image = photo
+                photo_obj.save()
+            return redirect('index')
+        else:
+            return super().form_invalid(form)
+        
+
+class ClubServiceDetailView(generic.DetailView):
+    model = models.ClubService
+    template_name = 'clubs/detail_service.html'
+    context_object_name = 'service'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.object.name
+        return context
 
 
 class EventCalendarView(generic.ListView):

@@ -1,20 +1,17 @@
 import random
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.authtoken.models import Token
 from accounts.models import User
 
 
-def generate_sms_code(k: int = 4) -> str:
-    nums = '0123456789'
-    sms_code = ''.join(random.choices(nums, k=k))
-    print(f"SMS_CODE: {sms_code}")
+def generate_sms_code() -> str:
+    # Your SMS code generation logic should be here...
+    sms_code = '7777'
     return sms_code
 
 
-def generate_tokens(user: User) -> dict:
-    refresh = RefreshToken.for_user(user)
+def generate_token(user: User) -> dict:
+    token = Token.objects.create(user=user)
 
     return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        'token': str(token.key),
     }
