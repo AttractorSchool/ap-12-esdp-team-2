@@ -175,4 +175,5 @@ class FestivalRequestServices:
             request: Запрос на вступление фестиваль.
         """
         request.approved = False
+        request.festival.approved_clubs.remove(request.club)
         request.save()

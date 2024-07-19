@@ -42,21 +42,17 @@
                                 <span class="request_status_key d-block mr-1">
                                     Статус запроса:
                                 </span>
-                                {% if request.approved %}
-                                <span class="request_status d-block text-success">
+
+                                <span class="request_status d-block font-weight-bold {% if request.approved %}text-success{% else %}text-danger{% endif %}" id="request-status-{{ request.id }}">
                                     {{ request.request_status_str }}
                                 </span>
-                                {% else %}
-                                <span class="request_status d-block text-danger">
-                                    {{ request.request_status_str }}
-                                </span>
-                                {% endif %}
                             </div>
                         </div>
                         {% if user.is_superuser %}
+                        {% csrf_token %}
                         <div class="request-actions d-flex">
-                            <button type="button" class="btn btn-success d-block w-100 mr-1">Принять</button>
-                            <button type="button" class="btn btn-danger d-block w-100">Отклонить</button>
+                            <button type="button" class="btn btn-success d-block w-100 mr-1" request-id="{{ request.id }}" onclick="ApproveFestivalRequest(this)">Принять</button>
+                            <button type="button" class="btn btn-danger d-block w-100" request-id="{{ request.id }}" onclick="RejectFestivalRequest(this)">Отклонить</button>
                         </div>
                         {% endif %}
                     </div>
@@ -94,4 +90,5 @@
     <script src="{%  static 'js/template_js/owl.carousel.min.js' %}"></script>
     <script src="{%  static 'js/template_js/mail-script.js' %}"></script>
     <script src="{%  static 'js/template_js/main.js' %}"></script>
+    <script src="{% static 'js/our_js/festival_request.js' %}"></script>
 {% endblock %}
