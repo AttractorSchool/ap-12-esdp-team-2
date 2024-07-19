@@ -145,10 +145,10 @@
                             <div class="jq-tab-content" data-tab="4">
                                 <div class="progress-table-wrap">
                                     <div class="progress-table bg-none">
-                                {% for club in user.member_of_clubs.all %}
+                                {% for club in user.members_of_clubs.all %}
                                     <div class="table-row justify-content-center">
                                         <div class="country">{{ club.name }}</div>
-                                        <a class="text-uppercase" href="{{ club.get_absolute_url }}">Страница сообщества</a>
+                                        <a class="primary-btn action-btn text-uppercase" href="{{ club.get_absolute_url }}">Страница сообщества</a>
                                     </div>
                                 {% empty %}
                                     <p class="text-center">

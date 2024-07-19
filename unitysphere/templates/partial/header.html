@@ -24,18 +24,18 @@
           <nav id="nav-menu-container">
             <ul class="nav-menu">
               <li><a href="{% url 'index' %}">ГЛАВНАЯ</a></li>
-              <li><a href="{% url 'festivals' %}">ФЕСТИВАЛИ</a></li>
-              <li><a href="{% url 'about' %}">О НАС</a></li>
               <li><a href="{% url 'clubs' %}">СООБЩЕСТВА</a></li>
               <li><a href="{% url 'user_list' %}">ПОЛЬЗОВАТЕЛИ</a></li>
               <li><a href="{% url 'club_events' %}">СОБЫТИЯ</a></li>
-              <li><a href="#">НОВОСТИ</a></li>
-              <li class="menu-has-children"><a href="">УСЛУГИ</a>
-                <ul>
-                  <li><a href="#">УСЛУГИ ОТ КЛУБОВ</a></li>
-                  <li><a href="#">УСЛУГИ ДЛЯ КЛУБОВ</a></li>
-                </ul>
-              </li>					          					          		          
+                <li><a href="{% url 'festivals' %}">ФЕСТИВАЛИ</a></li>
+              <li><a href="{% url 'about' %}">О НАС</a></li>
+{#              <li><a href="#">НОВОСТИ</a></li>#}
+{#              <li class="menu-has-children"><a href="">УСЛУГИ</a>#}
+{#                <ul>#}
+{#                  <li><a href="#">УСЛУГИ ОТ КЛУБОВ</a></li>#}
+{#                  <li><a href="#">УСЛУГИ ДЛЯ КЛУБОВ</a></li>#}
+{#                </ul>#}
+{#              </li>					          					          		          #}
               <li class="menu-has-children"><a href="">Профиль</a>
                 <ul>
                     {% if request.user.is_authenticated %}

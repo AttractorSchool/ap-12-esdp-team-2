@@ -283,6 +283,11 @@ class EventCalendarView(generic.ListView):
 class AboutView(generic.TemplateView):
     template_name = 'clubs/about.html'
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'О НАС'
+        return ctx
+
 
 class ClubPhotoGalleryView(generic.ListView):
     model = models.ClubGalleryPhoto

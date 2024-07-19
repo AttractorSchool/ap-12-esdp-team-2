@@ -20,67 +20,10 @@
 {% endblock %}
 
 {% block content %}
-    <section class="banner-area relative about-banner" id="home">
-        <div class="overlay overlay-bg"></div>
-        <div class="container">
-            <div class="row d-flex align-items-center justify-content-center">
-                <div class="about-content col-lg-12">
-                    <h1 class="text-white">
-                        О НАС
-                    </h1>
-                    <p class="text-white link-nav"><a href="/"> Главная страница </a>  <span class="lnr lnr-arrow-right"></span>  <a href="about.html"> О нас </a></p>
-                </div>
-            </div>
-        </div>
-    </section>
+    {% include 'partial/breadcrumb.html' %}
         <!-- End Banner About -->
 
         <!-- Start UnderBannerAbout -->
-    <section class="feature-area pb-120">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>Хотите узнать больше?</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p>
-                                Если у вас есть вопросы или предложения, мы всегда готовы помочь! Нажмите на кнопку ниже, чтобы связаться с нами через чат.
-                            </p>
-                            <a href="#">Присоединяйся сейчас</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>Хотите открыт для себя мир новых знакомств?</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p>
-                                Присоединяйтесь к нам и начните свое путешествие уже сегодня! Нажмите на одну из кнопок ниже, чтобы связаться с нами
-                            </p>
-                            <a href="#">Присоединяйся сейчас</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>Хотите стать частью нашего сообщества?</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p>
-                                Здесь каждый найдет что-то для себя: от профессиональных мероприятий до творческих мастерских
-                            </p>
-                            <a href="#">Присоединяйся сейчас</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
         <!-- End UnderBannerAbout -->
 
         <!--InformationSection-->
@@ -185,56 +128,6 @@
         <!-- End MissionAbout -->
 
         <!-- Start FormAbout -->
-    <section class="search-course-area relative">
-        <div class="overlay overlay-bg"></div>
-        <div class="container">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-lg-6 col-md-6 search-course-left">
-                    <h1 class="text-white">
-                        Get reduced fee <br>
-                        during this Summer!
-                    </h1>
-                    <p>
-                        inappropriate behavior is often laughed off as “boys will be boys,” women face higher conduct standards especially in the workplace. That’s why it’s crucial that, as women, our behavior on the job is beyond reproach.
-                    </p>
-                    <div class="row details-content">
-                        <div class="col single-detials">
-                            <span class="lnr lnr-graduation-hat"></span>
-                            <a href="#"><h4>Expert Instructors</h4></a>
-                            <p>
-                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
-                            </p>
-                        </div>
-                        <div class="col single-detials">
-                            <span class="lnr lnr-license"></span>
-                            <a href="#"><h4>Certification</h4></a>
-                            <p>
-                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 search-course-right section-gap">
-                    <form class="form-wrap" action="#">
-                        <h4 class="text-white pb-20 text-center mb-30">Search for Available Course</h4>
-                        <input type="text" class="form-control" name="name" placeholder="Your Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Name'" >
-                        <input type="phone" class="form-control" name="phone" placeholder="Your Phone Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Phone Number'" >
-                        <input type="email" class="form-control" name="email" placeholder="Your Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email Address'" >
-                        <div class="form-select" id="service-select">
-                            <select>
-                                <option datd-display="">Choose Course</option>
-                                <option value="1">Course One</option>
-                                <option value="2">Course Two</option>
-                                <option value="3">Course Three</option>
-                                <option value="4">Course Four</option>
-                            </select>
-                        </div>
-                        <button class="primary-btn text-uppercase">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
     <!-- End FormAbout -->
 {% endblock %}
 

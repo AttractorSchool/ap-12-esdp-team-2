@@ -43,20 +43,20 @@
     <section class="feature-area">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>ЗАЯВИТЬ О СВОЁМ ПРОЕКТЕ (СТАРТАПЕ / БИЗНЕС ИДЕЕ)</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p style="min-height: 90px;">
-                                РАССКАЖИТЕ О СВОЁМ ПРОЕКТЕ ЧТОБЫ СОБРАТЬ КОМАНДУ ИЛИ ПРИВЛЕЧЬ БИЗНЕС ПАРТНЕРОВ
-                            </p>
-                            <a href="#">Заявить сейчас</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
+{#                <div class="col-lg-3">#}
+{#                    <div class="single-feature">#}
+{#                        <div class="title">#}
+{#                            <h4>ЗАЯВИТЬ О СВОЁМ ПРОЕКТЕ (СТАРТАПЕ / БИЗНЕС ИДЕЕ)</h4>#}
+{#                        </div>#}
+{#                        <div class="desc-wrap">#}
+{#                            <p style="min-height: 90px;">#}
+{#                                РАССКАЖИТЕ О СВОЁМ ПРОЕКТЕ ЧТОБЫ СОБРАТЬ КОМАНДУ ИЛИ ПРИВЛЕЧЬ БИЗНЕС ПАРТНЕРОВ#}
+{#                            </p>#}
+{#                            <a href="#">Заявить сейчас</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+                <div class="col-lg-4">
                     <div class="single-feature">
                         <div class="title">
                             <h4>Создавайте сообщества</h4>
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="single-feature">
                         <div class="title">
                             <h4>Вступайте в сообщества</h4>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="single-feature">
                         <div class="title">
                             <h4>Фестивали сообществ</h4>
@@ -92,7 +92,7 @@
                             <p style="min-height: 90px;">
                                 ЗДЕСЬ ВЫ МОЖЕТЕ ПОЗНАКОМИТЬСЯ С СООБЩЕСТВАМИ В ЖИВУЮ, ПОДАТЬ ЗАЯВКУ НА УЧАСТИЕ ИЛИ ПОСМОТРЕТЬ СПИСОК УЧАСТВУЮЩИХ 
                             </p>
-                            <a href="#">Ближайшие фестивали</a>
+                            <a href="{% url 'festivals' %}">Ближайшие фестивали</a>
                         </div>
                     </div>
                 </div>
@@ -241,7 +241,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <a href="#" class="d-block text-center">ВСЕ СООБЩЕСТВА</a>
+            <a href="{% url 'clubs' %}" class="d-block text-center">ВСЕ СООБЩЕСТВА</a>
         </div>
     </section>
     {% endif %}
@@ -290,7 +290,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <a href="#" class="d-block text-center">ВСЕ СОБЫТИЯ</a>
+            <a href="{% url 'club_events' %}" class="d-block text-center">ВСЕ СОБЫТИЯ</a>
         </div>
     </section>
     {% endif %}

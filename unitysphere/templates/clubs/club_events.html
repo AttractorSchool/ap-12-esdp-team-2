@@ -40,7 +40,7 @@
                             <a href="{{ event.get_absolute_url }}"><h4>{{ event.title }}</h4></a>
                             <div class="event-key-value mb-2">
                                 <span class="event-key">Организатор:</span>
-                                <a href="#" class="event d-inline-block">Книжные Вдохновители</a>
+                                <a href="{{ event.club.get_absolute_url }}" class="event d-inline-block">Книжные Вдохновители</a>
                             </div>
                             <div class="event-key-value mb-2">
                                 <span class="event-key">Место:</span>

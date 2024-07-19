@@ -52,6 +52,13 @@
             </div>
         </div>
     </section>
+    {% if request.user.is_superuser %}
+    <section>
+        <div class="container">
+            <a href="{% url 'festival_create' %}" class="d-block text-center">Организовать фестиваль</a>
+        </div>
+    </section>
+    {% endif %}
     <section class="pagination">
 
         <div class="container">
