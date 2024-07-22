@@ -4,6 +4,7 @@ from django.urls import reverse
 from accounts.models import User
 from clubs.models import Club, ClubCategory, City
 
+
 class ClubsTestCase(TestCase):
     def setUp(self):
         phone_number = '+77478392004'
