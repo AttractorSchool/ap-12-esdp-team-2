@@ -1,0 +1,34 @@
+<form action="{{ form_action }}" method="{% if form_method %}{{ form_method }}{% else %}post{% endif %}" id="{{form_id}}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="block-errors" id="errors_non_field_errors">
+    {% if form.non_field_errors %}
+        {% for err in form.non_field_errors %}
+          <p class="festResponseText text-center">{{ err }}</p>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    {% for field in form.visible_fields %}
+    <div class="mb-2 text-center">
+        <label class="d-inline-block mx-auto">{{ field.label }}</label>
+        {% if field.field.required %}
+            <span style="color: red;" class="required">*</span>
+        {% endif %}
+        {{ field }}
+        <div class="block-errors" id="errors_{{ field.name }}">
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <p class="festResponseText text-center">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% if form.comments.help_text %}
+            <p>{{ field.help_text }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary my-3 d-block mx-auto">{{ btn_text }}</button>
+</form>
