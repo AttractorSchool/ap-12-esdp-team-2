@@ -61,25 +61,26 @@
                     {% if request.user in club.managers.all %}
                         <a href="{% url 'club_edit' club.pk %}" class="btn btn-primary w-100 mt-1"><i class="fa-solid fa-pen mr-1"></i>Редактировать</a>
                         <a href="{% url 'club_managers_choose' club.pk %}" class="btn btn-info w-100 mt-1"><i class="fa-solid fa-user-group mr-1"></i>Руководители</a>
+                        <a href="{% url 'club_delete' club.pk %}" class="btn btn-danger w-100 mt-1"><i class="fa-solid fa-trash mr-1"></i></i>Удалить</a>
                     {% endif %}
                 </div>
                 <div class="col-lg-4 right-contents">
                     <ul>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
-                                <p>Создатель</p> 
+                                <p class="font-weight-bold">Создатель:</p>
                                 <span>{{ club.creater }}</span>
                             </span>
                         </li>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
-                                <p>Категория</p>
+                                <p class="font-weight-bold">Категория:</p>
                                 <span>{{ club.category }}</span>
                             </span>
                         </li>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
-                                <p>Город</p>
+                                <p class="font-weight-bold">Город:</p>
                                 <span>
                                     {% if club.city %}
                                         {{ club.city }}
@@ -91,7 +92,7 @@
                         </li>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
-                                <p>Адрес</p>
+                                <p class="font-weight-bold">Адрес:</p>
                                 <span>
                                     {% if club.address %}
                                         {{ club.address }}
@@ -103,13 +104,13 @@
                         </li>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
-                                <p>Email</p> 
+                                <p class="font-weight-bold">Email:</p>
                                 <span>{{ club.email }}</span>
                             </span>
                         </li>
                         <li>
                             <span class="justify-content-between d-flex" href="#">
-                                <p>Телефон</p>
+                                <p class="font-weight-bold">Телефон:</p>
                                 <span>{{ club.phone }}</span>
                             </span>
                         </li>
@@ -142,7 +143,7 @@
                                             </a>
                                         </div>
                                     {% empty %}
-                                        <p class="text-center">Фотогалерея пуста</p>
+                                        <p class="text-center col-12">Фотогалерея пуста</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
@@ -179,7 +180,7 @@
                                         </div>
                                     </div>
                                     {% empty %}
-                                        <p class="text-center">Список услуг пуст</p>
+                                        <p class="text-center col-12">Список услуг пуст</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">
@@ -217,7 +218,7 @@
                                         </div>
                                     </div>
                                     {% empty %}
-                                        <p class="text-center">Список событии пуст</p>
+                                        <p class="text-center col-12">Список событии пуст</p>
                                     {% endfor %}
                                     {% if request.user in club.managers.all %}
                                         <div class="col-lg-4 mb-4">

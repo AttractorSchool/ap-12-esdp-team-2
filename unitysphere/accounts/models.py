@@ -65,6 +65,12 @@ class User(AbstractUser):
             self.email = None
         super().save(*args, **kwargs)
 
+    def get_active_managed_clubs(self):
+        return self.managed_clubs.filter(is_active=True)
+
+    def get_active_membered_clubs(self):
+        return self.members_of_clubs.filter(is_active=True)
+
 
 class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

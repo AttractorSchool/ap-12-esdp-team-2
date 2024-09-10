@@ -3,7 +3,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.validators import MinValueValidator
 from accounts.models import User
 from . import models
-from django.contrib.admin import widgets
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 class ClubForm(forms.ModelForm):
@@ -178,4 +178,34 @@ class FestivalForm(forms.ModelForm):
                 'class': 'form-control text-center w-50 mx-auto',
                 'placeholder': 'Напишите место проведения'
             }),
+        }
+
+
+class ServiceForClubCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = models.ServiceForClubs
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'description': forms.Textarea(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'min_price': forms.NumberInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'max_price': forms.NumberInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        }
+    image = forms.ImageField(
+        widget=forms.FileInput(attrs={'class': 'form-control text-center w-50 mx-auto'}),
+        label='Фото услуги'
+    )
+
+
+class PublicationForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorUploadingWidget(), label='Контент')
+
+    class Meta:
+        model = models.Publication
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control text-center mx-auto'}),
+            'annotation': forms.Textarea(attrs={'class': 'form-control text-center mx-auto'}),
         }

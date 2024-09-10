@@ -4,8 +4,9 @@ import uuid
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.db import models
 from django.urls import reverse
+from ckeditor_uploader.fields import RichTextUploadingField
+from bs4 import BeautifulSoup
 from pytz import timezone
-
 from accounts.models import phone_regex_validator
 
 
@@ -334,6 +335,41 @@ class ClubService(models.Model):
         verbose_name_plural = 'Услуги клуба'
 
 
+class ServiceForClubs(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200, verbose_name="Наименование услуги")
+    description = models.CharField(max_length=200, verbose_name="Описание услуги")
+    min_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена от(KZT.)', blank=True, null=True)
+    max_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена до(KZT.)', blank=True, null=True)
+    phone = models.CharField(
+        max_length=20,
+        verbose_name="Контактный телефон",
+        validators=[phone_regex_validator]
+    )
+    image = models.ImageField(upload_to='clubs/service_for_clubs', verbose_name='Фото')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
+
+    def __str__(self):
+        return f'Услуга для сообществ - {self.name}'
+
+    def get_absolute_url(self):
+        return reverse('service_for_club_detail', kwargs={'pk': self.pk})
+
+    def get_price_range_str(self):
+        if self.min_price and self.max_price:
+            return f'от {self.min_price} - до {self.max_price} KZT.'
+        if self.min_price:
+            return f'от {self.min_price} KZT.'
+        if self.max_price:
+            return f'до {self.max_price} KZT.'
+        return f'Договорная'
+
+    class Meta:
+        verbose_name = 'Услуга для сообществ'
+        verbose_name_plural = 'Услуги для сообществ'
+
+
 class ClubServiceImage(models.Model):
     """
     Модель представляет изображение для услуги клуба.
@@ -635,3 +671,23 @@ class FestivalParticipationRequest(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['club', 'festival'], name='unique_club_festival_request')
         ]
+
+
+class Publication(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200, verbose_name='Заголовок', unique=True)
+    annotation = models.TextField(verbose_name='Краткое содержание')
+    content = RichTextUploadingField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
+        ordering = ['-created_at',]
+
+    def get_absolute_url(self):
+        return reverse('publication_detail', kwargs={'pk': self.pk})

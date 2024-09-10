@@ -64,3 +64,6 @@ class ClubJoinRequestAdmin(admin.ModelAdmin):
 @admin.register(ClubGalleryPhoto)
 class ClubGalleryPhotoAdmin(admin.ModelAdmin):
     list_display = ('club', )
+
+
+admin.site.register(Publication)

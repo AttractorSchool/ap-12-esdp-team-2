@@ -118,58 +118,27 @@
                 </div>
             </div>
             <div class="row">
+                {% for service in services %}
                 <div class="col-lg-4">
                     <div class="single-cat-widget">
                         <div class="content relative">
                             <div class="overlay overlay-bg"></div>
                             <a href="#" target="_blank">
                               <div class="thumb">
-                                 <img class="content-image img-fluid d-block mx-auto" src="{%  static 'images/services/atributika.jpg' %}" alt=""  style="height: 250px;">
+                                 <img class="content-image img-fluid d-block mx-auto" src="{{ service.image.url }}" alt=""  style="height: 250px;">
                               </div>
                               <div class="content-details">
-                                <h4 class="content-title mx-auto text-uppercase w-75">Брендирование одежды</h4>
+                                <h4 class="content-title mx-auto text-uppercase w-75">{{ service.name }}</h4>
                                 <span></span>
-                                <p class="w-75 mx-auto">Вышивка и печать логотипа сообществ на кепки, футболки, кофты, флаги и многом другом</p>
+                                <p class="w-75 mx-auto">{{ service.description|slice:":100" }}...</p>
                               </div>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="single-cat-widget">
-                        <div class="content relative">
-                            <div class="overlay overlay-bg"></div>
-                            <a href="#" target="_blank">
-                              <div class="thumb">
-                                 <img class="content-image img-fluid d-block mx-auto" src="{%  static 'images/services/consult.jpg' %}" alt="" style="height: 250px;">
-                              </div>
-                              <div class="content-details">
-                                <h4 class="content-title mx-auto text-uppercase w-75">Консультация специалистов</h4>
-                                <span></span>
-                                <p class="w-75 mx-auto">Юрист, бухгалтер, маркетолог, нотариус</p>
-                              </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="single-cat-widget">
-                        <div class="content relative">
-                            <div class="overlay overlay-bg"></div>
-                            <a href="#" target="_blank">
-                              <div class="thumb">
-                                 <img class="content-image img-fluid d-block mx-auto" src="{%  static 'images/services/audience.jpg' %}" alt=""  style="height: 250px;">
-                              </div>
-                              <div class="content-details">
-                                <h4 class="content-title mx-auto text-uppercase">Организация мероприятии</h4>
-                                <span></span>
-                                <p class="w-75 mx-auto">Предоставление льготных цен для сообществ на необходимое для проведении мероприятий</p>
-                              </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
+            <a href="{% url 'service_for_club_list' %}" class="d-block mx-auto text-center mt-3">Все услуги для сообществ</a>
         </div>
     </section>
     <!-- Start cta-one Area -->

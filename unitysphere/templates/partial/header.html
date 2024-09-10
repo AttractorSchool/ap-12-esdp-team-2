@@ -23,19 +23,20 @@
           </div>
           <nav id="nav-menu-container">
             <ul class="nav-menu">
-              <li><a href="{% url 'index' %}">ГЛАВНАЯ</a></li>
               <li><a href="{% url 'clubs' %}">СООБЩЕСТВА</a></li>
-              <li><a href="{% url 'user_list' %}">ПОЛЬЗОВАТЕЛИ</a></li>
+              <li class="blinked-link"><a href="{% url 'publications' %}" class="blinked-link">НОВОСТИ ДЛЯ СООБЩЕСТВ</a></li>
               <li><a href="{% url 'club_events' %}">СОБЫТИЯ</a></li>
                 <li><a href="{% url 'festivals' %}">ФЕСТИВАЛИ</a></li>
               <li><a href="{% url 'about' %}">О НАС</a></li>
-{#              <li><a href="#">НОВОСТИ</a></li>#}
-{#              <li class="menu-has-children"><a href="">УСЛУГИ</a>#}
-{#                <ul>#}
-{#                  <li><a href="#">УСЛУГИ ОТ КЛУБОВ</a></li>#}
-{#                  <li><a href="#">УСЛУГИ ДЛЯ КЛУБОВ</a></li>#}
-{#                </ul>#}
-{#              </li>					          					          		          #}
+                {% if request.user.is_superuser %}
+                <li class="menu-has-children"><a href="">Администрирование</a>
+                    <ul>
+                        <li><a href="{% url 'festival_create' %}">Организовать фестиваль</a></li>
+                        <li><a href="{% url 'service_for_club_create' %}">Добавить услугу</a></li>
+                        <li><a href="{% url 'publication_create' %}">Добавить новость</a></li>
+                    </ul>
+                </li>
+                {% endif %}
               <li class="menu-has-children"><a href="">Профиль</a>
                 <ul>
                     {% if request.user.is_authenticated %}

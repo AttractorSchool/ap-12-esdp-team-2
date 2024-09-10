@@ -102,7 +102,11 @@
                                 <button type="button" class="btn btn-primary d-block mx-auto w-25 text-white" onclick="displayModal(this)" modal="profile-about-form-block">Изменить</button>
                                 {% endif %}
                                 {% else %}
-                                <p class="text-center" id="user-about-field">Информация "О себе" не заполнена</p>
+                                <p class="text-center" id="user-about-field">
+                                    Это уникальный случай рассказать о себе. Не упустите шанс проявиться. Указанную вами информацию
+                                    будут читать единомышленники, работодатели, потенциальные бизнес-партнёры, меценаты и другие пользователи сайта.
+                                    Поэтому будьте избирательны к тому что указываете, от этого зависит заинтересованность вами.
+                                </p>
                                 {% if request.user == user %}
                                 <button type="button" class="btn btn-primary d-block mx-auto w-25 text-white" onclick="displayModal(this)" modal="profile-about-form-block">Заполнить</button>
                                 {% endif %}
@@ -117,7 +121,10 @@
                                 </button>
                                 {% endif %}
                                 {% else %}
-                                <p class="text-center" id="user-goals-field">Информация не заполнена</p>
+                                <p class="text-center" id="user-goals-field">
+                                    Расскажите о своих целях и мечтах максимально ярко, не ограничивайте себя
+                                в фантазиях. Расскажите обо всём, чтобы вы хотели достигнуть в жизни.
+                                </p>
                                 {% if request.user == user %}
                                 <button type="button" class="btn btn-primary d-block mx-auto w-25 text-white" onclick="displayModal(this)" modal="profile-goals-form-block">Заполнить</button>
                                 {% endif %}
@@ -133,6 +140,9 @@
                                 <p class="text-center" id="user-interests-field">
                                     {% if request.user == user %}
                                     Информация не заполнена. Напишите свои интересы, чтобы ваш профиль отображался в поиске единомышленников
+                                    Расскажите подробно обо всём что вам нравится и интересно в жизни.
+                                    Это позволит вам легче и быстрее встретить единомышленников.
+
                                     {% else %}
                                     Информация не заполнена.
                                     {% endif %}
@@ -145,7 +155,7 @@
                             <div class="jq-tab-content" data-tab="4">
                                 <div class="progress-table-wrap">
                                     <div class="progress-table bg-none">
-                                {% for club in user.members_of_clubs.all %}
+                                {% for club in user.get_active_membered_clubs %}
                                     <div class="table-row justify-content-center">
                                         <div class="country">{{ club.name }}</div>
                                         <a class="primary-btn action-btn text-uppercase" href="{{ club.get_absolute_url }}">Страница сообщества</a>
@@ -165,7 +175,7 @@
                             <div class="jq-tab-content" data-tab="5">
                                 <div class="progress-table-wrap">
                                     <div class="progress-table bg-none">
-                                {% for club in user.managed_clubs.all %}
+                                {% for club in user.get_active_managed_clubs %}
                                     <div class="table-row justify-content-center">
                                         <div class="country">{{ club.name }}</div>
                                         <a class="primary-btn action-btn text-uppercase" href="{{ club.get_absolute_url }}">Страница сообщества</a>

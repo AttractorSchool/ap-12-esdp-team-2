@@ -10,4 +10,8 @@
 
 Выбрать папку проекта - cd <project_folder>
 
+Раскомментировать настройки settings/DATABASES
+
+Удалить настройки sqlite
+
 Запустить команду - docker compose up --build
