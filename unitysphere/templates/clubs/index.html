@@ -57,6 +57,7 @@
 {#                    </div>#}
 {#                </div>#}
                 <div class="col-lg-4">
+                    <a href="{% url 'club_create' %}">
                     <div class="single-feature">
                         <div class="title">
                             <h4>Создавайте сообщества</h4>
@@ -68,8 +69,10 @@
                             <a href="{% url 'club_create' %}">Создать сейчас</a>
                         </div>
                     </div>
+                    </a>
                 </div>
                 <div class="col-lg-4">
+                    <a href="{% url 'clubs' %}">
                     <div class="single-feature">
                         <div class="title">
                             <h4>Вступайте в сообщества</h4>
@@ -82,8 +85,10 @@
                             <a href="{% url 'clubs' %}">Список сообществ</a>
                         </div>
                     </div>
+                    </a>
                 </div>
                 <div class="col-lg-4">
+                    <a href="{% url 'festivals' %}">
                     <div class="single-feature">
                         <div class="title">
                             <h4>Фестивали сообществ</h4>
@@ -95,6 +100,7 @@
                             <a href="{% url 'festivals' %}">Ближайшие фестивали</a>
                         </div>
                     </div>
+                    </a>
                 </div>
             </div>
         </div>

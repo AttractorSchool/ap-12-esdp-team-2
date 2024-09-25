@@ -323,3 +323,11 @@
 .blinked-link:hover {
     color: white !important;
 }
+
+.publication-content p{
+    word-wrap: break-word;
+}
+
+.publication-content img {
+    width: 100% !important;
+}

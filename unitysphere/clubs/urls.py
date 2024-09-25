@@ -63,6 +63,7 @@ other_urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('clubs/<uuid:pk>/managers/edit/', views.ChooseClubManagersView.as_view(), name='club_managers_choose'),
     path('about/', views.AboutView.as_view(), name='about'),
+    path('policy/', views.PolicyView.as_view(), name='policy'),
 ]
 
 urlpatterns = [

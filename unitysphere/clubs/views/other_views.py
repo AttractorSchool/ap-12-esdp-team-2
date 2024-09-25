@@ -80,3 +80,23 @@ class AboutView(generic.TemplateView):
         ctx = super().get_context_data(**kwargs)
         ctx['page_title'] = 'О НАС'
         return ctx
+
+
+class PolicyView(generic.TemplateView):
+    template_name = 'clubs/policy.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Добавляет дополнительный контекст на страницу "О нас".
+
+        В контекст добавляется заголовок страницы.
+
+        Параметры:
+            **kwargs: Дополнительные аргументы для контекста.
+
+        Возвращает:
+            dict: Контекст для рендеринга шаблона страницы "О нас".
+        """
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = 'Публичная оферта'
+        return ctx
