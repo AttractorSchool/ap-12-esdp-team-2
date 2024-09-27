@@ -231,8 +231,8 @@
     "updated_at": "2024-06-19T15:14:26.063Z",
     "partners_count": 0,
     "managers": [
-      "f0c2895a-b172-41e3-b299-85f755bf923e",
-      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
+      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7",
+      "f0c2895a-b172-41e3-b299-85f755bf923e"
     ],
     "members": [],
     "likes": [],
@@ -255,17 +255,15 @@
     "address": "Абая 101",
     "members_count": 0,
     "likes_count": 0,
-    "is_active": true,
+    "is_active": false,
     "is_private": false,
     "created_at": "2024-07-01T05:40:59.787Z",
-    "updated_at": "2024-07-01T05:40:59.787Z",
+    "updated_at": "2024-08-28T11:30:35.203Z",
     "partners_count": 0,
     "managers": [
       "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
     ],
-    "members": [
-      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
-    ],
+    "members": [],
     "likes": [],
     "partners": []
   }
@@ -315,10 +313,10 @@
     "address": "Абая 101",
     "members_count": 0,
     "likes_count": 0,
-    "is_active": true,
+    "is_active": false,
     "is_private": false,
     "created_at": "2024-07-01T05:40:02.498Z",
-    "updated_at": "2024-07-01T05:40:02.498Z",
+    "updated_at": "2024-08-28T06:58:37.921Z",
     "partners_count": 0,
     "managers": [
       "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
@@ -344,16 +342,16 @@
     "phone": "+77085872998",
     "city": "8940c089-fa24-4df5-9042-5d8dc691cfad",
     "address": "Алимжанова 51",
-    "members_count": 0,
+    "members_count": 1,
     "likes_count": 0,
     "is_active": true,
     "is_private": false,
     "created_at": "2024-05-15T15:52:13.109Z",
-    "updated_at": "2024-06-18T05:57:59.236Z",
+    "updated_at": "2024-09-10T04:38:33.455Z",
     "partners_count": 0,
     "managers": [
-      "f0c2895a-b172-41e3-b299-85f755bf923e",
-      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
+      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7",
+      "f0c2895a-b172-41e3-b299-85f755bf923e"
     ],
     "members": [
       "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
@@ -377,24 +375,22 @@
     "city": "8940c089-fa24-4df5-9042-5d8dc691cfad",
     "address": "Абая 46",
     "members_count": 0,
-    "likes_count": 1,
+    "likes_count": 0,
     "is_active": true,
     "is_private": false,
     "created_at": "2024-05-21T12:44:58.362Z",
-    "updated_at": "2024-06-18T05:33:48.692Z",
+    "updated_at": "2024-08-29T04:40:45.576Z",
     "partners_count": 0,
     "managers": [
       "5e250a6a-2f57-4f8c-9c0a-14fb8b9643a1",
-      "e341bd4e-2e2b-435c-9919-59151970e6bb",
       "6d50c35b-25d7-4ccb-b92d-248122958430",
+      "e341bd4e-2e2b-435c-9919-59151970e6bb",
       "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
     ],
     "members": [
       "f0c2895a-b172-41e3-b299-85f755bf923e"
     ],
-    "likes": [
-      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
-    ],
+    "likes": [],
     "partners": [
       "c9fa4ac3-e77a-4f78-81fc-69212ecfe7af"
     ]
@@ -415,19 +411,21 @@
     "city": "8940c089-fa24-4df5-9042-5d8dc691cfad",
     "address": "Сатпаева 55",
     "members_count": 1,
-    "likes_count": 0,
+    "likes_count": 1,
     "is_active": true,
     "is_private": false,
     "created_at": "2024-05-21T12:58:24.926Z",
-    "updated_at": "2024-06-03T12:45:02.287Z",
+    "updated_at": "2024-08-27T09:13:58.439Z",
     "partners_count": 0,
     "managers": [
       "168371d8-6782-4b49-a6fe-435da130b4ca"
     ],
     "members": [
-      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
+      "72299acb-02c7-48ca-acdb-71e0eca97c0f"
     ],
-    "likes": [],
+    "likes": [
+      "72299acb-02c7-48ca-acdb-71e0eca97c0f"
+    ],
     "partners": [
       "c300bdf3-a152-4c9f-9d3d-cb752e947f93"
     ]
@@ -448,18 +446,20 @@
     "city": "8940c089-fa24-4df5-9042-5d8dc691cfad",
     "address": "Конаева 40",
     "members_count": 0,
-    "likes_count": 0,
-    "is_active": true,
+    "likes_count": 1,
+    "is_active": false,
     "is_private": false,
     "created_at": "2024-05-21T12:47:24.899Z",
-    "updated_at": "2024-06-18T05:58:07.661Z",
+    "updated_at": "2024-09-06T05:12:38.217Z",
     "partners_count": 0,
     "managers": [
       "6d50c35b-25d7-4ccb-b92d-248122958430",
       "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
     ],
     "members": [],
-    "likes": [],
+    "likes": [
+      "e8e48d41-0d19-4e08-abbe-517ce0b72cb7"
+    ],
     "partners": []
   }
 },
@@ -536,6 +536,62 @@
     "price": "10000.00",
     "created_at": "2024-05-31T12:48:35.753Z",
     "updated_at": "2024-05-31T12:48:35.753Z"
+  }
+},
+{
+  "model": "clubs.serviceforclubs",
+  "pk": "68e15df0-ce3f-499f-90f2-20e421d403f1",
+  "fields": {
+    "name": "Брендирование одежды",
+    "description": "Вышивка и печать логотипа сообществ на кепки, футболки, кофты, флаги и многом другом",
+    "min_price": "5000.00",
+    "max_price": "20000.00",
+    "phone": "+77777777777",
+    "image": "clubs/service_for_clubs/atributika.jpg",
+    "created_at": "2024-09-05T10:13:26.713Z",
+    "updated_at": "2024-09-06T05:05:25.684Z"
+  }
+},
+{
+  "model": "clubs.serviceforclubs",
+  "pk": "82775817-158a-44b7-8fbb-f70ad73194f3",
+  "fields": {
+    "name": "Организация мероприятии",
+    "description": "Предоставление льготных цен для сообществ на необходимое для проведении мероприятий",
+    "min_price": "5000.00",
+    "max_price": "20000.00",
+    "phone": "+77774441177",
+    "image": "clubs/service_for_clubs/audience.jpg",
+    "created_at": "2024-09-05T10:16:07.009Z",
+    "updated_at": "2024-09-05T10:16:07.009Z"
+  }
+},
+{
+  "model": "clubs.serviceforclubs",
+  "pk": "c12cf6c1-ca55-4489-8d91-7b54401a2d10",
+  "fields": {
+    "name": "Консультация специалистов",
+    "description": "Юрист, бухгалтер, маркетолог, нотариусЮрист, бухгалтер, маркетолог, нотариусЮрист, бухгалтер, маркетолог, нотариусЮрист, бухгалтер, маркетолог, нотариусЮрист, бухгалтер, маркетолог, нотариусЮрист, бух",
+    "min_price": "5000.00",
+    "max_price": "20000.00",
+    "phone": "+77777777778",
+    "image": "clubs/service_for_clubs/consult.jpg",
+    "created_at": "2024-09-05T10:15:17.321Z",
+    "updated_at": "2024-09-05T10:57:45.523Z"
+  }
+},
+{
+  "model": "clubs.serviceforclubs",
+  "pk": "f1ceb0d4-f8e2-47eb-9d3d-aa4799a3fe94",
+  "fields": {
+    "name": "Вышивка логотипов v1",
+    "description": "Вышивка логотипов v1Вышивка логотипов v1Вышивка логотипов v1Вышивка логотипов v1Вышивка логотипов v1",
+    "min_price": "5000.00",
+    "max_price": "10000.00",
+    "phone": "+77777777777",
+    "image": "clubs/service_for_clubs/nature1_0PWgz7E.jpg",
+    "created_at": "2024-09-19T10:51:30.722Z",
+    "updated_at": "2024-09-19T10:51:30.722Z"
   }
 },
 {
@@ -616,6 +672,16 @@
     "image": "clubs/gallery/banner-bg.jpg",
     "created_at": "2024-06-18T11:22:08.438Z",
     "updated_at": "2024-06-18T11:22:08.438Z"
+  }
+},
+{
+  "model": "clubs.clubgalleryphoto",
+  "pk": "a6e2fe39-620c-42b7-8523-041291de5e35",
+  "fields": {
+    "club": "cec70880-4c1f-4022-b6b2-9bc49bdc85c8",
+    "image": "clubs/gallery/website.png",
+    "created_at": "2024-08-28T11:36:11.075Z",
+    "updated_at": "2024-08-28T11:36:11.075Z"
   }
 },
 {
@@ -717,6 +783,17 @@
     "approved": true,
     "created_at": "2024-05-27T12:39:38.345Z",
     "updated_at": "2024-05-29T15:30:15.602Z"
+  }
+},
+{
+  "model": "clubs.publication",
+  "pk": "6b28bc79-620e-4b29-b70a-cae2de3b2194",
+  "fields": {
+    "title": "asdasdasdasd",
+    "annotation": "asdasdasdasdasdasdasdasdasdasdasdasd asdasdasdasdasdasdasdasdasdasdasdasd asdasdasdasdasdasdasdasdasdasdasdasd asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+    "content": "<p>&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ&nbsp;НОВОСТЬ</p>\r\n\r\n<p><img alt=\"\" src=\"/media/uploads/2024/09/19/nature1_0pwgz7e_rcjMszo.jpg\" style=\"height:806px; width:1200px\" /></p>",
+    "created_at": "2024-09-09T10:56:19.406Z",
+    "updated_at": "2024-09-19T10:20:11.421Z"
   }
 }
 ]
