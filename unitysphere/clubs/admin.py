@@ -65,5 +65,9 @@ class ClubJoinRequestAdmin(admin.ModelAdmin):
 class ClubGalleryPhotoAdmin(admin.ModelAdmin):
     list_display = ('club', )
 
+@admin.register(ServiceForClubs)
+class ServiceForClubsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'min_price', 'max_price', 'phone', 'image',)
+
 
 admin.site.register(Publication)

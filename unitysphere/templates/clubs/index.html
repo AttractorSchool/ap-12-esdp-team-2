@@ -127,19 +127,21 @@
                 {% for service in services %}
                 <div class="col-lg-4">
                     <div class="single-cat-widget">
-                        <div class="content relative">
-                            <div class="overlay overlay-bg"></div>
-                            <a href="#" target="_blank">
-                              <div class="thumb">
-                                 <img class="content-image img-fluid d-block mx-auto" src="{{ service.image.url }}" alt=""  style="height: 250px;">
-                              </div>
-                              <div class="content-details">
-                                <h4 class="content-title mx-auto text-uppercase w-75">{{ service.name }}</h4>
-                                <span></span>
-                                <p class="w-75 mx-auto">{{ service.description|slice:":100" }}...</p>
-                              </div>
-                            </a>
-                        </div>
+                        <a href="{% url 'service_for_club_detail' service.pk %}">
+                            <div class="content relative">
+                                <div class="overlay overlay-bg"></div>
+
+                                  <div class="thumb">
+                                     <img class="content-image img-fluid d-block mx-auto" src="{{ service.image.url }}" alt=""  style="height: 250px;">
+                                  </div>
+                                  <div class="content-details">
+                                    <h4 class="content-title mx-auto text-uppercase w-75">{{ service.name }}</h4>
+                                    <span></span>
+                                    <p class="w-75 mx-auto">{{ service.description|slice:":100" }}...</p>
+                                  </div>
+
+                            </div>
+                        </a>
                     </div>
                 </div>
                 {% endfor %}
